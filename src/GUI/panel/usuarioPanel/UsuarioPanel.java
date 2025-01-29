@@ -29,19 +29,16 @@ public class UsuarioPanel extends JPanel {
         this.usuarioDAO = usuarioDAO;
         setLayout(new BorderLayout());
 
-        // Tabla de usuarios
         tablaUsuarios = new JTable();
-        tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Asegúrate de que solo se seleccione una fila
-        tablaUsuarios.getSelectionModel().addListSelectionListener(_ -> mostrarFormularioModificar()); // Añadido listener
+        tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+        tablaUsuarios.getSelectionModel().addListSelectionListener(_ -> mostrarFormularioModificar()); 
         JScrollPane scrollUsuarios = new JScrollPane(tablaUsuarios);
         add(scrollUsuarios, BorderLayout.CENTER);
 
-        // Panel de formulario dinámico
         panelFormulario = new JPanel();
-        panelFormulario.setLayout(new GridLayout(6, 2));  // Para 5 campos y un botón
+        panelFormulario.setLayout(new GridLayout(6, 2));  
         add(panelFormulario, BorderLayout.SOUTH);
 
-        // Panel de botones
         JPanel panelBotones = new JPanel();
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -74,7 +71,6 @@ public class UsuarioPanel extends JPanel {
     }
 
     private void mostrarFormularioAgregar() {
-        // Limpiar el formulario y agregar los campos necesarios
         panelFormulario.removeAll();
         panelFormulario.add(new JLabel("Nombre:"));
         txtNombre = new JTextField();
@@ -105,14 +101,13 @@ public class UsuarioPanel extends JPanel {
     }
 
     private void mostrarFormularioModificar() {
-        if (modificando) { // Solo muestra el formulario de modificar si está en modo de modificación
+        if (modificando) { 
             int row = tablaUsuarios.getSelectedRow();
             if (row != -1) {
-                String nombre = (String) tablaUsuarios.getValueAt(row, 0); // Nombre
-                String rol = (String) tablaUsuarios.getValueAt(row, 1);   // Rol
-                String identificacion = (String) tablaUsuarios.getValueAt(row, 2); // Identificación
+                String nombre = (String) tablaUsuarios.getValueAt(row, 0); 
+                String rol = (String) tablaUsuarios.getValueAt(row, 1);  
+                String identificacion = (String) tablaUsuarios.getValueAt(row, 2); 
         
-                // Limpiar el formulario y agregar los campos con los valores de la fila seleccionada
                 panelFormulario.removeAll();
         
                 panelFormulario.add(new JLabel("Nombre:"));
@@ -127,23 +122,15 @@ public class UsuarioPanel extends JPanel {
                 txtIdentificacion = new JTextField(identificacion);
                 panelFormulario.add(txtIdentificacion);
         
-                // Eliminar los campos "Nombre de usuario" y "Contraseña"
-                // panelFormulario.add(new JLabel("Nombre de usuario:"));
-                // txtUsername = new JTextField();  
-                // panelFormulario.add(txtUsername);
-        
-                // panelFormulario.add(new JLabel("Contraseña:"));
-                // txtPassword = new JPasswordField();  
-                // panelFormulario.add(txtPassword);
+
         
                 JButton btnModificar = new JButton("Modificar");
-                btnModificar.addActionListener(_ -> modificarUsuario(row)); // Usamos el índice de la fila seleccionada
+                btnModificar.addActionListener(_ -> modificarUsuario(row)); 
                 panelFormulario.add(btnModificar);
         
                 revalidate();
                 repaint();
             } else {
-                // Si no se seleccionó ninguna fila
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un usuario.");
             }
         }
@@ -151,19 +138,17 @@ public class UsuarioPanel extends JPanel {
     
 
     private void modificarUsuario(int row) {
-        String identificacion = (String) tablaUsuarios.getValueAt(row, 2); // Ahora obtenemos la Identificación
+        String identificacion = (String) tablaUsuarios.getValueAt(row, 2); 
         
         String nuevoNombre = txtNombre.getText();
         String nuevoRol = txtRol.getText();
         
-        // Llama a la validación de credencial y a la lógica de modificación
         String credencial = pedirCredencial();
         if (credencial == null || !validarCredencial(credencial)) {
             JOptionPane.showMessageDialog(this, "No es posible realizar la acción solicitada sin autorización del DUEÑO.");
             return;
         }
     
-        // Aquí solo pasamos el nombre y rol, sin el username
         boolean result = usuarioDAO.modificarUsuario(identificacion, nuevoNombre, nuevoRol, credencial);
         if (result) {
             JOptionPane.showMessageDialog(this, "Usuario modificado.");
@@ -172,14 +157,14 @@ public class UsuarioPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al modificar usuario.");
         }
     
-        modificando = false; // Vuelve al estado normal después de modificar
-        cargarUsuarios(); // Actualiza la tabla
+        modificando = false; 
+        cargarUsuarios();
     }
     
 
     private void activarModoModificar() {
-        modificando = true; // Establece el estado de "modificar"
-        mostrarFormularioModificar(); // Muestra el formulario
+        modificando = true; 
+        mostrarFormularioModificar(); 
     }
 
     private void agregarUsuario() {
@@ -189,7 +174,6 @@ public class UsuarioPanel extends JPanel {
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
 
-        // Pide la credencial para validar
         String credencial = pedirCredencial();
         if (credencial == null || !validarCredencial(credencial)) {
             JOptionPane.showMessageDialog(this, "No es posible realizar la acción solicitada sin autorización del DUEÑO.");
@@ -211,10 +195,8 @@ public class UsuarioPanel extends JPanel {
     private void eliminarUsuario() {
         int row = tablaUsuarios.getSelectedRow();
         if (row != -1) {
-            // Obtenemos la identificación de la columna 2 (Identificación)
             String identificacion = (String) tablaUsuarios.getValueAt(row, 2);
 
-            // Llamar al DAO para eliminar el usuario
             boolean result = usuarioDAO.eliminarUsuario(identificacion);
             if (result) {
                 JOptionPane.showMessageDialog(this, "Usuario eliminado.");

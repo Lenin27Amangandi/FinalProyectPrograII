@@ -74,12 +74,11 @@ public class AdminPanel extends JPanel {
         sidebar.add(btnUsuarios);
         sidebar.add(Box.createVerticalStrut(10));
         sidebar.add(btnPinturas);
-        sidebar.add(Box.createVerticalGlue()); // Esto asegura que el botón Volver esté al final
-        sidebar.add(Box.createVerticalStrut(10)); // Espacio antes del botón
-        sidebar.add(btnVolver); // Botón Volver al final del sidebar
+        sidebar.add(Box.createVerticalGlue());
+        sidebar.add(Box.createVerticalStrut(10)); 
+        sidebar.add(btnVolver); 
     }
 
-    // Método para crear el Sidebar
     private JPanel createSidebar() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -88,7 +87,6 @@ public class AdminPanel extends JPanel {
         return panel;
     }
 
-    // Método para cambiar entre las vistas
     public void mostrarUsuarios() {
         CardLayout cl = (CardLayout) (mainPanel.getLayout());
         cl.show(mainPanel, "Usuarios");
@@ -99,29 +97,24 @@ public class AdminPanel extends JPanel {
         cl.show(mainPanel, "Pinturas");
     }
 
-    // Método para mostrar el panel vacío (Inicio)
     public void mostrarInicio() {
         CardLayout cl = (CardLayout) (mainPanel.getLayout());
         cl.show(mainPanel, "Inicio");
     }
 
-    // Método para alternar la visibilidad del Sidebar
     private void toggleSidebar() {
         sidebarVisible = !sidebarVisible;
         if (sidebarVisible) {
-            // Mostrar el sidebar
             if (sidebar.getParent() == null) {
                 add(sidebar, BorderLayout.WEST);
             }
         } else {
-            // Ocultar el sidebar
             remove(sidebar);
         }
         revalidate();
         repaint();
     }
 
-    // Método para la acción del botón Volver
     private void volver() {
         parentFrame.getContentPane().removeAll();
         parentFrame.add(new InicioPanel(parentFrame));

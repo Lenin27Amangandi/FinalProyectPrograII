@@ -17,81 +17,65 @@ public class IngresoAdminPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
 
-        // Crear un JPanel para el título y centrarlo
-        JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));  // FlowLayout centrado
+        JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));  
         JLabel titulo = EstiloFuenteYColor.crearTitulo("Panel de Administrador");
-        tituloPanel.add(titulo);  // Añadir el título al panel
+        tituloPanel.add(titulo);  
 
-        // Panel de botón Volver en la parte superior izquierda
-        JPanel volverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Botón de "Volver" a la izquierda
-        volverPanel.setOpaque(false);  // Establecer como transparente si deseas que el fondo no cubra el contenido
+        JPanel volverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+        volverPanel.setOpaque(false);  
 
-        // Usar el método crearBotonConIcono para crear el botón con solo el ícono
         JButton volverButton = ComponentFactory.crearBotonConIcono("src/utils/Resources/icons/back.png", _ -> volverAGInicioPanel());
-        volverButton.setPreferredSize(new Dimension(40, 40)); // Ajustar el tamaño del botón si es necesario
+        volverButton.setPreferredSize(new Dimension(40, 40)); 
 
         volverPanel.add(volverButton);
 
-        // Panel contenedor para el título y el botón de "Volver"
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false); // Hacer que el panel sea transparente
-        topPanel.add(volverPanel, BorderLayout.WEST); // Botón de Volver a la izquierda
-        topPanel.add(tituloPanel, BorderLayout.CENTER); // Título centrado
+        topPanel.setOpaque(false);
+        topPanel.add(volverPanel, BorderLayout.WEST); 
+        topPanel.add(tituloPanel, BorderLayout.CENTER); 
 
-        // Añadir panel contenedor al BorderLayout.NORTH
         add(topPanel, BorderLayout.NORTH);
 
-        // Panel central con GridBagLayout para centrar los elementos
         JPanel centroPanel = new JPanel();
         centroPanel.setLayout(new GridBagLayout());
         centroPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
 
-        // Definir un GridBagConstraints para alinear los elementos
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);  // Espaciado entre componentes
-        gbc.anchor = GridBagConstraints.CENTER;  // Centrado de los componentes
+        gbc.insets = new Insets(10, 10, 10, 10);  
+        gbc.anchor = GridBagConstraints.CENTER;  
 
-        // Usuario label
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel usuarioLabel = EstiloFuenteYColor.crearTituloSecundario("Usuario:");
         centroPanel.add(usuarioLabel, gbc);
 
-        // Campo de texto Usuario
         gbc.gridx = 1;
         JTextField usernameField = ComponentFactory.crearCampoTextoUsuario();
         centroPanel.add(usernameField, gbc);
 
-        // Contraseña label
         gbc.gridx = 0;
         gbc.gridy = 1;
         JLabel passwordLabel = EstiloFuenteYColor.crearTituloSecundario("Contraseña:");
         centroPanel.add(passwordLabel, gbc);
 
-        // Campo de texto Contraseña
         gbc.gridx = 1;
         JPasswordField passwordField = ComponentFactory.crearCampoTextoPassword();
         centroPanel.add(passwordField, gbc);
 
         add(centroPanel, BorderLayout.CENTER);
 
-    // Panel de botones para iniciar sesión y escanear credencial
         JPanel botonesPanelInferior = new JPanel();
-        botonesPanelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));  // Alineación central para los botones de la parte inferior
+        botonesPanelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));  
         botonesPanelInferior.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
 
-        // Crear botones
         JButton loginButton = ComponentFactory.crearBotonConTextoYIcono("Iniciar Sesión", "ingresar.png", _ -> iniciarSesion(usernameField, passwordField));
         JButton scanButton = ComponentFactory.crearBotonConTextoYIcono("Escanear Credencial", "credencial.png", _ -> mostrarVentanaEscanearCredencial());
 
-        // Añadir botones al panel inferior
         botonesPanelInferior.add(loginButton);
         botonesPanelInferior.add(scanButton);
 
-        // Añadir panel de botones a la parte inferior
         add(botonesPanelInferior, BorderLayout.SOUTH);
 
-        // Llamar a revalidate() y repaint() para asegurar que los botones se ajusten correctamente
         botonesPanelInferior.revalidate();
         botonesPanelInferior.repaint();
 

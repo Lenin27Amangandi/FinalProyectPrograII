@@ -134,7 +134,6 @@ public class PinturaPanel extends JPanel {
             String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
             Pintura pintura = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
             if (pintura != null) {
-                // Construir la ruta completa de la imagen
                 String rutaImagen = "src/utils/Resources/paintings/" + codigoBarras + ".jpg";
                 File archivoImagen = new File(rutaImagen);
                 if (archivoImagen.exists()) {
@@ -159,10 +158,8 @@ public class PinturaPanel extends JPanel {
         String categoria = txtCategoria.getText();
         String ubicacion = txtUbicacion.getText();
         
-        // Ruta de la imagen con el código de barras
         String imagen = "src/utils/Resources/paintings/" + codigoBarras + ".jpg";
 
-        // Validación
         if (titulo.isEmpty() || autor.isEmpty() || descripcion.isEmpty() || codigoBarras.isEmpty() || categoria.isEmpty() || ubicacion.isEmpty() || !new File(imagen).exists()) {
             JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados y la imagen debe existir.");
             return;

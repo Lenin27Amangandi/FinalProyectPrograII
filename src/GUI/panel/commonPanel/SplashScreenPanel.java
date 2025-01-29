@@ -107,16 +107,14 @@ public class SplashScreenPanel extends JPanel {
 
         g2d.drawImage(logo.getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH), x, y, this);
 
-        // Dibujar el círculo de progreso
         int circleRadius = 15;
         int centerX = getWidth() / 2;
         int centerY = getHeight() - 25;
 
         g2d.setStroke(new BasicStroke(3));
-        g2d.setColor(EstiloFuenteYColor.COLOR_LOGGIN); // Color del círculo
+        g2d.setColor(EstiloFuenteYColor.COLOR_LOGGIN); 
         g2d.drawArc(centerX - circleRadius, centerY - circleRadius, circleRadius * 2, circleRadius * 2, angle % 360, 270);
 
-        // Dibujar el texto del porcentaje
         String percentageText = progress + "%";
         FontMetrics fm = g2d.getFontMetrics(EstiloFuenteYColor.FUENTE_LOGIN);
         int textWidth = fm.stringWidth(percentageText);

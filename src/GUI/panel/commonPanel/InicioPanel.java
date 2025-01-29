@@ -17,15 +17,12 @@ public class InicioPanel extends JPanel {
         this.parentFrame = parentFrame;
         setLayout(new BorderLayout());
 
-        // Cargar imagen de fondo
         BackgroundPanel backgroundPanel = new BackgroundPanel("src/utils/Resources/logos/InicioImage.png");
         backgroundPanel.setLayout(new BorderLayout());
 
-        // Crear el sidebar
         sidebarPanel = createSidebar();
         sidebarPanel.setVisible(sidebarVisible);
 
-        // Botón para mostrar/ocultar el sidebar
         JButton textIconButton = new JButton("☰ Menú");
         textIconButton.setFocusPainted(false);
         textIconButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_TOGGLE);
@@ -35,12 +32,10 @@ public class InicioPanel extends JPanel {
         textIconButton.setToolTipText("Abrir menú");
         textIconButton.addActionListener(_ -> toggleSidebar());
 
-        // Panel superior con el botón
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setOpaque(false);
         topPanel.add(textIconButton);
 
-        // Agregar elementos al fondo
         backgroundPanel.add(topPanel, BorderLayout.NORTH);
         backgroundPanel.add(sidebarPanel, BorderLayout.LINE_START);
 
