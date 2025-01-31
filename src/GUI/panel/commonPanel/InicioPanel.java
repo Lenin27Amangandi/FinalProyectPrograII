@@ -1,11 +1,8 @@
 package GUI.panel.commonPanel;
 
 import utils.Estilo.*;
-
 import javax.swing.*;
-
 import GUI.panel.adminPanel.IngresoAdminPanel;
-
 import java.awt.*;
 
 public class InicioPanel extends JPanel {
@@ -17,12 +14,15 @@ public class InicioPanel extends JPanel {
         this.parentFrame = parentFrame;
         setLayout(new BorderLayout());
 
+        // Cargar imagen de fondo
         BackgroundPanel backgroundPanel = new BackgroundPanel("src/utils/Resources/logos/InicioImage.png");
         backgroundPanel.setLayout(new BorderLayout());
 
+        // Crear el sidebar
         sidebarPanel = createSidebar();
         sidebarPanel.setVisible(sidebarVisible);
 
+        // Botón para mostrar/ocultar el sidebar
         JButton textIconButton = new JButton("☰ Menú");
         textIconButton.setFocusPainted(false);
         textIconButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_TOGGLE);
@@ -30,12 +30,15 @@ public class InicioPanel extends JPanel {
         textIconButton.setFont(EstiloFuenteYColor.FUENTE_BOTON_TOGGLE);
         textIconButton.setBorder(EstiloBordes.BORDE_BOTON_SIDEBAR);
         textIconButton.setToolTipText("Abrir menú");
+        textIconButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
         textIconButton.addActionListener(_ -> toggleSidebar());
 
+        // Panel superior con el botón
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setOpaque(false);
         topPanel.add(textIconButton);
 
+        // Agregar elementos al fondo
         backgroundPanel.add(topPanel, BorderLayout.NORTH);
         backgroundPanel.add(sidebarPanel, BorderLayout.LINE_START);
 
@@ -49,8 +52,14 @@ public class InicioPanel extends JPanel {
         panel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
 
         JLabel titleLabel = ComponentFactory.crearTituloSidebar("Opciones"); // cambiar por una imagen
+
+        // Botón de "Visitar Museo"
         JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", _ -> irModoVisitante());
+        visitarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
+
+        // Botón de "Administración"
         JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", _ -> irLogin());
+        adminButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
 
         panel.add(Box.createVerticalStrut(20));
         panel.add(titleLabel);

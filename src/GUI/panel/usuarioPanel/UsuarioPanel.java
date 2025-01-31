@@ -8,10 +8,12 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import BusinessLogic.entities.Usuario;
 import DataAccess.DAO.UsuarioDAO;
 import utils.Estilo.ComponentFactory;
+import utils.Estilo.EstiloFuenteYColor;
 
 public class UsuarioPanel extends JPanel {
 
@@ -28,29 +30,44 @@ public class UsuarioPanel extends JPanel {
     public UsuarioPanel(UsuarioDAO usuarioDAO) {
         this.usuarioDAO = usuarioDAO;
         setLayout(new BorderLayout());
+        setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); // Fondo personalizado
 
+        // Tabla de usuarios con estilo personalizado
         tablaUsuarios = new JTable();
-        tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
-        tablaUsuarios.getSelectionModel().addListSelectionListener(_ -> mostrarFormularioModificar()); 
+        tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablaUsuarios.getSelectionModel().addListSelectionListener(_ -> mostrarFormularioModificar());
+        tablaUsuarios.setRowHeight(25);
+        tablaUsuarios.setGridColor(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+        tablaUsuarios.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+
+        JTableHeader header = tablaUsuarios.getTableHeader();
+        header.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        header.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
+        header.setFont(EstiloFuenteYColor.FUENTE_TABLA);
+
         JScrollPane scrollUsuarios = new JScrollPane(tablaUsuarios);
+        scrollUsuarios.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(scrollUsuarios, BorderLayout.CENTER);
 
-        panelFormulario = new JPanel();
-        panelFormulario.setLayout(new GridLayout(6, 2));  
-        add(panelFormulario, BorderLayout.SOUTH);
+        // Panel de botones con estilo
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelBotones.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
 
-        JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        btnAgregarUsuario = ComponentFactory.crearBotonPanelVisitante("Agregar", _ -> mostrarFormularioAgregar());
-        btnModificarUsuario = ComponentFactory.crearBotonPanelVisitante("Modificar", _ -> activarModoModificar());
-        btnEliminarUsuario = ComponentFactory.crearBotonPanelVisitante("Eliminar", _ -> eliminarUsuario());
+        btnAgregarUsuario = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
+        btnModificarUsuario = ComponentFactory.crearBoton("Modificar", _ -> activarModoModificar());
+        btnEliminarUsuario = ComponentFactory.crearBoton("Eliminar", _ -> eliminarUsuario());
 
         panelBotones.add(btnAgregarUsuario);
         panelBotones.add(btnModificarUsuario);
         panelBotones.add(btnEliminarUsuario);
 
         add(panelBotones, BorderLayout.NORTH);
+
+        // Panel de formulario estilizado
+        panelFormulario = new JPanel(new GridLayout(6, 2, 10, 10));
+        panelFormulario.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        panelFormulario.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        add(panelFormulario, BorderLayout.SOUTH);
 
         cargarUsuarios();
     }
@@ -67,47 +84,48 @@ public class UsuarioPanel extends JPanel {
         }
 
         tablaUsuarios.setModel(model);
-        tablaUsuarios.setRowHeight(20);
     }
 
     private void mostrarFormularioAgregar() {
+        // Limpiar el formulario y agregar los campos necesarios
         panelFormulario.removeAll();
-        panelFormulario.add(new JLabel("Nombre:"));
-        txtNombre = new JTextField();
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Nombre:"));
+        txtNombre = ComponentFactory.crearCampoTextoTransparente("");  // Aplicar estilo transparente
         panelFormulario.add(txtNombre);
-
-        panelFormulario.add(new JLabel("Rol:"));
-        txtRol = new JTextField();
+    
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Rol:"));
+        txtRol = ComponentFactory.crearCampoTextoTransparente("");  // Aplicar estilo transparente
         panelFormulario.add(txtRol);
-
-        panelFormulario.add(new JLabel("Identificación:"));
-        txtIdentificacion = new JTextField();
+    
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Identificación:"));
+        txtIdentificacion = ComponentFactory.crearCampoTextoTransparente("");  // Aplicar estilo transparente
         panelFormulario.add(txtIdentificacion);
-
-        panelFormulario.add(new JLabel("Nombre de usuario:"));
-        txtUsername = new JTextField();
+    
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Nombre de usuario:"));
+        txtUsername = ComponentFactory.crearCampoTextoTransparente("");  // Aplicar estilo transparente
         panelFormulario.add(txtUsername);
-
-        panelFormulario.add(new JLabel("Contraseña:"));
-        txtPassword = new JPasswordField();
+    
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Contraseña:"));
+        txtPassword = ComponentFactory.crearCampoTextoPasswordTransparente();  // Aplicar estilo transparente
         panelFormulario.add(txtPassword);
-
-        JButton btnGuardar = new JButton("Guardar");
-        btnGuardar.addActionListener(_ -> agregarUsuario());
+    
+        JButton btnGuardar = ComponentFactory.crearBoton("Guardar", _ -> agregarUsuario());
         panelFormulario.add(btnGuardar);
-
+    
         revalidate();
         repaint();
     }
+    
 
     private void mostrarFormularioModificar() {
-        if (modificando) { 
+        if (modificando) { // Solo muestra el formulario de modificar si está en modo de modificación
             int row = tablaUsuarios.getSelectedRow();
             if (row != -1) {
-                String nombre = (String) tablaUsuarios.getValueAt(row, 0); 
-                String rol = (String) tablaUsuarios.getValueAt(row, 1);  
-                String identificacion = (String) tablaUsuarios.getValueAt(row, 2); 
+                String nombre = (String) tablaUsuarios.getValueAt(row, 0); // Nombre
+                String rol = (String) tablaUsuarios.getValueAt(row, 1);   // Rol
+                String identificacion = (String) tablaUsuarios.getValueAt(row, 2); // Identificación
         
+                // Limpiar el formulario y agregar los campos con los valores de la fila seleccionada
                 panelFormulario.removeAll();
         
                 panelFormulario.add(new JLabel("Nombre:"));
@@ -122,15 +140,23 @@ public class UsuarioPanel extends JPanel {
                 txtIdentificacion = new JTextField(identificacion);
                 panelFormulario.add(txtIdentificacion);
         
-
+                // Eliminar los campos "Nombre de usuario" y "Contraseña"
+                // panelFormulario.add(new JLabel("Nombre de usuario:"));
+                // txtUsername = new JTextField();  
+                // panelFormulario.add(txtUsername);
+        
+                // panelFormulario.add(new JLabel("Contraseña:"));
+                // txtPassword = new JPasswordField();  
+                // panelFormulario.add(txtPassword);
         
                 JButton btnModificar = new JButton("Modificar");
-                btnModificar.addActionListener(_ -> modificarUsuario(row)); 
+                btnModificar.addActionListener(_ -> modificarUsuario(row)); // Usamos el índice de la fila seleccionada
                 panelFormulario.add(btnModificar);
         
                 revalidate();
                 repaint();
             } else {
+                // Si no se seleccionó ninguna fila
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un usuario.");
             }
         }
@@ -138,17 +164,19 @@ public class UsuarioPanel extends JPanel {
     
 
     private void modificarUsuario(int row) {
-        String identificacion = (String) tablaUsuarios.getValueAt(row, 2); 
+        String identificacion = (String) tablaUsuarios.getValueAt(row, 2); // Ahora obtenemos la Identificación
         
         String nuevoNombre = txtNombre.getText();
         String nuevoRol = txtRol.getText();
         
+        // Llama a la validación de credencial y a la lógica de modificación
         String credencial = pedirCredencial();
         if (credencial == null || !validarCredencial(credencial)) {
             JOptionPane.showMessageDialog(this, "No es posible realizar la acción solicitada sin autorización del DUEÑO.");
             return;
         }
     
+        // Aquí solo pasamos el nombre y rol, sin el username
         boolean result = usuarioDAO.modificarUsuario(identificacion, nuevoNombre, nuevoRol, credencial);
         if (result) {
             JOptionPane.showMessageDialog(this, "Usuario modificado.");
@@ -157,14 +185,14 @@ public class UsuarioPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al modificar usuario.");
         }
     
-        modificando = false; 
-        cargarUsuarios();
+        modificando = false; // Vuelve al estado normal después de modificar
+        cargarUsuarios(); // Actualiza la tabla
     }
     
 
     private void activarModoModificar() {
-        modificando = true; 
-        mostrarFormularioModificar(); 
+        modificando = true; // Establece el estado de "modificar"
+        mostrarFormularioModificar(); // Muestra el formulario
     }
 
     private void agregarUsuario() {
@@ -174,6 +202,7 @@ public class UsuarioPanel extends JPanel {
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
 
+        // Pide la credencial para validar
         String credencial = pedirCredencial();
         if (credencial == null || !validarCredencial(credencial)) {
             JOptionPane.showMessageDialog(this, "No es posible realizar la acción solicitada sin autorización del DUEÑO.");
@@ -195,8 +224,10 @@ public class UsuarioPanel extends JPanel {
     private void eliminarUsuario() {
         int row = tablaUsuarios.getSelectedRow();
         if (row != -1) {
+            // Obtenemos la identificación de la columna 2 (Identificación)
             String identificacion = (String) tablaUsuarios.getValueAt(row, 2);
 
+            // Llamar al DAO para eliminar el usuario
             boolean result = usuarioDAO.eliminarUsuario(identificacion);
             if (result) {
                 JOptionPane.showMessageDialog(this, "Usuario eliminado.");

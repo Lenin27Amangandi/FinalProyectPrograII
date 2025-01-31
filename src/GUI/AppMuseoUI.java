@@ -36,17 +36,18 @@ public class AppMuseoUI {
 
         new Thread(() -> {
             try {
+                // Llamamos a CrearDefaultUser() antes de continuar con el inicio de la app
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
-                usuarioDAO.CrearDefaultUser(); 
+                usuarioDAO.CrearDefaultUser();  // Crear o verificar el usuario por defecto
 
-                Thread.sleep(3550); 
+                Thread.sleep(3550); // Simulamos la espera por la animación de carga
             } catch (InterruptedException e){
                 e.printStackTrace();
             }
             SwingUtilities.invokeLater(() -> {
                 loadingPanel.stopLoadingAnimation();
                 loadingFrame.dispose();
-                mostrarInicio(); 
+                mostrarInicio();  // Ahora mostramos el panel de inicio
             });
         }).start();
     }
