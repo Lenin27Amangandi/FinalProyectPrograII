@@ -228,25 +228,27 @@ public class PinturaPanel extends JPanel {
             }
         }
                                             
-    private void cargarPinturas() {
-        List<PinturaDTO> pinturas = pinturaDAO.obtenerTodasLasPinturas();
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Código Barras");
-        model.addColumn("Título");
-        model.addColumn("Autor");
-        model.addColumn("Año");
-                   
-        for (PinturaDTO pintura : pinturas) {
-            String autor = obtenerNombreAutorPorId(pintura.getIdAutor());
-            model.addRow(new Object[]{pintura.getCodigoBarras(), 
-                    pintura.getTitulo(), 
-                    autor, 
-                    pintura.getAnio()});
+        private void cargarPinturas() {
+            List<PinturaDTO> pinturas = pinturaDAO.obtenerPinturasResumen();  // Llamada al nuevo método
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Código Barras");
+            model.addColumn("Título");
+            model.addColumn("Autor");
+            model.addColumn("Año");
+        
+            for (PinturaDTO pintura : pinturas) {
+                // Obtenemos el nombre del autor usando su ID
+                String autor = obtenerNombreAutorPorId(pintura.getIdAutor());
+                model.addRow(new Object[]{pintura.getCodigoBarras(), 
+                        pintura.getTitulo(), 
+                        autor, 
+                        pintura.getAnio()});
             }
-                    
+        
             tablaPinturas.setModel(model);
             tablaPinturas.setRowHeight(20);
         }
+        
 
         private void agregarPintura() throws SQLException {
             String titulo =         txtTitulo.getText();

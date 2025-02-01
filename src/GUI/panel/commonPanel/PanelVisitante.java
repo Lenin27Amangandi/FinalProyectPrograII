@@ -119,6 +119,7 @@ public class PanelVisitante extends JPanel {
             }
         });
     }
+
     private void buscarPintura(JTextField codigoInput) {
         String codigoBarras = codigoInput.getText();
         if (codigoBarras.isEmpty()) {
@@ -126,7 +127,7 @@ public class PanelVisitante extends JPanel {
             return;
         }
     
-        PinturaDTO pinturaDTO = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras); // Cambiar aquí: de int a String
+        PinturaDTO pinturaDTO = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras); // Usar el método del DAO
         if (pinturaDTO != null) {
             // Llamar por separado para mostrar los detalles y la imagen
             mostrarDetallesPintura(pinturaDTO);
@@ -135,9 +136,13 @@ public class PanelVisitante extends JPanel {
             resultadoArea.setText("No se encontró ninguna pintura con el código de barras ingresado.");
             imagenPinturaLabel.setIcon(null);
         }
+    
+        // Refrescar el panel después de realizar el escaneo
+        revalidate();  // Volver a organizar los componentes
+        repaint();     // Redibujar el panel
     }
     
-    
+
     private void mostrarDetallesPintura(PinturaDTO pinturaDTO) {
         // Mostrar detalles de la pintura en el JTextArea
         String detallesTexto = String.format(
@@ -152,7 +157,7 @@ public class PanelVisitante extends JPanel {
         resultadoArea.setText(detallesTexto);
     }
     
-    
+
     private void mostrarImagenPintura(PinturaDTO pinturaDTO) {
         // Mostrar imagen de la pintura
         String imagenPath = "src/utils/Resources/paintings/" + pinturaDTO.getCodigoBarras() + ".jpg";
@@ -173,5 +178,4 @@ public class PanelVisitante extends JPanel {
             imagenPinturaLabel.setIcon(null); // Si no se encuentra la imagen, poner el icono en null
         }
     }
-    
 }

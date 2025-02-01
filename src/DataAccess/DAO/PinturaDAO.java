@@ -168,8 +168,18 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
 
     @Override
     public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) {
+        String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
+                       "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
+                       "p.fechaCrea, p.fechaModifica, " +
+                       "a.nombreAutor, c.categoria, s.Salas " +
+                       "FROM Pinturas p " +
+                       "JOIN Autores a ON p.idAutor = a.idAutor " +
+                       "JOIN Categorias c ON p.idCategoria = c.idCategoria " +
+                       "JOIN Salas s ON p.idSala = s.idSala " +
+                       "WHERE p.codigoBarras = ?";
+    
         try (Connection connection = DbHelper.getConnection(); 
-             PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_CODIGO)) {
+             PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, codigoBarras);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -180,6 +190,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         }
         return null;
     }
+    
 
     @Override
     public List<PinturaDTO> obtenerTodasLasPinturas() {
@@ -198,6 +209,30 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         return pinturas;
     }
 
+    public List<PinturaDTO> obtenerPinturasResumen() {
+        List<PinturaDTO> pinturas = new ArrayList<>();
+        String query = "SELECT codigoBarras, titulo, idAutor, anio FROM Pinturas";  // Ajusta la consulta según tu esquema
+    
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+    
+            while (rs.next()) {
+                PinturaDTO pintura = new PinturaDTO();
+                pintura.setCodigoBarras(rs.getString("codigoBarras"));
+                pintura.setTitulo(rs.getString("titulo"));
+                pintura.setIdAutor(rs.getInt("idAutor"));
+                pintura.setAnio(rs.getInt("anio"));
+                pinturas.add(pintura);
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pinturas;
+    }
+    
+
     private PinturaDTO mapResultSetToPinturaDTO(ResultSet rs) throws SQLException {
         PinturaDTO pintura = new PinturaDTO();
         pintura.setIdPintura(rs.getInt("idPintura"));
@@ -212,6 +247,13 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         pintura.setEstado(rs.getString("estado"));
         pintura.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
         pintura.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+        
+        // Asignar los valores obtenidos de las tablas relacionadas
+        pintura.setNombreAutor(rs.getString("nombreAutor"));  // Asigna el nombre del autor
+        pintura.setcategoria(rs.getString("categoria"));      // Asigna la categoría
+        pintura.setSalas(rs.getString("Salas"));         // Asigna el nombre de la sala
+    
         return pintura;
     }
+    
 }
