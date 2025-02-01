@@ -4,7 +4,6 @@ import DataAccess.DataHelper.DbHelper;
 import DataAccess.IUsuarioDAO;
 import DataAccess.DTO.UsuarioDTO;
 
-import static DataAccess.DataHelper.DbHelper.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,7 +16,6 @@ import java.util.Properties;
 public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
 
     private static final String INSERT_USUARIO = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_USUARIO = "UPDATE Usuarios SET nombre = ?, identificacion = ?, idRol = ?, fechaModifica = ? WHERE idUsuarios = ?";
     private static final String DELETE_USUARIO = "UPDATE Usuarios SET estado = 'E', fechaModifica = ? WHERE idUsuarios = ?";
     private static final String SELECT_USUARIO_BY_ID = "SELECT * FROM Usuarios WHERE idUsuarios = ?";
     private static final String SELECT_USUARIO_BY_IDENTIFICACION = "SELECT * FROM Usuarios WHERE identificacion = ?";
@@ -30,7 +28,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
 
     private static final String SELECT_USUARIO_BY_CREDENCIALES = "SELECT * FROM Usuarios WHERE idCredenciales = ?";
     private static final String SELECT_ROLE_BY_NAME = "SELECT idRol FROM Roles WHERE nombreRol = ?";
-    private static final String SELECT_ROL_ID = "SELECT idRol FROM Roles WHERE nombreRol = ?";
 
     public UsuarioDAO() {
         super();  // Llama al constructor de DbHelper
