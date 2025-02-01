@@ -15,11 +15,8 @@ import javax.swing.JOptionPane;
 public class PinturaDAO extends DbHelper implements IPinturaDAO {
     
     private static final String INSERT_PINTURA = "INSERT INTO Pinturas (titulo, anio, descripcion, codigoBarras, idCategoria, idAutor, idSala, imagen, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String INSERT_AUTOR = "INSERT INTO Autores (nombreAutor) VALUES (?)";
     private static final String SELECT_AUTOR_ID = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
-    private static final String INSERT_CATEGORIA = "INSERT INTO Categorias (categoria) VALUES (?)";
     private static final String SELECT_CATEGORIA_ID = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
-    private static final String INSERT_SALA = "INSERT INTO Salas (Salas) VALUES (?)";
     private static final String SELECT_SALA_ID = "SELECT idSala FROM Salas WHERE Salas = ?";
     private static final String UPDATE_PINTURA = "UPDATE Pinturas SET titulo = ?, anio = ?, descripcion = ?, codigoBarras = ?, idCategoria = ?, idAutor = ?, idSala = ?, imagen = ?, estado = ?, fechaModifica = ? WHERE idPintura = ?";
     private static final String DELETE_PINTURA = "UPDATE Pinturas SET estado = 'E', fechaModifica = ? WHERE idPintura = ?";
