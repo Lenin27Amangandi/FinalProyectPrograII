@@ -33,23 +33,18 @@ public class AdminPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); // Establecer fondo unificado
 
-        // Crear el Sidebar
         sidebar = createSidebar();
 
-        // Crear el panel principal con CardLayout
         mainPanel = new JPanel(new CardLayout());
         mainPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); // Fondo uniforme
 
-        // Mostrar la imagen en el panel "Inicio"
         mostrarInicio();
 
-        // Añadir los paneles de usuarios y pinturas
         mainPanel.add(usuarioPanel, "Usuarios");
         mainPanel.add(pinturaPanel, "Pinturas");
 
         add(mainPanel, BorderLayout.CENTER);
 
-        // Crear el botón para abrir y cerrar el sidebar
         toggleButton = ComponentFactory.crearBotonSidebar("☰", _ -> toggleSidebar());
         toggleButton.setFocusPainted(false);
         toggleButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_SIDEBAR);
@@ -57,20 +52,17 @@ public class AdminPanel extends JPanel {
         toggleButton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
         toggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Añadir el botón de alternar al panel
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topPanel.setOpaque(true); // Establecer opacidad verdadera para aplicar color de fondo
-        topPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); // Fondo uniforme
+        topPanel.setOpaque(true); 
+        topPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); 
         topPanel.add(toggleButton);
         add(topPanel, BorderLayout.NORTH);
 
-        // Crear los botones del Sidebar
         JButton btnHome = ComponentFactory.crearBotonSidebar("Inicio", _ -> mostrarInicio());
         JButton btnUsuarios = ComponentFactory.crearBotonSidebar("Usuarios", _ -> mostrarUsuarios());
         JButton btnPinturas = ComponentFactory.crearBotonSidebar("Pinturas", _ -> mostrarPinturas());
         btnVolver = ComponentFactory.crearBotonSidebar("← Volver", _ -> volver());
 
-        // Añadir botones al sidebar
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(btnHome);
         sidebar.add(Box.createVerticalStrut(10));
