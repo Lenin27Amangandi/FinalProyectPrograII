@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public abstract class DbHelper {
 
     private static final Logger LOGGER = Logger.getLogger(DbHelper.class.getName());
-    private static final String DB_URL = "jdbc:sqlite:database/museo.db";
+    private static final String DB_URL = "jdbc:sqlite:database/museo.sqlite";
     private static final String DRIVER = "org.sqlite.JDBC";
 
     private static Connection connection;
@@ -74,7 +74,7 @@ public abstract class DbHelper {
      * Verifica si la base de datos existe en la ruta especificada.
      */
     private static void verificarBaseDeDatos() {
-        File dbFile = new File("database/museo.db");
+        File dbFile = new File("database/museo.sqlite");
         if (!dbFile.exists()) {
             LOGGER.severe("La base de datos no existe en la ruta: " + dbFile.getAbsolutePath());
         }

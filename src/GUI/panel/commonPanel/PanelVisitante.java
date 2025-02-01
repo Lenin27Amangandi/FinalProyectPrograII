@@ -8,8 +8,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import BusinessLogic.entities.Pintura;
 import DataAccess.DAO.PinturaDAO;
+import DataAccess.DTO.PinturaDTO; // Importar PinturaDTO
 import utils.Estilo.*;
 
 public class PanelVisitante extends JPanel {
@@ -119,7 +119,6 @@ public class PanelVisitante extends JPanel {
             }
         });
     }
-
     private void buscarPintura(JTextField codigoInput) {
         String codigoBarras = codigoInput.getText();
         if (codigoBarras.isEmpty()) {
@@ -127,28 +126,36 @@ public class PanelVisitante extends JPanel {
             return;
         }
     
-        Pintura pintura = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
-        if (pintura != null) {
+        PinturaDTO pinturaDTO = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras); // Cambiar aquí: de int a String
+        if (pinturaDTO != null) {
             // Llamar por separado para mostrar los detalles y la imagen
-            mostrarDetallesPintura(pintura);
-            mostrarImagenPintura(pintura);
+            mostrarDetallesPintura(pinturaDTO);
+            mostrarImagenPintura(pinturaDTO);
         } else {
             resultadoArea.setText("No se encontró ninguna pintura con el código de barras ingresado.");
             imagenPinturaLabel.setIcon(null);
         }
     }
     
-    private void mostrarDetallesPintura(Pintura pintura) {
+    
+    private void mostrarDetallesPintura(PinturaDTO pinturaDTO) {
         // Mostrar detalles de la pintura en el JTextArea
         String detallesTexto = String.format(
-                "Título: %s\nAutor: %s\nAño: %d\nDescripción: %s\nUbicación: %s",
-                pintura.getTitulo(), pintura.getAutor(), pintura.getAnio(), pintura.getDescripcion(), pintura.getUbicacion());
+                "Título: %s\nAutor: %s\nAño: %d\nDescripción: %s\nUbicación: %s\nCategoría: %s",
+                pinturaDTO.getTitulo(), 
+                pinturaDTO.getNombreAutor(),  // Muestra el nombre del autor
+                pinturaDTO.getAnio(), 
+                pinturaDTO.getDescripcion(), 
+                pinturaDTO.getSalas(),  // Muestra la sala de la pintura
+                pinturaDTO.getcategoria()  // Muestra la categoría de la pintura
+        );
         resultadoArea.setText(detallesTexto);
     }
     
-    private void mostrarImagenPintura(Pintura pintura) {
+    
+    private void mostrarImagenPintura(PinturaDTO pinturaDTO) {
         // Mostrar imagen de la pintura
-        String imagenPath = "src/utils/Resources/paintings/" + pintura.getCodigoBarras() + ".jpg";
+        String imagenPath = "src/utils/Resources/paintings/" + pinturaDTO.getCodigoBarras() + ".jpg";
         File imagenFile = new File(imagenPath);
         if (imagenFile.exists()) {
             try {
@@ -160,9 +167,11 @@ public class PanelVisitante extends JPanel {
                 imagenPinturaLabel.setIcon(icon);
             } catch (IOException e) {
                 imagenPinturaLabel.setIcon(null); // Si hay error al cargar, poner el icono en null
+                e.printStackTrace();
             }
         } else {
             imagenPinturaLabel.setIcon(null); // Si no se encuentra la imagen, poner el icono en null
         }
     }
+    
 }

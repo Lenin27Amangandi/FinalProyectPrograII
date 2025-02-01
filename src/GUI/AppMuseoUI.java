@@ -38,7 +38,7 @@ public class AppMuseoUI {
             try {
                 // Llamamos a CrearDefaultUser() antes de continuar con el inicio de la app
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
-                usuarioDAO.CrearDefaultUser();  // Crear o verificar el usuario por defecto
+                usuarioDAO.cargarUsuarioPorDefecto();  // Crear o verificar el usuario por defecto
 
                 Thread.sleep(3550); // Simulamos la espera por la animación de carga
             } catch (InterruptedException e){

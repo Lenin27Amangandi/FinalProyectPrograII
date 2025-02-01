@@ -27,6 +27,27 @@ public class ComponentFactory {
         boton.addActionListener(action);
         return boton;
     }
+    // Método para crear botones en el Sidebar
+
+    public static JButton crearBotonExito(String texto, ActionListener action) {
+        JButton boton = new JButton(texto);
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setFocusPainted(false);
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
+    
+        // Establecer el color del texto a blanco
+        boton.setForeground(EstiloFuenteYColor.COLOR_EXITO);
+    
+        // Hacer el botón transparente
+        boton.setOpaque(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setBorder(null);
+        setHandCursor(boton);
+    
+        boton.addActionListener(action);
+        return boton;
+    }
 
     // Método para crear botones en el Sidebar
     public static JButton crearBotonSidebar(String texto, ActionListener action) {

@@ -1,46 +1,25 @@
 package DataAccess;
 
-import BusinessLogic.entities.*;
+import DataAccess.DTO.PinturaDTO;
 import java.util.List;
 
 public interface IPinturaDAO {
 
-    /**
-     * Inserta una nueva pintura en la base de datos.
-     * 
-     * @param pintura Objeto Pintura a insertar.
-     * @return true si la pintura fue insertada correctamente, false en caso contrario.
-     */
-    boolean insertarPintura(Pintura pintura);
+    // Insertar una nueva pintura
+    void insertarPintura(PinturaDTO pintura);
 
-    /**
-     * Actualiza una pintura existente en la base de datos.
-     * 
-     * @param pintura Objeto Pintura con los nuevos datos a actualizar.
-     * @return true si la pintura fue actualizada correctamente, false en caso contrario.
-     */
-    boolean actualizarPintura(Pintura pintura);
+    // Actualizar los datos de una pintura
+    void actualizarPintura(PinturaDTO pintura);
 
-    /**
-     * Elimina una pintura de la base de datos utilizando su código de barras.
-     * 
-     * @param codigoBarras Código de barras de la pintura a eliminar.
-     * @return true si la pintura fue eliminada correctamente, false en caso contrario.
-     */
-    boolean eliminarPintura(String codigoBarras);
+    // Eliminar una pintura (actualiza su estado a 'E')
+    void eliminarPintura(int idPintura);
 
-    /**
-     * Obtiene una pintura desde la base de datos utilizando su código de barras.
-     * 
-     * @param codigoBarras Código de barras de la pintura.
-     * @return Objeto Pintura correspondiente al código de barras proporcionado.
-     */
-    Pintura obtenerPinturaPorCodigoBarras(String codigoBarras);
+    // Obtener pintura por código de barras
+    PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras);
 
-    /**
-     * Obtiene todas las pinturas desde la base de datos.
-     * 
-     * @return Lista de objetos Pintura.
-     */
-    List<Pintura> obtenerTodasLasPinturas();
+    // Obtener todas las pinturas
+    List<PinturaDTO> obtenerTodasLasPinturas();
+
+    // Obtener una pintura por su ID
+    PinturaDTO obtenerPinturaPorId(int idPintura);
 }

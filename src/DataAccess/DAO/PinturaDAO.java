@@ -1,154 +1,220 @@
 package DataAccess.DAO;
 
-import DataAccess.IPinturaDAO;
 import DataAccess.DataHelper.DbHelper;
+import DataAccess.IPinturaDAO;
+import DataAccess.DTO.PinturaDTO;
 
-import java.io.File;
+import java.awt.HeadlessException;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import BusinessLogic.entities.Pintura;
+import javax.swing.JOptionPane;
 
 public class PinturaDAO extends DbHelper implements IPinturaDAO {
-
-    public PinturaDAO(){
+    
+    private static final String INSERT_PINTURA = "INSERT INTO Pinturas (titulo, anio, descripcion, codigoBarras, idCategoria, idAutor, idSala, imagen, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_AUTOR = "INSERT INTO Autores (nombreAutor) VALUES (?)";
+    private static final String SELECT_AUTOR_ID = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
+    private static final String INSERT_CATEGORIA = "INSERT INTO Categorias (categoria) VALUES (?)";
+    private static final String SELECT_CATEGORIA_ID = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
+    private static final String INSERT_SALA = "INSERT INTO Salas (Salas) VALUES (?)";
+    private static final String SELECT_SALA_ID = "SELECT idSala FROM Salas WHERE Salas = ?";
+    private static final String UPDATE_PINTURA = "UPDATE Pinturas SET titulo = ?, anio = ?, descripcion = ?, codigoBarras = ?, idCategoria = ?, idAutor = ?, idSala = ?, imagen = ?, estado = ?, fechaModifica = ? WHERE idPintura = ?";
+    private static final String DELETE_PINTURA = "UPDATE Pinturas SET estado = 'E', fechaModifica = ? WHERE idPintura = ?";
+    private static final String SELECT_PINTURA_BY_CODIGO = "SELECT * FROM Pinturas WHERE codigoBarras = ?";
+    private static final String SELECT_ALL_PINTURAS = "SELECT * FROM Pinturas WHERE estado != 'E'";
+    private static final String SELECT_PINTURA_BY_ID = "SELECT * FROM Pinturas WHERE idPintura = ?";
+    private static final String ACTUALIZAR_ESTADO_PINTURA = 
+        "UPDATE Pinturas SET estado = ? WHERE idPintura = ?";
+    
+    
+    public PinturaDAO() {
         super();
     }
 
     @Override
-    public boolean actualizarPintura(Pintura pintura) {
-        String query = "UPDATE Pinturas SET titulo = ?, autor = ?, anio = ?, descripcion = ?, categoria = ?, ubicacion = ?, imagen = ? WHERE codigoBarras = ?";
-        
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-        
-            stmt.setString(1, pintura.getTitulo());     // Título
-            stmt.setString(2, pintura.getAutor());      // Autor
-            stmt.setInt(3, pintura.getAnio());          // Año
-            stmt.setString(4, pintura.getDescripcion()); // Descripción
-            stmt.setString(5, pintura.getCategoria());  // Categoría
-            stmt.setString(6, pintura.getUbicacion());  // Ubicación
-            stmt.setString(7, pintura.getImagen());     // Imagen
-            stmt.setString(8, pintura.getCodigoBarras());  // Código de barras como clave
-        
-            return stmt.executeUpdate() > 0;
+    public void insertarPintura(PinturaDTO pintura) {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
+            
+            ps.setString(1, pintura.getTitulo());
+            ps.setInt(2, pintura.getAnio());
+            ps.setString(3, pintura.getDescripcion());
+            ps.setString(4, pintura.getCodigoBarras());
+            ps.setInt(5, pintura.getIdCategoria());
+            ps.setInt(6, pintura.getIdAutor());
+            ps.setInt(7, pintura.getIdSala());
+            ps.setString(8, pintura.getImagen());
+            ps.setString(9, pintura.getEstado());
+            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaCrea()));
+            ps.setTimestamp(11, Timestamp.valueOf(pintura.getFechaModifica()));
+            ps.executeUpdate();
+            
         } catch (SQLException e) {
-            System.err.println("Error al actualizar la pintura: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public boolean validarIdExistente(String autor, String categoria, String sala) throws HeadlessException, SQLException {
+        // Verificar si el autor existe
+        if (!existeAutor(autor)) {
+            JOptionPane.showMessageDialog(null, "El autor no existe en la base de datos.");
             return false;
         }
+        // Verificar si la categoría existe
+        if (!existeCategoria(categoria)) {
+            JOptionPane.showMessageDialog(null, "La categoría no existe en la base de datos.");
+            return false;
+        }
+        // Verificar si la sección existe
+        if (!existeSala(sala)) {
+            JOptionPane.showMessageDialog(null, "La sección no existe en la base de datos.");
+            return false;
+        }
+        return true;
     }
     
-
-    @Override
-    public boolean eliminarPintura(String codigoBarras) {
-        String query = "DELETE FROM pinturas WHERE codigobarras = ?";
-
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, codigoBarras);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error al eliminar la pintura: " + e.getMessage());
-            return false;
-        }
+    private boolean existeAutor(String autor) throws SQLException {
+        return obtenerId(SELECT_AUTOR_ID, autor) != -1;
+    }
+    
+    private boolean existeCategoria(String categoria) throws SQLException {
+        return obtenerId(SELECT_CATEGORIA_ID, categoria) != -1;
+    }
+    
+    private boolean existeSala(String sala) throws SQLException {
+        return obtenerId(SELECT_SALA_ID, sala) != -1;
     }
 
-    @Override
-    public boolean insertarPintura(Pintura pintura) {
-        String sql = "INSERT INTO Pinturas (titulo, autor, anio, descripcion, codigoBarras, categoria, ubicacion, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        File imagenFile = new File(pintura.getImagen());
-        if (!imagenFile.exists()) {
-            System.err.println("La imagen no existe en la ruta especificada.");
-            return false;
-        }
-        
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-        
-                stmt.setString(1, pintura.getTitulo());     // Título
-                stmt.setString(2, pintura.getAutor());      // Autor
-                stmt.setInt(3, pintura.getAnio());          // Año
-                stmt.setString(4, pintura.getDescripcion()); // Descripción
-                stmt.setString(5, pintura.getCodigoBarras()); // Código de barras
-                stmt.setString(6, pintura.getCategoria());  // Categoría
-                stmt.setString(7, pintura.getUbicacion());  // Ubicación
-                stmt.setString(8, pintura.getImagen());     // Imagen
-                
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("Pintura insertada correctamente.");
-                return true;
-            } else {
-                System.err.println("No se pudo insertar la pintura.");
-                return false;
+    private int obtenerId(String selectSQL, String valor) throws SQLException {
+        try (PreparedStatement ps = DbHelper.getConnection().prepareStatement(selectSQL)) {
+            ps.setString(1, valor);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
+        }
+        return -1;
+    }
+
+    @Override
+    public void actualizarPintura(PinturaDTO pintura) {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(UPDATE_PINTURA)) {
+            
+            ps.setString(1, pintura.getTitulo());
+            ps.setInt(2, pintura.getAnio());
+            ps.setString(3, pintura.getDescripcion());
+            ps.setString(4, pintura.getCodigoBarras());
+            ps.setInt(5, pintura.getIdCategoria());
+            ps.setInt(6, pintura.getIdAutor());
+            ps.setInt(7, pintura.getIdSala());
+            ps.setString(8, pintura.getImagen());
+            ps.setString(9, pintura.getEstado());
+            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaModifica()));
+            ps.setInt(11, pintura.getIdPintura());
+            ps.executeUpdate();
+            
         } catch (SQLException e) {
-            System.err.println("Error al insertar la pintura: " + e.getMessage());
-            return false;
+            e.printStackTrace();
         }
     }
 
+    public void actualizarEstadoPintura(int idPintura, String estado) throws SQLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_ESTADO_PINTURA)) {
+
+            // Establecemos los parámetros
+            ps.setString(1, estado);         // El nuevo estado ("E" en este caso)
+            ps.setInt(2, idPintura);         // El ID de la pintura que queremos actualizar
+
+            // Ejecutamos la actualización
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Error al actualizar el estado de la pintura: " + e.getMessage(), e);
+        }
+    }
 
     @Override
-    public Pintura obtenerPinturaPorCodigoBarras(String codigoBarras) {
-        String query = "SELECT titulo, autor, anio, descripcion, codigobarras, categoria, ubicacion, imagen FROM Pinturas WHERE codigobarras = ?";
+    public void eliminarPintura(int idPintura) {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
+            
+            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(2, idPintura);
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, codigoBarras);
-            ResultSet rs = stmt.executeQuery();
-
+    @Override
+    public PinturaDTO obtenerPinturaPorId(int idPintura) {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_ID)) {
+            
+            ps.setInt(1, idPintura);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Pintura(
-                    rs.getString("titulo"),
-                    rs.getString("autor"),
-                    rs.getInt("anio"),
-                    rs.getString("descripcion"),
-                    rs.getString("codigobarras"),
-                    rs.getString("categoria"),
-                    rs.getString("ubicacion"),
-                    rs.getString("imagen")
-                );
+                return mapResultSetToPinturaDTO(rs);
             }
+            
         } catch (SQLException e) {
-            System.err.println("Error al obtener pintura por código de barras: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public List<Pintura> obtenerTodasLasPinturas() {
-        List<Pintura> pinturas = new ArrayList<>();
-        String query = "SELECT titulo, autor, anio, descripcion, codigoBarras, categoria, ubicacion, imagen FROM Pinturas";
-
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                Pintura pintura = new Pintura();
-                pintura.setTitulo(rs.getString("titulo"));
-                pintura.setAutor(rs.getString("autor"));
-                pintura.setAnio(rs.getInt("anio"));
-                pintura.setDescripcion(rs.getString("descripcion"));
-                pintura.setCodigoBarras(rs.getString("codigoBarras"));
-                pintura.setCategoria(rs.getString("categoria"));
-                pintura.setUbicacion(rs.getString("ubicacion"));
-                pintura.setImagen(rs.getString("imagen"));
-
-                pinturas.add(pintura);
+    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) {
+        try (Connection connection = DbHelper.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_CODIGO)) {
+            ps.setString(1, codigoBarras);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToPinturaDTO(rs);
             }
         } catch (SQLException e) {
-            System.err.println("Error al obtener todas las pinturas: " + e.getMessage());
+            e.printStackTrace();
         }
+        return null;
+    }
 
+    @Override
+    public List<PinturaDTO> obtenerTodasLasPinturas() {
+        List<PinturaDTO> pinturas = new ArrayList<>();
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PINTURAS);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                pinturas.add(mapResultSetToPinturaDTO(rs));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return pinturas;
     }
 
-    
+    private PinturaDTO mapResultSetToPinturaDTO(ResultSet rs) throws SQLException {
+        PinturaDTO pintura = new PinturaDTO();
+        pintura.setIdPintura(rs.getInt("idPintura"));
+        pintura.setTitulo(rs.getString("titulo"));
+        pintura.setAnio(rs.getInt("anio"));
+        pintura.setDescripcion(rs.getString("descripcion"));
+        pintura.setCodigoBarras(rs.getString("codigoBarras"));
+        pintura.setIdCategoria(rs.getInt("idCategoria"));
+        pintura.setIdAutor(rs.getInt("idAutor"));
+        pintura.setIdSala(rs.getInt("idSala"));
+        pintura.setImagen(rs.getString("imagen"));
+        pintura.setEstado(rs.getString("estado"));
+        pintura.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
+        pintura.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+        return pintura;
+    }
 }

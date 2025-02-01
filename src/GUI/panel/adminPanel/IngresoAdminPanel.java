@@ -129,25 +129,26 @@ public class IngresoAdminPanel extends JPanel {
     private void iniciarSesion(JTextField usernameField, JPasswordField passwordField) {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
-
+    
         System.out.println("Usuario ingresado: " + username);
         System.out.println("Contraseña ingresada: " + password);
-
+    
         if (username.isEmpty() || password.isEmpty()) {
             mostrarMensaje("Por favor, complete todos los campos.", "Error");
             return;
         }
-
+    
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         boolean authenticated = usuarioDAO.verificarCredenciales(username, password);
-
+    
         if (authenticated) {
             mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
-            irPanelAdmin();
+            irPanelAdmin();  // Ir al panel admin después de la autenticación exitosa
         } else {
             mostrarMensaje("Usuario o contraseña incorrectos.", "Error");
         }
     }
+    
 
     private void mostrarMensaje(String mensaje, String titulo) {
         JOptionPane.showMessageDialog(
@@ -164,7 +165,7 @@ public class IngresoAdminPanel extends JPanel {
         dialog.setSize(400, 200);
         dialog.setLocationRelativeTo(this);
 
-        JLabel titulo = EstiloFuenteYColor.crearTituloSecundario("Escanee o ingrese el ID:");
+        JLabel titulo = EstiloFuenteYColor.crearTituloSecundario("Escanee su Credencial:");
         dialog.add(titulo, BorderLayout.NORTH);
 
         JPanel panelCentral = EstiloFuenteYColor.crearPanelTransparente();
@@ -196,13 +197,14 @@ public class IngresoAdminPanel extends JPanel {
 
         dialog.setVisible(true);
     }
-
+    
     private void verificarYAutenticarCredencial(JTextField identificacionField, JDialog dialog) {
         String identificacion = identificacionField.getText();
         if (identificacion.length() == 13) {
             UsuarioDAO usuarioDAO = new UsuarioDAO();
-            boolean authenticated = usuarioDAO.verificarCredencialesPorId(identificacion);
-
+            // Aquí se asume que la clave también se pasa como el mismo texto de identificación
+            boolean authenticated = usuarioDAO.verificarCredencialesPorIdentificacion(identificacion);
+    
             if (authenticated) {
                 mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
                 dialog.dispose();
@@ -215,6 +217,7 @@ public class IngresoAdminPanel extends JPanel {
             mostrarMensaje("El ID debe tener exactamente 13 caracteres.", "Error");
         }
     }
+    
 
     private void irPanelAdmin() {
         parentFrame.getContentPane().removeAll();

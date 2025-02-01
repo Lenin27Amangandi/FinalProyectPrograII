@@ -1,31 +1,27 @@
 package DataAccess;
 
-import BusinessLogic.entities.*;
+import DataAccess.DTO.UsuarioDTO;
 import java.util.List;
 
 public interface IUsuarioDAO {
     
-    // Agrega un nuevo usuario
-    String agregarUsuario(String nombre, String rol, String identificacion, String username, String password);
-
-    // Obtiene una lista de todos los usuarios
-    List<Usuario> obtenerUsuarios();
+    // Inserta un nuevo usuario en la base de datos
+    void insertarUsuario(UsuarioDTO usuario);
     
-    // Verifica las credenciales de un usuario
-    boolean verificarCredenciales(String username, String password);
+    // Actualiza los datos de un usuario existente
+    boolean actualizarUsuario(UsuarioDTO usuario);
     
-    // Verifica si un usuario existe por su ID
-    boolean verificarCredencialesPorId(String id);
+    // Elimina un usuario (cambia su estado a "E" de eliminado)
+    boolean eliminarUsuario(int idUsuario);
+    
+    // Obtiene un usuario por su identificacion
+    UsuarioDTO obtenerUsuarioPorIdentificacion(String identificacion);
+    
+    // Obtiene todos los usuarios activos
+    List<UsuarioDTO> obtenerTodosUsuarios();
+    
+    // Obtiene un usuario por su ID
+    UsuarioDTO obtenerUsuarioPorId(int idUsuario);
 
-    // Inserta un nuevo usuario
-    boolean insertarUsuario(Usuario usuario);
-
-    // Busca un usuario por ID, nombre o username
-    Usuario buscarUsuario(String criterio);
-
-    // Modifica los detalles de un usuario existente
-    boolean modificarUsuario(String id, String nombre, String rol, String username);
-
-    // Elimina un usuario
-    boolean eliminarUsuario(String identificacion);
+    UsuarioDTO obtenerUsuarioPorCredenciales(int idCredenciales);
 }
