@@ -9,16 +9,14 @@ import javax.imageio.ImageIO;
 public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
 
-    // Constructor que recibe la ruta de la imagen
     public BackgroundPanel(String imagePath) {
         setBackgroundImage(imagePath);
     }
 
-    // Método para cargar la imagen
     public void setBackgroundImage(String imagePath) {
         try {
             backgroundImage = ImageIO.read(new File(imagePath));
-            repaint(); // Redibujar el panel cuando se cambia la imagen
+            repaint(); 
         } catch (IOException e) {
             System.err.println("No se pudo cargar la imagen de fondo: " + e.getMessage());
         }
