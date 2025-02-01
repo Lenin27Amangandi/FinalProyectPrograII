@@ -33,7 +33,7 @@ public class PanelVisitante extends JPanel {
         topPanel.setOpaque(false);
         topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         
-        JButton volverButton = ComponentFactory.crearBotonPanelVisitante("\u2190 Volver", _ -> {
+        JButton volverButton = ComponentFactory.crearBotonPanelVisitante("\u2190 Volver", e -> {
             parentFrame.getContentPane().removeAll();
             parentFrame.add(new InicioPanel(parentFrame));
             parentFrame.revalidate();
@@ -59,7 +59,7 @@ public class PanelVisitante extends JPanel {
         codigoInput.setSelectedTextColor(Color.WHITE); // Color de texto seleccionado
         codigoInput.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO); // Aplica solo el borde inferior
 
-        JButton buscarButton = ComponentFactory.crearBotonIcono("buscarpaint.png", _ -> buscarPintura(codigoInput));
+        JButton buscarButton = ComponentFactory.crearBotonIcono("buscarpaint.png", e -> buscarPintura(codigoInput));
 
         buscarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cursor de mano
 

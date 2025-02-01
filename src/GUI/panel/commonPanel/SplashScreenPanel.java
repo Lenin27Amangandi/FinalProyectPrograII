@@ -62,7 +62,7 @@ public class SplashScreenPanel extends JPanel {
      * el ángulo de rotación para el círculo animado y el porcentaje de carga.
      */
     private void startLoadingAnimation() {
-        timer = new Timer(50, _ -> {
+        timer = new Timer(50, e -> {
             angle += 20;
             if (angle >= MAX_ANGLE) {
                 angle = MAX_ANGLE;

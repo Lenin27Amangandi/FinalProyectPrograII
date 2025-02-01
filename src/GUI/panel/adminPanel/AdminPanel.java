@@ -45,7 +45,7 @@ public class AdminPanel extends JPanel {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        toggleButton = ComponentFactory.crearBotonSidebar("☰", _ -> toggleSidebar());
+        toggleButton = ComponentFactory.crearBotonSidebar("☰", e -> toggleSidebar());
         toggleButton.setFocusPainted(false);
         toggleButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_SIDEBAR);
         toggleButton.setForeground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
@@ -58,10 +58,10 @@ public class AdminPanel extends JPanel {
         topPanel.add(toggleButton);
         add(topPanel, BorderLayout.NORTH);
 
-        JButton btnHome = ComponentFactory.crearBotonSidebar("Inicio", _ -> mostrarInicio());
-        JButton btnUsuarios = ComponentFactory.crearBotonSidebar("Usuarios", _ -> mostrarUsuarios());
-        JButton btnPinturas = ComponentFactory.crearBotonSidebar("Pinturas", _ -> mostrarPinturas());
-        btnVolver = ComponentFactory.crearBotonSidebar("← Volver", _ -> volver());
+        JButton btnHome = ComponentFactory.crearBotonSidebar("Inicio", e -> mostrarInicio());
+        JButton btnUsuarios = ComponentFactory.crearBotonSidebar("Usuarios", e -> mostrarUsuarios());
+        JButton btnPinturas = ComponentFactory.crearBotonSidebar("Pinturas", e -> mostrarPinturas());
+        btnVolver = ComponentFactory.crearBotonSidebar("← Volver", e -> volver());
 
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(btnHome);

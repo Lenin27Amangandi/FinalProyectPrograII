@@ -27,7 +27,7 @@ public class IngresoAdminPanel extends JPanel {
         volverPanel.setOpaque(false);  // Establecer como transparente si deseas que el fondo no cubra el contenido
 
         // Usar el método crearBotonConIcono para crear el botón con solo el ícono
-        JButton volverButton = ComponentFactory.crearBotonIcono("back.png", _ -> volverAGInicioPanel());
+        JButton volverButton = ComponentFactory.crearBotonIcono("back.png", e -> volverAGInicioPanel());
         volverButton.setPreferredSize(new Dimension(40, 40)); // Ajustar el tamaño del botón si es necesario
         volverButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
         volverPanel.add(volverButton);
@@ -84,8 +84,8 @@ public class IngresoAdminPanel extends JPanel {
         botonesPanelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));  // Alineación central para los botones de la parte inferior
         botonesPanelInferior.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO); // Establecer el mismo fondo
         // Crear botones con iconos y texto
-        JButton loginButton = ComponentFactory.crearBotonConTextoYIcono("Iniciar Sesión", "ingresar.png", _ -> iniciarSesion(usernameField, passwordField));
-        JButton scanButton = ComponentFactory.crearBotonConTextoYIcono("Escanear Credencial", "credencial.png", _ -> mostrarVentanaEscanearCredencial());
+        JButton loginButton = ComponentFactory.crearBotonConTextoYIcono("Iniciar Sesión", "ingresar.png", e -> iniciarSesion(usernameField, passwordField));
+        JButton scanButton = ComponentFactory.crearBotonConTextoYIcono("Escanear Credencial", "credencial.png", e -> mostrarVentanaEscanearCredencial());
 
         // Aplicar cursor de mano a los botones
         loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -123,7 +123,7 @@ public class IngresoAdminPanel extends JPanel {
         botonesPanelInferior.revalidate();
         botonesPanelInferior.repaint();
 
-        passwordField.addActionListener(_ -> iniciarSesion(usernameField, passwordField));
+        passwordField.addActionListener(e -> iniciarSesion(usernameField, passwordField));
     }
 
     private void iniciarSesion(JTextField usernameField, JPasswordField passwordField) {
@@ -174,7 +174,7 @@ public class IngresoAdminPanel extends JPanel {
         dialog.add(panelCentral, BorderLayout.CENTER);
 
         JPanel panelInferior = EstiloFuenteYColor.crearPanelTransparente();
-        JButton cancelButton = ComponentFactory.crearBoton("Cancelar", _ -> dialog.dispose());
+        JButton cancelButton = ComponentFactory.crearBoton("Cancelar", e -> dialog.dispose());
         panelInferior.add(cancelButton);
         dialog.add(panelInferior, BorderLayout.SOUTH);
 

@@ -94,9 +94,9 @@ public class PinturaPanel extends JPanel {
                         
         // Panel de botones
         panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        btnAgregarPintura = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
-        btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> activarModoModificar());
-        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", _ -> eliminarPintura());
+        btnAgregarPintura = ComponentFactory.crearBoton("Agregar", e -> mostrarFormularioAgregar());
+        btnModificarPintura = ComponentFactory.crearBoton("Modificar", e -> activarModoModificar());
+        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", e -> eliminarPintura());
                         
         panelBotones.add(btnAgregarPintura);
         panelBotones.add(btnModificarPintura);
@@ -107,7 +107,7 @@ public class PinturaPanel extends JPanel {
         cargarPinturas();
                         
         // Agregar eventos de selección a la tabla
-        tablaPinturas.getSelectionModel().addListSelectionListener(_ -> mostrarImagenSeleccionada());
+        tablaPinturas.getSelectionModel().addListSelectionListener(E -> mostrarImagenSeleccionada());
         tablaPinturas.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
                 activarModoModificar();
@@ -153,11 +153,11 @@ public class PinturaPanel extends JPanel {
             lblImagenPreview.setPreferredSize(new Dimension(200, 200));
                     
             // Botón de guardar
-            JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
+            JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", e -> {
                 try {
                     agregarPintura();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
                 });
             
@@ -208,11 +208,11 @@ public class PinturaPanel extends JPanel {
                     txtIdSala = ComponentFactory.crearCampoTextoTransparente(sala);
                     panelFormulario.add(txtIdSala);
                         
-                    JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", _ -> {
+                    JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", e -> {
                         try {
                             actualizarPintura(pintura.getIdPintura());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
                         }
                         });
                     

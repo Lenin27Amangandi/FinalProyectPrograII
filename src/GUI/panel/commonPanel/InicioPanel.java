@@ -31,7 +31,7 @@ public class InicioPanel extends JPanel {
         textIconButton.setBorder(EstiloBordes.BORDE_BOTON_SIDEBAR);
         textIconButton.setToolTipText("Abrir menú");
         textIconButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
-        textIconButton.addActionListener(_ -> toggleSidebar());
+        textIconButton.addActionListener(e -> toggleSidebar());
 
         // Panel superior con el botón
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -54,11 +54,11 @@ public class InicioPanel extends JPanel {
         JLabel titleLabel = ComponentFactory.crearTituloSidebar("Opciones"); // cambiar por una imagen
 
         // Botón de "Visitar Museo"
-        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", _ -> irModoVisitante());
+        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", e -> irModoVisitante());
         visitarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
 
         // Botón de "Administración"
-        JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", _ -> irLogin());
+        JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", e -> irLogin());
         adminButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
 
         panel.add(Box.createVerticalStrut(20));
