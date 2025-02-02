@@ -32,7 +32,7 @@ public class UsuarioPanel extends JPanel {
 
         tablaUsuarios = new JTable();
         tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tablaUsuarios.getSelectionModel().addListSelectionListener(_ -> mostrarFormularioModificar());
+        tablaUsuarios.getSelectionModel().addListSelectionListener(e -> mostrarFormularioModificar());
         tablaUsuarios.setRowHeight(25);
         tablaUsuarios.setGridColor(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
         tablaUsuarios.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
@@ -48,9 +48,9 @@ public class UsuarioPanel extends JPanel {
 
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelBotones.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
-        btnAgregarUsuario = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
-        btnModificarUsuario = ComponentFactory.crearBoton("Modificar", _ -> activarModoModificar());
-        btnEliminarUsuario = ComponentFactory.crearBoton("Eliminar", _ -> eliminarUsuario());
+        btnAgregarUsuario = ComponentFactory.crearBoton("Agregar", e -> mostrarFormularioAgregar());
+        btnModificarUsuario = ComponentFactory.crearBoton("Modificar", e -> activarModoModificar());
+        btnEliminarUsuario = ComponentFactory.crearBoton("Eliminar", e -> eliminarUsuario());
 
         panelBotones.add(btnAgregarUsuario);
         panelBotones.add(btnModificarUsuario);
@@ -104,11 +104,11 @@ public class UsuarioPanel extends JPanel {
         txtPassword = ComponentFactory.crearCampoTextoPasswordTransparente();  
         panelFormulario.add(txtPassword);
     
-        JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
+        JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", e -> {
             try {
                 agregarUsuario(comboRoles);  
-            } catch (HeadlessException | SQLException e) {
-                e.printStackTrace();
+            } catch (HeadlessException | SQLException ex) {
+                ex.printStackTrace();
             }
         });
         panelFormulario.add(btnGuardar);
@@ -175,11 +175,11 @@ public class UsuarioPanel extends JPanel {
             txtIdentificacion = ComponentFactory.crearCampoTextoTransparente(identificacion);  
             panelFormulario.add(txtIdentificacion);
 
-            JButton btnModificar = ComponentFactory.crearBoton("Modificar", _ -> {
+            JButton btnModificar = ComponentFactory.crearBoton("Modificar", e -> {
                 try {
                     modificarUsuario(row, comboRolesModificar);  
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
             });
 

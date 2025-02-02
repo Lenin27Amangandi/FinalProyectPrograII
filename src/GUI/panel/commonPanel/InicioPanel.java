@@ -48,10 +48,10 @@ public class InicioPanel extends JPanel {
 
         JLabel titleLabel = ComponentFactory.crearTituloSidebar("Opciones");
 
-        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", _ -> irModoVisitante());
+        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", e -> irModoVisitante());
         visitarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
 
-        JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", _ -> irLogin());
+        JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", e -> irLogin());
         adminButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
 
         panel.add(Box.createVerticalStrut(20));

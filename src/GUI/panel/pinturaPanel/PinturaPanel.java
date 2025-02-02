@@ -70,21 +70,21 @@ public class PinturaPanel extends JPanel {
         add(panelImagen, BorderLayout.EAST);
                         
         panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        btnAgregarPintura = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
-        btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> {
+        btnAgregarPintura = ComponentFactory.crearBoton("Agregar", e -> mostrarFormularioAgregar());
+        btnModificarPintura = ComponentFactory.crearBoton("Modificar", e -> {
             try {
                 activarModoModificar();
-            } catch (UsuarioBLException e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-                e.printStackTrace();
+            } catch (UsuarioBLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace();
             }
         });
-        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", _ -> {
+        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", e -> {
             try {
                 eliminarPintura();
-            } catch (UsuarioBLException | SQLException e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-                e.printStackTrace();
+            } catch (UsuarioBLException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace();
             }
         });
                         
@@ -95,12 +95,12 @@ public class PinturaPanel extends JPanel {
                         
         cargarPinturas();
                         
-        tablaPinturas.getSelectionModel().addListSelectionListener(_ -> {
+        tablaPinturas.getSelectionModel().addListSelectionListener(e -> {
             try {
                 mostrarImagenSeleccionada();
-            } catch (UsuarioBLException | SQLException e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-                e.printStackTrace();
+            } catch (UsuarioBLException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace();
             }
         });
         tablaPinturas.getSelectionModel().addListSelectionListener(event -> {
@@ -150,11 +150,11 @@ public class PinturaPanel extends JPanel {
                     
             lblImagenPreview.setPreferredSize(new Dimension(200, 200));
                     
-            JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
+            JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", e -> {
                 try {
                     agregarPintura();
-                } catch (UsuarioBLException | SQLException e) {
-                    e.printStackTrace();
+                } catch (UsuarioBLException | SQLException ex) {
+                    ex.printStackTrace();
                 }
                 });
             
@@ -205,11 +205,11 @@ public class PinturaPanel extends JPanel {
                     txtIdSala = ComponentFactory.crearCampoTextoTransparente(sala);
                     panelFormulario.add(txtIdSala);
                         
-                    JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", _ -> {
+                    JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", e -> {
                         try {
                             actualizarPintura(pintura.getIdPintura());
-                        } catch (UsuarioBLException | HeadlessException | SQLException e) {
-                            e.printStackTrace();
+                        } catch (UsuarioBLException | HeadlessException | SQLException ex) {
+                            ex.printStackTrace();
                         }
                         });
                     
@@ -256,13 +256,10 @@ public class PinturaPanel extends JPanel {
             try {
                 anio = Integer.parseInt(txtAnio.getText());
                 if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
-                    // Mostrar un mensaje de error si el año no es válido
                     JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
                                                   "Año inválido", JOptionPane.ERROR_MESSAGE);
-                    return;  // Termina el método para no continuar con el proceso
                 }
             } catch (NumberFormatException e) {
-                // Si la conversión a número falla, mostramos un mensaje de error
                 JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
                                               "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -372,13 +369,10 @@ public class PinturaPanel extends JPanel {
         try {
         anio = Integer.parseInt(txtAnio.getText());
         if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
-            // Mostrar un mensaje de error si el año no es válido
             JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
                                           "Año inválido", JOptionPane.ERROR_MESSAGE);
-            return;  // Termina el método para no continuar con el proceso
         }
     } catch (NumberFormatException e) {
-        // Si la conversión a número falla, mostramos un mensaje de error
         JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
                                       "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
         return;

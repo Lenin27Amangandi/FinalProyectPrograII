@@ -60,11 +60,11 @@ import utils.Estilo.*;
             // codigoInput.setCaretColor(Color.WHITE); 
             codigoInput.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO); 
     
-            JButton buscarButton = ComponentFactory.crearBotonIcono("buscarpaint.png", _ -> {
+            JButton buscarButton = ComponentFactory.crearBotonIcono("buscarpaint.png", e -> {
                 try {
                     buscarPintura(codigoInput);
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
             });
     
