@@ -176,7 +176,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
                        "JOIN Autores a ON p.idAutor = a.idAutor " +
                        "JOIN Categorias c ON p.idCategoria = c.idCategoria " +
                        "JOIN Salas s ON p.idSala = s.idSala " +
-                       "WHERE p.codigoBarras = ?";
+                       "WHERE p.codigoBarras = ? AND p.estado = 'A'";  // Filtrando por estado 'A'
     
         try (Connection connection = DbHelper.getConnection(); 
              PreparedStatement ps = connection.prepareStatement(query)) {
