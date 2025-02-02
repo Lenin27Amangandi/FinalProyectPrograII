@@ -20,7 +20,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     private static final String SELECT_SALA_ID = "SELECT idSala FROM Salas WHERE Salas = ?";
     private static final String UPDATE_PINTURA = "UPDATE Pinturas SET titulo = ?, anio = ?, descripcion = ?, codigoBarras = ?, idCategoria = ?, idAutor = ?, idSala = ?, imagen = ?, estado = ?, fechaModifica = ? WHERE idPintura = ?";
     private static final String DELETE_PINTURA = "UPDATE Pinturas SET estado = 'E', fechaModifica = ? WHERE idPintura = ?";
-    private static final String SELECT_PINTURA_BY_CODIGO = "SELECT * FROM Pinturas WHERE codigoBarras = ?";
     private static final String SELECT_ALL_PINTURAS = "SELECT * FROM Pinturas WHERE estado != 'E'";
     private static final String SELECT_PINTURA_BY_ID = "SELECT * FROM Pinturas WHERE idPintura = ?";
     private static final String ACTUALIZAR_ESTADO_PINTURA = 
