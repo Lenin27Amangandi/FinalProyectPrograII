@@ -191,6 +191,23 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         }
         return usuario;
     }
+
+    public int obtenerIdPorIdentificacion(String identificacion) {
+        String query = "SELECT idUsuarios FROM Usuarios WHERE identificacion = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, identificacion);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idUsuarios");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Retorna -1 si no encuentra el usuario
+    }
+    
     
     private void verificarRolesPorDefecto() {
         try (Connection connection = DbHelper.getConnection();

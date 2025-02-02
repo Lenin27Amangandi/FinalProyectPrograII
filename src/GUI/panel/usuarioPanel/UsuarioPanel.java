@@ -97,9 +97,11 @@ public class UsuarioPanel extends JPanel {
         panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Identificación:"));
         txtIdentificacion = ComponentFactory.crearCampoTextoTransparente("");  
         panelFormulario.add(txtIdentificacion);
+
         panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Nombre de usuario:"));
         txtUsername = ComponentFactory.crearCampoTextoTransparente("");  
         panelFormulario.add(txtUsername);
+        
         panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Contraseña:"));
         txtPassword = ComponentFactory.crearCampoTextoPasswordTransparente();  
         panelFormulario.add(txtPassword);

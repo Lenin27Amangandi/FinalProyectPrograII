@@ -13,7 +13,7 @@ import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO; 
 import utils.Estilo.*;
 
-    public class PanelVisitante extends JPanel {
+public class PanelVisitante extends JPanel {
         private JTextArea resultadoArea;
         private JTextArea tituloArea;  
         private JLabel imagenPinturaLabel;

@@ -119,21 +119,31 @@ public class IngresoAdminPanel extends JPanel {
             boolean authenticated = usuarioDAO.verificarCredencialesYEstado(username, password);
             if (authenticated) {
                 int idUsuario = usuarioDAO.obtenerIdPorUsuario(username);
-                
+    
                 boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
                 String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
-                
+    
                 if (rol != null) {
                     mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
-                    
                     irPanelAdmin(rol);
                 } else {
-                    mostrarMensaje("Usuario o contraseña incorrectos", "Error");
+                    mostrarPanelAviso();  // Mostrar el panel de aviso si el rol no es válido
                 }
-            } 
+            } else {
+                mostrarPanelAviso();  // Mostrar el panel de aviso si las credenciales son incorrectas
+            }
         } catch (Exception e) {
             mostrarMensaje("Error al conectar con la base de datos.", "Error");
         }
+    }
+    
+    private void mostrarPanelAviso() {
+        JPanel panelAviso = new JPanel();
+        panelAviso.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        JLabel avisoLabel = new JLabel("Usuario o contraseña incorrectos.");
+        panelAviso.add(avisoLabel);
+        
+        JOptionPane.showMessageDialog(this, panelAviso, "Error", JOptionPane.ERROR_MESSAGE);
     }
     
     private void verificarYAutenticarCredencial(JTextField identificacionField, JDialog dialog) {
@@ -141,14 +151,23 @@ public class IngresoAdminPanel extends JPanel {
         if (identificacion.length() < 13) {
             return;
         }
-
-        try{
+    
+        try {
             UsuarioDAO usuarioDAO = new UsuarioDAO();
             boolean authenticated = usuarioDAO.verificarCredencialesPorIdentificacionYEstado(identificacion);
             if (authenticated) {
-                mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
-                dialog.dispose();
-                irPanelAdmin(identificacion);
+                int idUsuario = usuarioDAO.obtenerIdPorIdentificacion(identificacion);
+                
+                boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
+                String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
+    
+                if (rol != null) {
+                    mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
+                    dialog.dispose();
+                    irPanelAdmin(rol);
+                } else {
+                    mostrarMensaje("No tiene permisos de administrador.", "Error");
+                }
             } else {
                 mostrarMensaje("ID de credencial incorrecto.", "Error");
                 identificacionField.setText(""); 
@@ -157,6 +176,7 @@ public class IngresoAdminPanel extends JPanel {
             mostrarMensaje("Error al conectar con la base de datos.", "Error");
         }
     }
+    
     
     private void mostrarMensaje(String mensaje, String titulo) {
         JOptionPane.showMessageDialog(
