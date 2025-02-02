@@ -4,6 +4,7 @@ import DataAccess.DataHelper.DbHelper;
 import DataAccess.IUsuarioDAO;
 import DataAccess.DTO.UsuarioDTO;
 
+import static DataAccess.DataHelper.DbHelper.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,30 +31,26 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     private static final String SELECT_ROLE_BY_NAME = "SELECT idRol FROM Roles WHERE nombreRol = ?";
 
     public UsuarioDAO() {
-        super();  // Llama al constructor de DbHelper
-        verificarRolesPorDefecto();  // Verificar y agregar roles por defecto si no existen
-        cargarUsuarioPorDefecto();  // Cargar y agregar usuario si no existe
+        super();
+        verificarRolesPorDefecto();
+        cargarUsuarioPorDefecto();
     }
 
     private void verificarRolesPorDefecto() {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement psAdmin = connection.prepareStatement(SELECT_ROLE_BY_NAME)) {
 
-            // Verificar si el rol 'Administrador' existe
             psAdmin.setString(1, "Administrador");
             ResultSet rsAdmin = psAdmin.executeQuery();
             if (!rsAdmin.next()) {
-                // Insertar 'Administrador' si no existe
                 try (PreparedStatement psInsert = connection.prepareStatement("INSERT INTO Roles (nombreRol) VALUES ('Administrador')")) {
                     psInsert.executeUpdate();
                 }
             }
 
-            // Verificar si el rol 'Supervisor' existe
             psAdmin.setString(1, "Supervisor");
             ResultSet rsSupervisor = psAdmin.executeQuery();
             if (!rsSupervisor.next()) {
-                // Insertar 'Supervisor' si no existe
                 try (PreparedStatement psInsert = connection.prepareStatement("INSERT INTO Roles (nombreRol) VALUES ('Supervisor')")) {
                     psInsert.executeUpdate();
                 }
@@ -68,23 +65,19 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         try (FileInputStream fis = new FileInputStream("src/utils/Resources/config/config.properties")) {
             properties.load(fis);
 
-            // Obtener los valores del archivo de configuración
             String username = properties.getProperty("username");
             String password = properties.getProperty("password");
             String nombre = properties.getProperty("nombre");
             String rol = properties.getProperty("rol");
             String identificacion = properties.getProperty("identificacion");
 
-            // Imprimir para depurar y verificar si los valores están bien cargados
             System.out.println("username: " + username);
             System.out.println("password: " + password);
             System.out.println("nombre: " + nombre);
             System.out.println("rol: " + rol);
             System.out.println("identificacion: " + identificacion);
 
-            // Verificar si el usuario ya existe por identificacion
             if (obtenerUsuarioPorIdentificacion(identificacion) == null) {
-                // Si no existe, insertamos el nuevo usuario
                 insertarUsuarioDesdeConfig(username, password, nombre, rol, identificacion);
             } else {
                 System.out.println("El usuario ya existe en la base de datos.");
@@ -95,28 +88,61 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         }
     }
 
+    public boolean verificarRolPorId(int idUsuario) {
+        String query = "SELECT idRol FROM Usuarios WHERE idUsuarios = ?";
+        
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, idUsuario);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int idRol = rs.getInt("idRol");
+                    return idRol == 1 || idRol == 2; // 1 = Administrador, 2 = Supervisor
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public int obtenerIdPorUsuario(String username) {
+        String query = "SELECT u.idUsuarios FROM Usuarios u JOIN Credenciales c ON u.idCredenciales = c.idCredenciales WHERE c.username = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, username);
+    
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idUsuarios");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Si no se encuentra el usuario
+    }
+    
+
+
     private void insertarUsuarioDesdeConfig(String username, String password, String nombre, String rol, String identificacion) {
         try (Connection connection = DbHelper.getConnection()) {
-            // Verificar si el username ya existe
             if (existeUsername(connection, username)) {
                 System.out.println("El username ya existe. No se insertará.");
-                return;  // Si el username ya existe, no continuar con la inserción
+                return; 
             }
 
-            // Insertar credenciales
             int idCredenciales = insertarCredenciales(username, password, connection);
-
-            // Obtener el rol del usuario
             int idRol = obtenerRolId(rol, connection);
 
-            // Insertar usuario
             String insertUsuario = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement psUsuario = connection.prepareStatement(insertUsuario)) {
                 psUsuario.setString(1, nombre);
                 psUsuario.setString(2, identificacion);
-                psUsuario.setInt(3, idCredenciales);  // Usamos el idCredenciales generado
-                psUsuario.setInt(4, idRol);           // Usamos el idRol obtenido
-                psUsuario.setString(5, "A");          // Estado activo
+                psUsuario.setInt(3, idCredenciales); 
+                psUsuario.setInt(4, idRol);           
+                psUsuario.setString(5, "A");         
                 psUsuario.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
                 psUsuario.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
                 psUsuario.executeUpdate();
@@ -138,14 +164,14 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getString("nombreRol"); // Retorna el nombre del rol
+                    return rs.getString("nombreRol");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     
-        return null; // Retorna null si no se encuentra el usuario o hay un error
+        return null; 
     }
 
     private int insertarCredenciales(String username, String password, Connection connection) throws SQLException {
@@ -157,10 +183,10 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
 
             ResultSet generatedKeys = psCredenciales.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return generatedKeys.getInt(1); // Devuelve el id generado
+                return generatedKeys.getInt(1); 
             }
         }
-        return -1;  // Si no se generó ningún ID
+        return -1;  
     }
 
     public int obtenerRolId(String nombrerol, Connection connection) throws SQLException {
@@ -171,7 +197,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             if (rs.next()) {
                 return rs.getInt("idRol");
             } else {
-                // Si no existe el rol, insertarlo
                 String insertRol = "INSERT INTO Roles (nombreRol) VALUES (?)";
                 try (PreparedStatement psInsert = connection.prepareStatement(insertRol, Statement.RETURN_GENERATED_KEYS)) {
                     psInsert.setString(1, nombrerol);
@@ -183,9 +208,8 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 }
             }
         }
-        return -1;  // Rol no encontrado ni insertado
+        return -1;  
     }
-
 
     @Override
     public void insertarUsuario(UsuarioDTO usuario) {
@@ -194,23 +218,20 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         }
     
         try (Connection connection = DbHelper.getConnection()) {
-            connection.setAutoCommit(false); // Inicia transacción
+            connection.setAutoCommit(false); 
     
-            // Insertar credenciales y obtener el ID generado
             int idCredenciales = insertarCredenciales(usuario.getUsername(), usuario.getPassword(), connection);
             if (idCredenciales == -1) {
                 throw new SQLException("Error al obtener idCredenciales.");
             }
     
-            // Insertar usuario con el idCredenciales obtenido
             try (PreparedStatement ps = connection.prepareStatement(INSERT_USUARIO)) {
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2, usuario.getIdentificacion());
-                ps.setInt(3, idCredenciales); // Asigna el idCredenciales obtenido
+                ps.setInt(3, idCredenciales);
                 ps.setInt(4, usuario.getIdRol());
                 ps.setString(5, usuario.getEstado());
     
-                // Manejo de fechas
                 LocalDateTime fechaCrea = usuario.getFechaCrea() != null ? usuario.getFechaCrea() : LocalDateTime.now();
                 LocalDateTime fechaModifica = usuario.getFechaModifica() != null ? usuario.getFechaModifica() : LocalDateTime.now();
     
@@ -220,7 +241,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 ps.executeUpdate();
             }
     
-            connection.commit(); // Confirma transacción
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -232,12 +253,11 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             stmt.setString(1, identificacion);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Devuelve true si ya existe
+                return rs.getInt(1) > 0; 
             }
         }
         return false;
     }    
-    
     
     @Override
     public boolean actualizarUsuario(UsuarioDTO usuario) {
@@ -250,9 +270,8 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             ps.setString(3, usuario.getIdentificacion());
     
             int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;  // Si no se actualizó ninguna fila, se retorna false
+            return rowsUpdated > 0;  
         } catch (SQLException e) {
-            // Aquí puedes agregar más detalles sobre el error en el log
             e.printStackTrace();
             return false;
         }
@@ -261,9 +280,9 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     
     @Override
     public boolean eliminarUsuario(int idUsuario) {
-        UsuarioDTO usuario = obtenerUsuarioPorId(idUsuario); // Verificar si el usuario existe
+        UsuarioDTO usuario = obtenerUsuarioPorId(idUsuario); 
         if (usuario == null) {
-            return false;  // Si no existe, no hacer nada
+            return false;  
         }
     
         try (Connection connection = DbHelper.getConnection();
@@ -273,7 +292,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             ps.setInt(2, idUsuario);
     
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;  // Si se afectaron filas, lo que indica éxito
+            return rowsAffected > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -286,15 +305,13 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, identificacion);
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;  // Si se actualizó al menos una fila, se considera exitoso
+            return rowsAffected > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
     
-    
-
     @Override
     public List<UsuarioDTO> obtenerTodosUsuarios() {
         List<UsuarioDTO> usuarios = new ArrayList<>();
@@ -311,7 +328,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 usuario.setEstado(rs.getString("estado"));
                 usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
                 usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
-                usuario.setNombreRol(rs.getString("nombreRol")); // Ahora obtenemos el nombre del rol directamente
+                usuario.setNombreRol(rs.getString("nombreRol")); 
                 usuarios.add(usuario);
             }
     
@@ -321,7 +338,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         return usuarios;
     }
     
-
     @Override
     public UsuarioDTO obtenerUsuarioPorId(int idUsuario) {
         UsuarioDTO usuario = null;
@@ -397,55 +413,54 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         return usuario;
     }
 
-    // En UsuarioDAO
-    public boolean verificarCredenciales(String username, String password) {
-        String query = "SELECT * FROM Credenciales WHERE username = ? AND password = ?";
-        
+    public boolean verificarCredencialesYEstado(String username, String password) {
+        String query = "SELECT u.estado FROM Credenciales c " +
+        "JOIN Usuarios u ON c.idCredenciales = u.idCredenciales " + 
+        "WHERE c.username = ? AND c.password = ?";
+
         try (Connection connection = DbHelper.getConnection();
             PreparedStatement ps = connection.prepareStatement(query)) {
             
-            ps.setString(1, username);  // Establecemos la identificación
-            ps.setString(2, password);  // Establecemos la clave (en este ejemplo, asumiendo que la clave se pasa como texto)
+            ps.setString(1, username);
+            ps.setString(2, password); 
             
             try (ResultSet rs = ps.executeQuery()) {
-                // Si hay resultados, las credenciales son correctas
-                return rs.next();
+                if (rs.next()){
+                    String estado = rs.getString("estado");
+                    return "A".equals(estado);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         
-        return false;  // Si no se encuentra el usuario o hay algún error, retornamos false
+        return false;
     }
 
-        // En UsuarioDAO
-        public boolean verificarCredencialesPorIdentificacion(String identificacion) {
-            String query = "SELECT * FROM Usuarios WHERE identificacion = ?";
+        public boolean verificarCredencialesPorIdentificacionYEstado(String identificacion) {
+            String query = "SELECT COUNT(*) FROM Usuarios WHERE identificacion = ? AND estado = 'A'";
             
             try (Connection connection = DbHelper.getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)) {
                 
-                ps.setString(1, identificacion);  // Establecemos la identificación
+                ps.setString(1, identificacion);
                 
                 try (ResultSet rs = ps.executeQuery()) {
-                    // Si hay resultados, la identificación existe
                     return rs.next();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             
-            return false;  // Si no se encuentra el usuario o hay algún error, retornamos false
+            return false;
         }
-
-
 
     public boolean existeUsername(Connection connection, String username) throws SQLException {
         String selectUsername = "SELECT * FROM Credenciales WHERE username = ?";
         try (PreparedStatement ps = connection.prepareStatement(selectUsername)) {
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();  // Si existe, devolver true
+                return rs.next();
             }
         }
     }

@@ -16,140 +16,153 @@ public class IngresoAdminPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
 
-        // Crear un JPanel para el título y centrarlo
-        JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));  // FlowLayout centrado
-        tituloPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);  // Establecer el mismo fondo
+        JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        tituloPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
         JLabel titulo = EstiloFuenteYColor.crearTitulo("Ingreso de Administrador");
-        tituloPanel.add(titulo);  // Añadir el título al panel
+        tituloPanel.add(titulo);
 
-        // Panel de botón Volver en la parte superior izquierda
-        JPanel volverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); // Botón de "Volver" a la izquierda
-        volverPanel.setOpaque(false);  // Establecer como transparente si deseas que el fondo no cubra el contenido
+        JPanel volverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        volverPanel.setOpaque(false);
 
-        // Usar el método crearBotonConIcono para crear el botón con solo el ícono
-        JButton volverButton = ComponentFactory.crearBotonIcono("back.png", _ -> volverAGInicioPanel());
-        volverButton.setPreferredSize(new Dimension(40, 40)); // Ajustar el tamaño del botón si es necesario
-        volverButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Aplicar cursor de mano
+        JButton volverButton = ComponentFactory.crearBotonIcono("back.png", e -> volverAGInicioPanel());
+        volverButton.setPreferredSize(new Dimension(40, 40)); 
+        volverButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         volverPanel.add(volverButton);
 
-        // Panel contenedor para el título y el botón de "Volver"
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false); // Hacer que el panel sea transparente
-        topPanel.add(volverPanel, BorderLayout.WEST); // Botón de Volver a la izquierda
-        topPanel.add(tituloPanel, BorderLayout.CENTER); // Título centrado
+        topPanel.setOpaque(false);
+        topPanel.add(volverPanel, BorderLayout.WEST);
+        topPanel.add(tituloPanel, BorderLayout.CENTER);
 
-        // Añadir panel contenedor al BorderLayout.NORTH
         add(topPanel, BorderLayout.NORTH);
 
-        // Panel central con GridBagLayout para centrar los elementos
         JPanel centroPanel = new JPanel();
         centroPanel.setLayout(new GridBagLayout());
-        centroPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);  // Establecer el mismo fondo
+        centroPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO); 
 
-        // Definir un GridBagConstraints para alinear los elementos
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);  // Espaciado entre componentes
-        gbc.anchor = GridBagConstraints.CENTER;  // Centrado de los componentes
+        gbc.insets = new Insets(10, 10, 10, 10); 
+        gbc.anchor = GridBagConstraints.CENTER; 
 
-        // Usuario label
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel usuarioLabel = EstiloFuenteYColor.crearTituloSecundario("Usuario:");
         centroPanel.add(usuarioLabel, gbc);
 
-        // Campo de texto Usuario (transparente con borde inferior)
         gbc.gridx = 1;
         JTextField usernameField = ComponentFactory.crearCampoTextoUsuario();
-        usernameField.setOpaque(false); // Hacer transparente
-        usernameField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN)); // Borde inferior
+        usernameField.setOpaque(false);
+        usernameField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN));
         centroPanel.add(usernameField, gbc);
 
-        // Contraseña label
         gbc.gridx = 0;
         gbc.gridy = 1;
         JLabel passwordLabel = EstiloFuenteYColor.crearTituloSecundario("Contraseña:");
         centroPanel.add(passwordLabel, gbc);
 
-        // Campo de texto Contraseña (transparente con borde inferior)
         gbc.gridx = 1;
         JPasswordField passwordField = ComponentFactory.crearCampoTextoPassword();
-        passwordField.setOpaque(false); // Hacer transparente
-        passwordField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN)); // Borde inferior
+        passwordField.setOpaque(false);
+        passwordField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN)); 
         centroPanel.add(passwordField, gbc);
 
         add(centroPanel, BorderLayout.CENTER);
 
-        // Panel de botones para iniciar sesión y escanear credencial
         JPanel botonesPanelInferior = new JPanel();
-        botonesPanelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));  // Alineación central para los botones de la parte inferior
-        botonesPanelInferior.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO); // Establecer el mismo fondo
-        // Crear botones con iconos y texto
-        JButton loginButton = ComponentFactory.crearBotonConTextoYIcono("Iniciar Sesión", "ingresar.png", _ -> iniciarSesion(usernameField, passwordField));
-        JButton scanButton = ComponentFactory.crearBotonConTextoYIcono("Escanear Credencial", "credencial.png", _ -> mostrarVentanaEscanearCredencial());
+        botonesPanelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));  
+        botonesPanelInferior.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        JButton loginButton = ComponentFactory.crearBotonConTextoYIcono("Iniciar Sesión", "ingresar.png", e -> iniciarSesion(usernameField, passwordField));
+        JButton scanButton = ComponentFactory.crearBotonConTextoYIcono("Escanear Credencial", "credencial.png", e -> mostrarVentanaEscanearCredencial());
 
-        // Aplicar cursor de mano a los botones
         loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         scanButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Hacer que el fondo del botón sea transparente, pero no eliminar los iconos
-        loginButton.setContentAreaFilled(false);  // Hacer el fondo transparente
-        loginButton.setBorderPainted(false);     // Eliminar el borde
-        loginButton.setOpaque(true);              // No hacer completamente transparente
+        loginButton.setContentAreaFilled(false); 
+        loginButton.setBorderPainted(false);  
+        loginButton.setOpaque(true);          
 
-        scanButton.setContentAreaFilled(false);  // Hacer el fondo transparente
-        scanButton.setBorderPainted(false);     // Eliminar el borde
-        scanButton.setOpaque(true);              // No hacer completamente transparente
+        scanButton.setContentAreaFilled(false);  
+        scanButton.setBorderPainted(false);     
+        scanButton.setOpaque(true);             
 
-        // Establecer tamaño de los botones (más largos)
-        loginButton.setPreferredSize(new Dimension(250, 40));  // Ajustar el tamaño
-        scanButton.setPreferredSize(new Dimension(250, 40));   // Ajustar el tamaño
+        loginButton.setPreferredSize(new Dimension(250, 40)); 
+        scanButton.setPreferredSize(new Dimension(250, 40));   
 
-        // Alinear la imagen a la izquierda y el texto a la derecha
-        loginButton.setIconTextGap(20);  // Espacio entre el icono y el texto
-        scanButton.setIconTextGap(20);   // Espacio entre el icono y el texto
+        loginButton.setIconTextGap(20);  
+        scanButton.setIconTextGap(20);   
 
-        // Alinear el icono a la izquierda
         loginButton.setHorizontalAlignment(SwingConstants.LEFT);
         scanButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // Añadir botones al panel inferior
         botonesPanelInferior.add(loginButton);
         botonesPanelInferior.add(scanButton);
 
-        // Añadir panel de botones a la parte inferior
         add(botonesPanelInferior, BorderLayout.SOUTH);
 
-        // Llamar a revalidate() y repaint() para asegurar que los botones se ajusten correctamente
         botonesPanelInferior.revalidate();
         botonesPanelInferior.repaint();
 
-        passwordField.addActionListener(_ -> iniciarSesion(usernameField, passwordField));
+        passwordField.addActionListener(e -> iniciarSesion(usernameField, passwordField));
     }
 
     private void iniciarSesion(JTextField usernameField, JPasswordField passwordField) {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
     
-        System.out.println("Usuario ingresado: " + username);
-        System.out.println("Contraseña ingresada: " + password);
-    
         if (username.isEmpty() || password.isEmpty()) {
             mostrarMensaje("Por favor, complete todos los campos.", "Error");
             return;
         }
     
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        boolean authenticated = usuarioDAO.verificarCredenciales(username, password);
-    
-        if (authenticated) {
-            mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
-            irPanelAdmin();  // Ir al panel admin después de la autenticación exitosa
-        } else {
-            mostrarMensaje("Usuario o contraseña incorrectos.", "Error");
+        try {
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            boolean authenticated = usuarioDAO.verificarCredencialesYEstado(username, password);
+            if (authenticated) {
+                int idUsuario = usuarioDAO.obtenerIdPorUsuario(username);
+                
+                // Obtener el rol del usuario
+                boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
+                String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
+                
+                if (rol != null) {
+                    // Mostrar mensaje de éxito
+                    mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
+                    
+                    // Aquí pasamos el rol al AdminPanel
+                    irPanelAdmin(rol);
+                } else {
+                    mostrarMensaje("Usuario o contraseña incorrectos", "Error");
+                }
+            } 
+        } catch (Exception e) {
+            mostrarMensaje("Error al conectar con la base de datos.", "Error");
         }
     }
     
+    
+    
+    private void verificarYAutenticarCredencial(JTextField identificacionField, JDialog dialog) {
+        String identificacion = identificacionField.getText();
+        if (identificacion.length() < 13) {
+            return;
+        }
 
+        try{
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            boolean authenticated = usuarioDAO.verificarCredencialesPorIdentificacionYEstado(identificacion);
+            if (authenticated) {
+                mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
+                dialog.dispose();
+                irPanelAdmin(identificacion);
+            } else {
+                mostrarMensaje("ID de credencial incorrecto.", "Error");
+                identificacionField.setText(""); 
+            }
+        } catch (Exception e) {
+            mostrarMensaje("Error al conectar con la base de datos.", "Error");
+        }
+    }
+    
     private void mostrarMensaje(String mensaje, String titulo) {
         JOptionPane.showMessageDialog(
             this,
@@ -174,10 +187,9 @@ public class IngresoAdminPanel extends JPanel {
         dialog.add(panelCentral, BorderLayout.CENTER);
 
         JPanel panelInferior = EstiloFuenteYColor.crearPanelTransparente();
-        JButton cancelButton = ComponentFactory.crearBoton("Cancelar", _ -> dialog.dispose());
+        JButton cancelButton = ComponentFactory.crearBoton("Cancelar", e -> dialog.dispose());
         panelInferior.add(cancelButton);
         dialog.add(panelInferior, BorderLayout.SOUTH);
-
         idField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -197,34 +209,14 @@ public class IngresoAdminPanel extends JPanel {
 
         dialog.setVisible(true);
     }
-    
-    private void verificarYAutenticarCredencial(JTextField identificacionField, JDialog dialog) {
-        String identificacion = identificacionField.getText();
-        if (identificacion.length() == 13) {
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            // Aquí se asume que la clave también se pasa como el mismo texto de identificación
-            boolean authenticated = usuarioDAO.verificarCredencialesPorIdentificacion(identificacion);
-    
-            if (authenticated) {
-                mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
-                dialog.dispose();
-                irPanelAdmin();
-            } else {
-                mostrarMensaje("ID de credencial incorrecto.", "Error");
-                identificacionField.setText(""); 
-            }
-        } else {
-            mostrarMensaje("El ID debe tener exactamente 13 caracteres.", "Error");
-        }
-    }
-    
 
-    private void irPanelAdmin() {
+    private void irPanelAdmin(String rol) {
         parentFrame.getContentPane().removeAll();
-        parentFrame.add(new AdminPanel(parentFrame));
+        parentFrame.add(new AdminPanel(parentFrame, rol));  // Pasamos el rol al constructor de AdminPanel
         parentFrame.revalidate();
         parentFrame.repaint();
     }
+    
 
     private void volverAGInicioPanel() {
         parentFrame.getContentPane().removeAll();
