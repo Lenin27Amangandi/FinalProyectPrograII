@@ -7,21 +7,15 @@ import java.util.List;
 
 public interface IPinturaDAO {
 
-    // Insertar una nueva pintura
     void insertarPintura(PinturaDTO pintura) throws SQLException;
 
-    // Actualizar los datos de una pintura
-    void actualizarPintura(PinturaDTO pintura);
+    void actualizarPintura(PinturaDTO pintura) throws SQLException;
 
-    // Eliminar una pintura (actualiza su estado a 'E')
-    void eliminarPintura(int idPintura);
+    void eliminarPintura(int idPintura) throws SQLException;
 
-    // Obtener pintura por código de barras
-    PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras);
+    PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws SQLException;
 
-    // Obtener todas las pinturas
-    List<PinturaDTO> obtenerTodasLasPinturas();
+    List<PinturaDTO> obtenerTodasLasPinturas() throws SQLException;
 
-    // Obtener una pintura por su ID
-    PinturaDTO obtenerPinturaPorId(int idPintura);
+    PinturaDTO obtenerPinturaPorId(int idPintura) throws SQLException;
 }

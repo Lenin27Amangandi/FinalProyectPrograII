@@ -21,7 +21,7 @@ public class Pintura {
     public static final String ESTADO_ELIMINADO = "E";
 
     public Pintura() {
-        this.estado = ESTADO_ACTIVO;  // Valor predeterminado
+        this.estado = ESTADO_ACTIVO; 
     }
 
     public Pintura(String titulo, int anio, String descripcion, String codigoBarras, int idCategoria, int idAutor, int idSeccion, String imagen, String estado, LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
@@ -33,7 +33,7 @@ public class Pintura {
         this.idAutor = idAutor;
         this.idSeccion = idSeccion;
         this.imagen = imagen;
-        this.estado = estado != null ? estado : ESTADO_ACTIVO;  // Si estado es null, poner valor predeterminado
+        this.estado = estado != null ? estado : ESTADO_ACTIVO; 
         this.fechaCrea = LocalDateTime.now();
         this.fechaModifica = LocalDateTime.now();
     }

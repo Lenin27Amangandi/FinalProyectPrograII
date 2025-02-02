@@ -50,22 +50,19 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.executeUpdate();
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error al insertar pintura en la base de datos.", e);
         }
     }
 
     public boolean validarIdExistente(String autor, String categoria, String sala) throws HeadlessException, SQLException {
-        // Verificar si el autor existe
         if (!existeAutor(autor)) {
             JOptionPane.showMessageDialog(null, "El autor no existe en la base de datos.");
             return false;
         }
-        // Verificar si la categoría existe
         if (!existeCategoria(categoria)) {
             JOptionPane.showMessageDialog(null, "La categoría no existe en la base de datos.");
             return false;
         }
-        // Verificar si la sección existe
         if (!existeSala(sala)) {
             JOptionPane.showMessageDialog(null, "La sección no existe en la base de datos.");
             return false;
@@ -98,7 +95,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     }
 
     @Override
-    public void actualizarPintura(PinturaDTO pintura) {
+    public void actualizarPintura(PinturaDTO pintura) throws SQLException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(UPDATE_PINTURA)) {
             
@@ -116,19 +113,18 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.executeUpdate();
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error al actualizar pintura en la base de datos.", e);
         }
+
     }
 
     public void actualizarEstadoPintura(int idPintura, String estado) throws SQLException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_ESTADO_PINTURA)) {
 
-            // Establecemos los parámetros
-            ps.setString(1, estado);         // El nuevo estado ("E" en este caso)
-            ps.setInt(2, idPintura);         // El ID de la pintura que queremos actualizar
+            ps.setString(1, estado);        
+            ps.setInt(2, idPintura);        
 
-            // Ejecutamos la actualización
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Error al actualizar el estado de la pintura: " + e.getMessage(), e);
@@ -136,7 +132,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     }
 
     @Override
-    public void eliminarPintura(int idPintura) {
+    public void eliminarPintura(int idPintura) throws SQLException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
             
@@ -145,12 +141,12 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.executeUpdate();
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error al insertar pintura en la base de datos.", e);
         }
     }
 
     @Override
-    public PinturaDTO obtenerPinturaPorId(int idPintura) {
+    public PinturaDTO obtenerPinturaPorId(int idPintura) throws SQLException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_ID)) {
             
@@ -161,13 +157,13 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             }
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error al insertar pintura en la base de datos.", e);
         }
         return null;
     }
 
     @Override
-    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) {
+    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws SQLException {
         String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
                        "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
                        "p.fechaCrea, p.fechaModifica, " +
@@ -176,7 +172,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
                        "JOIN Autores a ON p.idAutor = a.idAutor " +
                        "JOIN Categorias c ON p.idCategoria = c.idCategoria " +
                        "JOIN Salas s ON p.idSala = s.idSala " +
-                       "WHERE p.codigoBarras = ? AND p.estado = 'A'";  // Filtrando por estado 'A'
+                       "WHERE p.codigoBarras = ? AND p.estado = 'A'";  
     
         try (Connection connection = DbHelper.getConnection(); 
              PreparedStatement ps = connection.prepareStatement(query)) {
@@ -186,14 +182,14 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
                 return mapResultSetToPinturaDTO(rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error al insertar pintura en la base de datos.", e);
         }
         return null;
     }
     
 
     @Override
-    public List<PinturaDTO> obtenerTodasLasPinturas() {
+    public List<PinturaDTO> obtenerTodasLasPinturas() throws SQLException {
         List<PinturaDTO> pinturas = new ArrayList<>();
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PINTURAS);
@@ -204,14 +200,14 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             }
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException("Error al insertar pintura en la base de datos.", e);
         }
         return pinturas;
     }
 
     public List<PinturaDTO> obtenerPinturasResumen() {
         List<PinturaDTO> pinturas = new ArrayList<>();
-        String query = "SELECT * FROM pinturas WHERE estado != 'E'";  // Ajusta la consulta según tu esquema
+        String query = "SELECT * FROM pinturas WHERE estado != 'E'";  
     
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
@@ -231,7 +227,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         }
         return pinturas;
     }
-    
 
     private PinturaDTO mapResultSetToPinturaDTO(ResultSet rs) throws SQLException {
         PinturaDTO pintura = new PinturaDTO();
@@ -248,10 +243,9 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         pintura.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
         pintura.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
         
-        // Asignar los valores obtenidos de las tablas relacionadas
-        pintura.setNombreAutor(rs.getString("nombreAutor"));  // Asigna el nombre del autor
-        pintura.setcategoria(rs.getString("categoria"));      // Asigna la categoría
-        pintura.setSalas(rs.getString("Salas"));         // Asigna el nombre de la sala
+        pintura.setNombreAutor(rs.getString("nombreAutor"));  
+        pintura.setcategoria(rs.getString("categoria"));     
+        pintura.setSalas(rs.getString("Salas"));         
     
         return pintura;
     }
@@ -263,9 +257,8 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.setString(1, nombreAutor);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt("idAutor");  // Autor encontrado
+                return rs.getInt("idAutor");  
             } else {
-                // Si no existe, insertar el nuevo autor
                 String insertSql = "INSERT INTO Autores (nombreAutor) VALUES (?)";
                 try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     insertPs.setString(1, nombreAutor);
@@ -289,7 +282,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             if (rs.next()) {
                 return rs.getInt("idCategoria");  
             } else {
-                // Si no existe, insertar la nueva categoría
                 String insertSql = "INSERT INTO Categorias (categoria) VALUES (?)";
                 try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                     insertPs.setString(1, nombreCategoria);
@@ -326,7 +318,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         return -1; 
     }
 
-    
     public String obtenerNombreAutorPorId(int idAutor) {
         String sql = "SELECT nombreAutor FROM Autores WHERE idAutor = ?";
         try (Connection connection = DbHelper.getConnection();

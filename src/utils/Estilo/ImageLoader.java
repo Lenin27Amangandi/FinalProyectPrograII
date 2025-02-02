@@ -18,6 +18,6 @@ public class ImageLoader {
                 e.printStackTrace();
             }
         }
-        return null;  // Si no se encuentra la imagen o hay error, retorna null
+        return null; 
     }
 }

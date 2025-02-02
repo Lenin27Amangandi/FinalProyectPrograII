@@ -2,7 +2,6 @@ package BusinessLogic.services;
 
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,41 +13,78 @@ public class PinturaService {
         this.pinturaDAO = new PinturaDAO();
     }
 
-    // Insertar una pintura
-    public void insertarPintura(PinturaDTO pintura) throws SQLException {
-        // Aquí puedes agregar validaciones o lógica adicional si es necesario
-        if (pintura != null) {
+    public void insertarPintura(PinturaDTO pintura) {
+        try {
+            if (pintura == null || pintura.getTitulo() == null || pintura.getTitulo().isEmpty()) {
+                throw new IllegalArgumentException("El título de la pintura no puede estar vacío.");
+            }
             pinturaDAO.insertarPintura(pintura);
+        } catch (SQLException e) {
+            System.err.println("Error al insertar pintura: " + e.getMessage());
+            throw new RuntimeException("Error al insertar pintura.", e); 
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error de validación: " + e.getMessage());
+            throw e;  
         }
     }
 
-    // Actualizar una pintura
     public void actualizarPintura(PinturaDTO pintura) {
-        // Aquí puedes agregar validaciones o lógica adicional si es necesario
-        if (pintura != null) {
+        try {
+            if (pintura == null || pintura.getIdPintura() <= 0) {
+                throw new IllegalArgumentException("ID de pintura no válido.");
+            }
             pinturaDAO.actualizarPintura(pintura);
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar pintura: " + e.getMessage());
+            throw new RuntimeException("Error al actualizar pintura.", e);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error de validación: " + e.getMessage());
+            throw e;
         }
     }
 
-    // Eliminar una pintura (cambia su estado a 'E')
     public void eliminarPintura(int idPintura) {
-        // Validar o realizar alguna acción antes de eliminar
-        pinturaDAO.eliminarPintura(idPintura);
+        try {
+            if (idPintura <= 0) {
+                throw new IllegalArgumentException("ID de pintura no válido.");
+            }
+            pinturaDAO.eliminarPintura(idPintura);
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar pintura: " + e.getMessage());
+            throw new RuntimeException("Error al eliminar pintura.", e);
+        }
     }
 
-    // Obtener una pintura por su código de barras
     public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) {
-        return pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+        try {
+            if (codigoBarras == null || codigoBarras.trim().isEmpty()) {
+                throw new IllegalArgumentException("El código de barras no puede estar vacío.");
+            }
+            return pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+        } catch (SQLException e) {
+            System.err.println("Error al obtener pintura por código de barras: " + e.getMessage());
+            throw new RuntimeException("Error al obtener pintura.", e);
+        }
     }
 
-    // Obtener todas las pinturas
     public List<PinturaDTO> obtenerTodasLasPinturas() {
-        return pinturaDAO.obtenerTodasLasPinturas();
+        try {
+            return pinturaDAO.obtenerTodasLasPinturas();
+        } catch (SQLException e) {
+            System.err.println("Error al obtener todas las pinturas: " + e.getMessage());
+            throw new RuntimeException("Error al obtener todas las pinturas.", e);
+        }
     }
 
-    // Obtener una pintura por su ID
     public PinturaDTO obtenerPinturaPorId(int idPintura) {
-        return pinturaDAO.obtenerPinturaPorId(idPintura);
+        try {
+            if (idPintura <= 0) {
+                throw new IllegalArgumentException("ID de pintura no válido.");
+            }
+            return pinturaDAO.obtenerPinturaPorId(idPintura);
+        } catch (SQLException e) {
+            System.err.println("Error al obtener pintura por ID: " + e.getMessage());
+            throw new RuntimeException("Error al obtener pintura.", e);
+        }
     }
-
 }

@@ -120,15 +120,12 @@ public class IngresoAdminPanel extends JPanel {
             if (authenticated) {
                 int idUsuario = usuarioDAO.obtenerIdPorUsuario(username);
                 
-                // Obtener el rol del usuario
                 boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
                 String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
                 
                 if (rol != null) {
-                    // Mostrar mensaje de éxito
                     mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
                     
-                    // Aquí pasamos el rol al AdminPanel
                     irPanelAdmin(rol);
                 } else {
                     mostrarMensaje("Usuario o contraseña incorrectos", "Error");
@@ -138,8 +135,6 @@ public class IngresoAdminPanel extends JPanel {
             mostrarMensaje("Error al conectar con la base de datos.", "Error");
         }
     }
-    
-    
     
     private void verificarYAutenticarCredencial(JTextField identificacionField, JDialog dialog) {
         String identificacion = identificacionField.getText();
@@ -212,12 +207,11 @@ public class IngresoAdminPanel extends JPanel {
 
     private void irPanelAdmin(String rol) {
         parentFrame.getContentPane().removeAll();
-        parentFrame.add(new AdminPanel(parentFrame, rol));  // Pasamos el rol al constructor de AdminPanel
+        parentFrame.add(new AdminPanel(parentFrame, rol));  
         parentFrame.revalidate();
         parentFrame.repaint();
     }
     
-
     private void volverAGInicioPanel() {
         parentFrame.getContentPane().removeAll();
         parentFrame.getContentPane().add(new InicioPanel(parentFrame));

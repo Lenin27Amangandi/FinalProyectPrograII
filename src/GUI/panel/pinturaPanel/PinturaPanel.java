@@ -69,8 +69,20 @@ public class PinturaPanel extends JPanel {
                         
         panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnAgregarPintura = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
-        btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> activarModoModificar());
-        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", _ -> eliminarPintura());
+        btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> {
+            try {
+                activarModoModificar();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", _ -> {
+            try {
+                eliminarPintura();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
                         
         panelBotones.add(btnAgregarPintura);
         panelBotones.add(btnModificarPintura);
@@ -79,10 +91,20 @@ public class PinturaPanel extends JPanel {
                         
         cargarPinturas();
                         
-        tablaPinturas.getSelectionModel().addListSelectionListener(_ -> mostrarImagenSeleccionada());
+        tablaPinturas.getSelectionModel().addListSelectionListener(_ -> {
+            try {
+                mostrarImagenSeleccionada();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
         tablaPinturas.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
-                activarModoModificar();
+                try {
+                    activarModoModificar();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -136,7 +158,7 @@ public class PinturaPanel extends JPanel {
             repaint();
         }
 
-    private void activarModoModificar() {
+    private void activarModoModificar() throws SQLException {
         int row = tablaPinturas.getSelectedRow();
             if (row != -1) {
                 String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
@@ -280,7 +302,7 @@ public class PinturaPanel extends JPanel {
             }
         }
 
-    private void mostrarImagenSeleccionada() {
+    private void mostrarImagenSeleccionada() throws SQLException {
         int row = tablaPinturas.getSelectedRow();
         if (row != -1) {
             String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
@@ -302,7 +324,7 @@ public class PinturaPanel extends JPanel {
         }
     }
     
-    private void eliminarPintura() {
+    private void eliminarPintura() throws SQLException {
         int row = tablaPinturas.getSelectedRow();
         if (row != -1) {
             String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);

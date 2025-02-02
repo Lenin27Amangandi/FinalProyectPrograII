@@ -20,13 +20,10 @@ public class AdminPanel extends JPanel {
     private JButton btnVolver;
 
     private JFrame parentFrame;
-    private String rol;
 
     public AdminPanel(JFrame parentFrame, String rol) {
         this.parentFrame = parentFrame;
-        this.rol = rol;  // Guardamos el rol del usuario
     
-        // Crear los paneles de usuarios y pinturas
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         PinturaDAO pinturaDAO = new PinturaDAO();
         usuarioPanel = new UsuarioPanel(usuarioDAO);
@@ -35,23 +32,18 @@ public class AdminPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
     
-        // Crear el Sidebar
         sidebar = createSidebar();
     
-        // Crear el panel principal con CardLayout
         mainPanel = new JPanel(new CardLayout());
         mainPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); 
     
-        // Mostrar la imagen en el panel "Inicio"
         mostrarInicio();
     
-        // Añadir los paneles de usuarios y pinturas
         mainPanel.add(usuarioPanel, "Usuarios");
         mainPanel.add(pinturaPanel, "Pinturas");
     
         add(mainPanel, BorderLayout.CENTER);
     
-        // Crear el botón para abrir y cerrar el sidebar
         toggleButton = ComponentFactory.crearBotonSidebar("☰", e -> toggleSidebar());
         toggleButton.setFocusPainted(false);
         toggleButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_SIDEBAR);
@@ -59,25 +51,21 @@ public class AdminPanel extends JPanel {
         toggleButton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
         toggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     
-        // Añadir el botón de alternar al panel
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setOpaque(true);
         topPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
         topPanel.add(toggleButton);
         add(topPanel, BorderLayout.NORTH);
     
-        // Crear los botones del Sidebar
         JButton btnHome = ComponentFactory.crearBotonSidebar("Inicio", e -> mostrarInicio());
         JButton btnUsuarios = ComponentFactory.crearBotonSidebar("Usuarios", e -> mostrarUsuarios());
         JButton btnPinturas = ComponentFactory.crearBotonSidebar("Pinturas", e -> mostrarPinturas());
         btnVolver = ComponentFactory.crearBotonSidebar("Salir", e -> volver());
     
-        // Si el rol es Supervisor, deshabilitar el botón de "Usuarios"
         if ("Supervisor".equals(rol)) {
             btnUsuarios.setEnabled(false);
         }
     
-        // Añadir botones al sidebar
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(btnHome);
         sidebar.add(Box.createVerticalStrut(10));

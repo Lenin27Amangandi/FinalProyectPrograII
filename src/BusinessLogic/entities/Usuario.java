@@ -3,28 +3,18 @@ package BusinessLogic.entities;
 import java.time.LocalDateTime;
 
 public class Usuario {
-    private int idUsuarios;            // ID del usuario (autoincremental)
-    private String nombre;             // Nombre del usuario
-    private String identificacion;     // Identificación única del usuario
-    private int idCredenciales;        // ID de las credenciales (relacionado con la tabla Credenciales)
-    private int idRol;                 // ID del rol (relacionado con la tabla Roles)
-    private String estado;             // Estado del usuario (activo, inactivo, eliminado)
-    private LocalDateTime fechaCrea;   // Fecha de creación del registro
-    private LocalDateTime fechaModifica; // Fecha de última modificación del registro
+    private int idUsuarios;           
+    private String nombre;             
+    private String identificacion;     
+    private int idCredenciales;       
+    private int idRol;                 
+    private String estado;             
+    private LocalDateTime fechaCrea;   
+    private LocalDateTime fechaModifica; 
 
     public Usuario() {}
 
-    /**
-     * Constructor que inicializa todos los atributos del usuario
-     * @param idUsuarios
-     * @param nombre
-     * @param identificacion
-     * @param idCredenciales
-     * @param idRol
-     * @param estado
-     * @param fechaCrea
-     * @param fechaModifica
-     */
+
     public Usuario(int idUsuarios, String nombre, String identificacion, int idCredenciales, int idRol, String estado, LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
         this.idUsuarios = idUsuarios;
         this.nombre = nombre;

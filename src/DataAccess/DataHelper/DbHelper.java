@@ -7,10 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Clase abstracta DbHelper para gestionar la conexión a la base de datos SQLite.
- * Implementa el patrón Singleton para garantizar una única instancia de la conexión.
- */
+
 public abstract class DbHelper {
 
     private static final Logger LOGGER = Logger.getLogger(DbHelper.class.getName());
@@ -35,14 +32,9 @@ public abstract class DbHelper {
     }
 
     protected DbHelper() {
-        // Constructor protegido para evitar instanciación directa.
     }
 
-    /**
-     * Obtiene la conexión única a la base de datos.
-     * 
-     * @return La conexión actual.
-     */
+  
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
@@ -56,9 +48,6 @@ public abstract class DbHelper {
         }
     }
 
-    /**
-     * Cierra la conexión a la base de datos.
-     */
     public static void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -70,9 +59,6 @@ public abstract class DbHelper {
         }
     }
 
-    /**
-     * Verifica si la base de datos existe en la ruta especificada.
-     */
     private static void verificarBaseDeDatos() {
         File dbFile = new File("database/museo.sqlite");
         if (!dbFile.exists()) {

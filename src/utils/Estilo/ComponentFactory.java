@@ -7,17 +7,14 @@ import java.awt.event.ActionListener;
 public class ComponentFactory {
     private static final String ICONS_PATH = "src/utils/Resources/icons/";
 
-    // Método para crear botones en el Sidebar
     public static JButton crearBoton(String texto, ActionListener action) {
         JButton boton = new JButton(texto);
         boton.setAlignmentX(Component.CENTER_ALIGNMENT);
         boton.setFocusPainted(false);
         boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
     
-        // Establecer el color del texto a blanco
         boton.setForeground(EstiloFuenteYColor.COLOR_ERROR);
     
-        // Hacer el botón transparente
         boton.setOpaque(false);
         boton.setContentAreaFilled(false);
         boton.setBorderPainted(false);
@@ -27,7 +24,6 @@ public class ComponentFactory {
         boton.addActionListener(action);
         return boton;
     }
-    // Método para crear botones en el Sidebar
 
     public static JButton crearBotonExito(String texto, ActionListener action) {
         JButton boton = new JButton(texto);
@@ -35,10 +31,8 @@ public class ComponentFactory {
         boton.setFocusPainted(false);
         boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
     
-        // Establecer el color del texto a blanco
         boton.setForeground(EstiloFuenteYColor.COLOR_EXITO);
     
-        // Hacer el botón transparente
         boton.setOpaque(false);
         boton.setContentAreaFilled(false);
         boton.setBorderPainted(false);
@@ -49,17 +43,14 @@ public class ComponentFactory {
         return boton;
     }
 
-    // Método para crear botones en el Sidebar
     public static JButton crearBotonSidebar(String texto, ActionListener action) {
         JButton boton = new JButton(texto);
         boton.setAlignmentX(Component.CENTER_ALIGNMENT);
         boton.setFocusPainted(false);
         boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
     
-        // Establecer el color del texto a blanco
         boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
     
-        // Hacer el botón transparente
         boton.setOpaque(false);
         boton.setContentAreaFilled(false);
         boton.setBorderPainted(false);
@@ -86,19 +77,17 @@ public class ComponentFactory {
         return boton;
     }
 
-    // Método en ComponentFactory para crear un botón con solo icono
     public static JButton crearBotonIcono(String iconPath, ActionListener action) {
-        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath);  // Usar ruta fija para el icono
+        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath); 
         JButton boton = new JButton(icon);
 
         boton.setText("");  
-        boton.setFocusPainted(false);  // Eliminar el borde de enfoque
+        boton.setFocusPainted(false);  
         boton.setContentAreaFilled(false);
-        boton.setBorderPainted(false);  // Eliminar el borde del botón
-        boton.setOpaque(false);  // Hacerlo transparente (opcional)
+        boton.setBorderPainted(false);  
+        boton.setOpaque(false);  
         boton.setBorder(null);
         
-        // Añadir la acción
         boton.addActionListener(action);
         return boton;
     }
@@ -106,30 +95,26 @@ public class ComponentFactory {
     public static JButton crearBotonConTextoYIcono(String texto, String iconPath, ActionListener accion) {
         JButton boton = new JButton(texto);
     
-        // Establecer fuente y colores usando EstiloUtil
         boton.setFont(EstiloFuenteYColor.FUENTE_BOTON);
         boton.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
         boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
     
-        // Crear el icono si se proporciona el path
-        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath);  // Usar ruta fija para el icono
+        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath);  
         if (icon != null) {
             boton.setIcon(icon);
             boton.setHorizontalTextPosition(SwingConstants.RIGHT);  
-            boton.setIconTextGap(10);  // Espacio entre el icono y el texto
+            boton.setIconTextGap(10);
         }
     
-        boton.setPreferredSize(boton.getPreferredSize());  // Esto debería forzar el ajuste al contenido
-        boton.revalidate();  // Forzar el revalidado del botón
-        boton.repaint();  // Forzar la repintura del botón
+        boton.setPreferredSize(boton.getPreferredSize());
+        boton.revalidate(); 
+        boton.repaint();  
     
-        // Añadir acción al botón
         boton.addActionListener(accion);
         
         return boton;
     }
 
-    // Método para crear un título en el Sidebar
     public static JLabel crearTituloSidebar(String texto) {
         JLabel titulo = new JLabel(texto);
         titulo.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR);
@@ -139,7 +124,6 @@ public class ComponentFactory {
         return titulo;
     }
 
-    // Método para crear un campo de texto con borde y tamaño personalizado
     public static JTextField crearCampoTexto(String texto) {
         JTextField campo = new JTextField(texto);
         campo.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
@@ -148,7 +132,6 @@ public class ComponentFactory {
         return campo;
     }
 
-    // Método para crear un panel con bordes
     public static JPanel crearPanelConBorde(Color colorBorde) {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createLineBorder(colorBorde, 2));
@@ -184,7 +167,7 @@ public class ComponentFactory {
     public static JButton crearBotonConCursor(String texto, ActionListener accion) {
         JButton button = new JButton(texto);
         button.addActionListener(accion);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Configura el cursor aquí
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
         return button;
     }
 
@@ -193,8 +176,6 @@ public class ComponentFactory {
         panel.setOpaque(false);
         return panel;
     }
-
-    // Métodos de optimización añadidos:
 
     public static JTextField crearCampoTextoTransparente(String texto) {
         JTextField campo = new JTextField(texto);
@@ -225,7 +206,7 @@ public class ComponentFactory {
         boton.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
         boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
         boton.addActionListener(accion);
-        setHandCursor(boton);  // Establecer el cursor de mano
+        setHandCursor(boton);  
         return boton;
     }
 

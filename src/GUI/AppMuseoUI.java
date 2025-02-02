@@ -10,11 +10,6 @@ import GUI.panel.commonPanel.SplashScreenPanel;
 public class AppMuseoUI {
     private final JFrame frame;
 
-    /**
-     * Constructor de la clase AppMuseo.
-     * 
-     * @param parentFrame El marco principal que contendra los componentes de la aplicacion.
-     */
     public AppMuseoUI(JFrame parentFrame) {
         this.frame = parentFrame;
     }
@@ -36,18 +31,17 @@ public class AppMuseoUI {
 
         new Thread(() -> {
             try {
-                // Llamamos a CrearDefaultUser() antes de continuar con el inicio de la app
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
-                usuarioDAO.cargarUsuarioPorDefecto();  // Crear o verificar el usuario por defecto
+                usuarioDAO.cargarUsuarioPorDefecto(); 
 
-                Thread.sleep(3550); // Simulamos la espera por la animación de carga
+                Thread.sleep(3550); 
             } catch (InterruptedException e){
                 e.printStackTrace();
             }
             SwingUtilities.invokeLater(() -> {
                 loadingPanel.stopLoadingAnimation();
                 loadingFrame.dispose();
-                mostrarInicio();  // Ahora mostramos el panel de inicio
+                mostrarInicio();  
             });
         }).start();
     }

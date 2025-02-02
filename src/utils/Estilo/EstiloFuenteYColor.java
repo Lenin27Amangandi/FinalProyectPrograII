@@ -32,34 +32,30 @@ public class EstiloFuenteYColor {
 
     public static void aplicarEstiloFondoYTexto(JTextField campo) {
         campo.setFont(FUENTE_CAMPO_TEXTO);
-        campo.setBackground(new Color(0, 0, 0, 5));  // Fondo ligeramente transparente
+        campo.setBackground(new Color(0, 0, 0, 5)); 
         campo.setSelectedTextColor(Color.WHITE);
     }
 
     public static void aplicarEstiloFondoYTexto(JTextArea area) {
         if (area != null) {
             area.setFont(FUENTE_CAMPO_TEXTO);
-            area.setBackground(new Color(0, 0, 0, 5));  // Fondo ligeramente transparente
+            area.setBackground(new Color(0, 0, 0, 5));  
             area.setSelectedTextColor(Color.WHITE);
         }
     }
     
-    
-    // Método para crear un panel con fondo transparente
     public static JPanel crearPanelTransparente() {
         JPanel panel = new JPanel();
-        panel.setOpaque(false);  // Hace que el fondo del panel sea transparente
+        panel.setOpaque(false); 
         return panel;
     }
 
-    // Método para crear un texto secundario
     public static JLabel crearTextoPrincipal(String texto) {
         JLabel label = new JLabel(texto);
         label.setFont(FUENTE_TITULO_SIDEBAR);
         label.setForeground(COLOR_TEXTO);
         return label;
     }
-    // Método para crear un texto Formularios de modificacion
     public static JLabel crearTextoFormularios(String texto) {
         JLabel label = new JLabel(texto);
         label.setFont(FUENTE_TABLA);
@@ -67,7 +63,6 @@ public class EstiloFuenteYColor {
         return label;
     }
 
-    // Método para crear un texto secundario
     public static JLabel crearTextoSecundario(String texto) {
         JLabel label = new JLabel(texto);
         label.setFont(FUENTE_BOTON);
@@ -75,14 +70,12 @@ public class EstiloFuenteYColor {
         return label;
     }
 
-    // Método para crear un texto secundario
     public static JLabel crearTituloSecundario(String texto) {
         JLabel label = new JLabel(texto);
         label.setFont(FUENTE_TITULO_SIDEBAR);
         label.setForeground(COLOR_TEXTO);
         return label;
     }
-    // Método para crear un texto secundario
     public static JLabel crearTitulo(String texto) {
         JLabel label = new JLabel(texto);
         label.setFont(FUENTE_TITULO);
