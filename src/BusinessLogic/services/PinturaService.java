@@ -2,7 +2,6 @@ package BusinessLogic.services;
 
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 

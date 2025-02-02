@@ -213,7 +213,7 @@ public class ComponentFactory {
     public static JPanel crearPanelTransparenteConLayoutYBorde(LayoutManager layout, Color colorBorde) {
         JPanel panel = new JPanel(layout);
         panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createLineBorder(colorBorde, 1));
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDE));
         return panel;
     }
 
