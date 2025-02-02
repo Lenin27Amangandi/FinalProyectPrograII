@@ -31,7 +31,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     }
 
     @Override
-    public void insertarPintura(PinturaDTO pintura) {
+    public void insertarPintura(PinturaDTO pintura) throws SQLException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
             
@@ -46,6 +46,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.setString(9, pintura.getEstado());
             ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaCrea()));
             ps.setTimestamp(11, Timestamp.valueOf(pintura.getFechaModifica()));
+            
             ps.executeUpdate();
             
         } catch (SQLException e) {
@@ -210,7 +211,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
 
     public List<PinturaDTO> obtenerPinturasResumen() {
         List<PinturaDTO> pinturas = new ArrayList<>();
-        String query = "SELECT codigoBarras, titulo, idAutor, anio FROM Pinturas";  // Ajusta la consulta según tu esquema
+        String query = "SELECT * FROM pinturas WHERE estado != 'E'";  // Ajusta la consulta según tu esquema
     
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);
@@ -253,6 +254,122 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         pintura.setSalas(rs.getString("Salas"));         // Asigna el nombre de la sala
     
         return pintura;
+    }
+
+    public int obtenerIdAutorPorNombre(String nombreAutor) throws SQLException {
+        String sql = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nombreAutor);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idAutor");  // Autor encontrado
+            } else {
+                // Si no existe, insertar el nuevo autor
+                String insertSql = "INSERT INTO Autores (nombreAutor) VALUES (?)";
+                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertPs.setString(1, nombreAutor);
+                    insertPs.executeUpdate();
+                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1); 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    public int obtenerIdCategoriaPorNombre(String nombreCategoria) throws SQLException {
+        String sql = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nombreCategoria);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idCategoria");  
+            } else {
+                // Si no existe, insertar la nueva categoría
+                String insertSql = "INSERT INTO Categorias (categoria) VALUES (?)";
+                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertPs.setString(1, nombreCategoria);
+                    insertPs.executeUpdate();
+                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);  
+                    }
+                }
+            }
+        }
+        return -1;  
+    }
+    public int obtenerIdSalaPorNombre(String nombreSala) throws SQLException {
+        String sql = "SELECT idSala FROM Salas WHERE Salas = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nombreSala);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idSala"); 
+            } else {
+                String insertSql = "INSERT INTO Salas (Salas) VALUES (?)";
+                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertPs.setString(1, nombreSala);
+                    insertPs.executeUpdate();
+                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1); 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    
+    public String obtenerNombreAutorPorId(int idAutor) {
+        String sql = "SELECT nombreAutor FROM Autores WHERE idAutor = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idAutor);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nombreAutor");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String obtenerNombreCategoriaPorId(int idCategoria) {
+        String sql = "SELECT categoria FROM Categorias WHERE idCategoria = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idCategoria);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("categoria");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String obtenerNombreSalaPorId(int idSala) {
+        String sql = "SELECT Salas FROM Salas WHERE idSala = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idSala);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Salas");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
     
 }

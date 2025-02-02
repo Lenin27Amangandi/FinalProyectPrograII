@@ -1,12 +1,14 @@
 package DataAccess;
 
 import DataAccess.DTO.PinturaDTO;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IPinturaDAO {
 
     // Insertar una nueva pintura
-    void insertarPintura(PinturaDTO pintura);
+    void insertarPintura(PinturaDTO pintura) throws SQLException;
 
     // Actualizar los datos de una pintura
     void actualizarPintura(PinturaDTO pintura);

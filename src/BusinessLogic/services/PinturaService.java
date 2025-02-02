@@ -2,6 +2,8 @@ package BusinessLogic.services;
 
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public class PinturaService {
@@ -13,7 +15,7 @@ public class PinturaService {
     }
 
     // Insertar una pintura
-    public void insertarPintura(PinturaDTO pintura) {
+    public void insertarPintura(PinturaDTO pintura) throws SQLException {
         // Aquí puedes agregar validaciones o lógica adicional si es necesario
         if (pintura != null) {
             pinturaDAO.insertarPintura(pintura);

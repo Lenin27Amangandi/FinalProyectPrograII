@@ -2,7 +2,6 @@ package GUI.panel.pinturaPanel;
 
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
-import DataAccess.DataHelper.DbHelper;
 import utils.Estilo.ComponentFactory;
 import utils.Estilo.EstiloFuenteYColor;
 
@@ -12,29 +11,12 @@ import javax.swing.table.JTableHeader;
 
 import java.awt.*;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class PinturaPanel extends JPanel {
 
-    private static final String INSERT_PINTURA = "INSERT INTO Pinturas " +
-                                                 "(titulo," 
-                                                + "anio," 
-                                                + "descripcion," 
-                                                + "codigoBarras," 
-                                                + "idCategoria," 
-                                                + "idAutor," 
-                                                + "idSala," 
-                                                + "imagen,"
-                                                + "estado," 
-                                                + "fechaCrea," 
-                                                + "fechaModifica)" +
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private JTable      tablaPinturas;
     private JButton     btnAgregarPintura;
     private JButton     btnModificarPintura;
@@ -57,12 +39,9 @@ public class PinturaPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
 
-        // Panel que contiene la tabla y el formulario
         panelContenido = new JPanel();
         panelContenido.setLayout(new BorderLayout());
 
-                        
-        // Crear el panel de la tabla
         JPanel panelTabla = new JPanel(new BorderLayout());
         tablaPinturas = new JTable(new DefaultTableModel(new Object[]{"ID", "Título", "Autor", "Año"}, 0));
         tablaPinturas.setGridColor(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
@@ -75,24 +54,19 @@ public class PinturaPanel extends JPanel {
         header.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
         header.setFont(EstiloFuenteYColor.FUENTE_TABLA);
                         
-        // Panel para el formulario
         panelFormulario = new JPanel(new GridLayout(8, 2));
                         
-        // Panel para la imagen de vista previa
         JPanel panelImagen = new JPanel(new BorderLayout());
         lblImagenPreview = new JLabel();
         lblImagenPreview.setPreferredSize(new Dimension(400, 400));
         panelImagen.add(lblImagenPreview, BorderLayout.CENTER);
                         
-        // Añadir la tabla y el formulario al panelContenido
-        panelContenido.add(panelTabla, BorderLayout.CENTER); // Tabla arriba
-        panelContenido.add(panelFormulario, BorderLayout.SOUTH); // Formulario abajo
+        panelContenido.add(panelTabla, BorderLayout.CENTER); 
+        panelContenido.add(panelFormulario, BorderLayout.SOUTH);
                         
-        // Agregar los paneles principales al PinturaPanel
         add(panelContenido, BorderLayout.CENTER);
-        add(panelImagen, BorderLayout.EAST); // Imagen a la derecha
+        add(panelImagen, BorderLayout.EAST);
                         
-        // Panel de botones
         panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnAgregarPintura = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
         btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> activarModoModificar());
@@ -103,10 +77,8 @@ public class PinturaPanel extends JPanel {
         panelBotones.add(btnEliminarPintura);
         add(panelBotones, BorderLayout.NORTH);
                         
-        // Cargar datos en la tabla
         cargarPinturas();
                         
-        // Agregar eventos de selección a la tabla
         tablaPinturas.getSelectionModel().addListSelectionListener(_ -> mostrarImagenSeleccionada());
         tablaPinturas.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
@@ -114,11 +86,10 @@ public class PinturaPanel extends JPanel {
             }
         });
     }
-                        
                     
         private void mostrarFormularioAgregar() {
 
-            panelFormulario.removeAll();  // Limpiar el panel antes de agregar los campos
+            panelFormulario.removeAll();  
             panelFormulario.setLayout(new GridLayout(8, 2));
 
             panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Título:"));
@@ -149,10 +120,8 @@ public class PinturaPanel extends JPanel {
             txtIdSala = ComponentFactory.crearCampoTextoTransparente("");
             panelFormulario.add(txtIdSala);
                     
-            // El preview de la imagen sigue en su lugar a la derecha
             lblImagenPreview.setPreferredSize(new Dimension(200, 200));
                     
-            // Botón de guardar
             JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
                 try {
                     agregarPintura();
@@ -181,7 +150,7 @@ public class PinturaPanel extends JPanel {
                     panelFormulario.add(txtTitulo);
                         
                     panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Autor:"));
-                    String autor = obtenerNombreAutorPorId(pintura.getIdAutor());
+                    String autor = pinturaDAO.obtenerNombreAutorPorId(pintura.getIdAutor());
                     txtAutor = ComponentFactory.crearCampoTextoTransparente(autor);
                     panelFormulario.add(txtAutor);
                         
@@ -199,12 +168,12 @@ public class PinturaPanel extends JPanel {
                     panelFormulario.add(txtCodigoBarras);
                         
                     panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Categoría:"));
-                    String categoria = obtenerNombreCategoriaPorId(pintura.getIdCategoria());
+                    String categoria = pinturaDAO.obtenerNombreCategoriaPorId(pintura.getIdCategoria());
                     txtCategoria = ComponentFactory.crearCampoTextoTransparente(categoria);
                     panelFormulario.add(txtCategoria);
                         
                     panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Sala:"));
-                    String sala = obtenerNombreSalaPorId(pintura.getIdSala());
+                    String sala = pinturaDAO.obtenerNombreSalaPorId(pintura.getIdSala());
                     txtIdSala = ComponentFactory.crearCampoTextoTransparente(sala);
                     panelFormulario.add(txtIdSala);
                         
@@ -218,7 +187,6 @@ public class PinturaPanel extends JPanel {
                     
                     panelFormulario.add(btnActualizar);
                         
-                    // Asegurarse de que el panel se actualiza en la vista
                     panelContenido.add(panelFormulario, BorderLayout.SOUTH);
                     panelContenido.revalidate();
                     panelContenido.repaint();
@@ -229,7 +197,7 @@ public class PinturaPanel extends JPanel {
         }
                                             
         private void cargarPinturas() {
-            List<PinturaDTO> pinturas = pinturaDAO.obtenerPinturasResumen();  // Llamada al nuevo método
+            List<PinturaDTO> pinturas = pinturaDAO.obtenerPinturasResumen(); 
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn("Código Barras");
             model.addColumn("Título");
@@ -237,8 +205,7 @@ public class PinturaPanel extends JPanel {
             model.addColumn("Año");
         
             for (PinturaDTO pintura : pinturas) {
-                // Obtenemos el nombre del autor usando su ID
-                String autor = obtenerNombreAutorPorId(pintura.getIdAutor());
+                String autor = pinturaDAO.obtenerNombreAutorPorId(pintura.getIdAutor());
                 model.addRow(new Object[]{pintura.getCodigoBarras(), 
                         pintura.getTitulo(), 
                         autor, 
@@ -249,7 +216,6 @@ public class PinturaPanel extends JPanel {
             tablaPinturas.setRowHeight(20);
         }
         
-
         private void agregarPintura() throws SQLException {
             String titulo =         txtTitulo.getText();
             String autor =          txtAutor.getText();
@@ -269,9 +235,9 @@ public class PinturaPanel extends JPanel {
                 return;
             }
     
-            int idAutor = obtenerIdAutorPorNombre(autor);
-            int idCategoria = obtenerIdCategoriaPorNombre(categoria);
-            int idSala = obtenerIdSalaPorNombre(sala);
+            int idAutor = pinturaDAO.obtenerIdAutorPorNombre(autor);
+            int idCategoria = pinturaDAO.obtenerIdCategoriaPorNombre(categoria);
+            int idSala = pinturaDAO.obtenerIdSalaPorNombre(sala);
     
             if (idAutor == -1 || idCategoria == -1 || idSala == -1) {
                 JOptionPane.showMessageDialog(this, "Autor, Categoría o Sala no encontrados en la base de datos.");
@@ -285,7 +251,6 @@ public class PinturaPanel extends JPanel {
                 return;
             }
     
-            // Crear objeto PinturaDTO
             PinturaDTO nuevaPinturaDTO = new PinturaDTO(
                 0, 
                 titulo,
@@ -304,80 +269,16 @@ public class PinturaPanel extends JPanel {
                 LocalDateTime.now()
             );
     
-            try (Connection connection = DbHelper.getConnection()) {
-                connection.setAutoCommit(false);
-    
-                try (PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
-                    ps.setString(1, nuevaPinturaDTO.getTitulo());
-                    ps.setInt(2, nuevaPinturaDTO.getAnio());
-                    ps.setString(3, nuevaPinturaDTO.getDescripcion());
-                    ps.setString(4, nuevaPinturaDTO.getCodigoBarras());
-                    ps.setInt(5, nuevaPinturaDTO.getIdCategoria());
-                    ps.setInt(6, nuevaPinturaDTO.getIdAutor());
-                    ps.setInt(7, nuevaPinturaDTO.getIdSala());
-                    ps.setString(8, nuevaPinturaDTO.getImagen());
-                    ps.setString(9, nuevaPinturaDTO.getEstado());
-                    ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                    ps.setTimestamp(11, Timestamp.valueOf(LocalDateTime.now()));
-    
-                    ps.executeUpdate();
-                }
-    
-                connection.commit();
+            try {
+                PinturaDAO pinturaDAO = new PinturaDAO();
+                pinturaDAO.insertarPintura(nuevaPinturaDTO);
                 JOptionPane.showMessageDialog(this, "Pintura agregada exitosamente.");
                 cargarPinturas(); 
-    
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error al agregar la pintura: " + e.getMessage());
                 e.printStackTrace();
             }
         }
-
-    private String obtenerNombreAutorPorId(int idAutor) {
-        String sql = "SELECT nombreAutor FROM Autores WHERE idAutor = ?";
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, idAutor);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("nombreAutor");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    
-    private String obtenerNombreCategoriaPorId(int idCategoria) {
-        String sql = "SELECT categoria FROM Categorias WHERE idCategoria = ?";
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, idCategoria);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("categoria");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    
-    private String obtenerNombreSalaPorId(int idSala) {
-        String sql = "SELECT Salas FROM Salas WHERE idSala = ?";
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, idSala);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("Salas");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
 
     private void mostrarImagenSeleccionada() {
         int row = tablaPinturas.getSelectedRow();
@@ -400,81 +301,6 @@ public class PinturaPanel extends JPanel {
 
         }
     }
-
-    private int obtenerIdAutorPorNombre(String nombreAutor) throws SQLException {
-        String sql = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
-        try (Connection connection = DbHelper.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, nombreAutor);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("idAutor");  // Autor encontrado
-            } else {
-                // Si no existe, insertar el nuevo autor
-                String insertSql = "INSERT INTO Autores (nombreAutor) VALUES (?)";
-                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                    insertPs.setString(1, nombreAutor);
-                    insertPs.executeUpdate();
-                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1); 
-                    }
-                }
-            }
-        }
-        return -1; 
-    }
-
-
-    private int obtenerIdCategoriaPorNombre(String nombreCategoria) throws SQLException {
-        String sql = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
-        try (Connection connection = DbHelper.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, nombreCategoria);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("idCategoria");  
-            } else {
-                // Si no existe, insertar la nueva categoría
-                String insertSql = "INSERT INTO Categorias (categoria) VALUES (?)";
-                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                    insertPs.setString(1, nombreCategoria);
-                    insertPs.executeUpdate();
-                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1);  
-                    }
-                }
-            }
-        }
-        return -1;  
-    }
-    
-
-    private int obtenerIdSalaPorNombre(String nombreSala) throws SQLException {
-        String sql = "SELECT idSala FROM Salas WHERE Salas = ?";
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, nombreSala);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("idSala"); 
-            } else {
-                String insertSql = "INSERT INTO Salas (Salas) VALUES (?)";
-                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                    insertPs.setString(1, nombreSala);
-                    insertPs.executeUpdate();
-                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        return generatedKeys.getInt(1); 
-                    }
-                }
-            }
-        }
-        return -1; 
-    }
-    
-    
     
     private void eliminarPintura() {
         int row = tablaPinturas.getSelectedRow();
@@ -487,7 +313,6 @@ public class PinturaPanel extends JPanel {
                     "Confirmar eliminación", 
                     JOptionPane.YES_NO_OPTION, 
                     JOptionPane.WARNING_MESSAGE);
-                
                 if (opcion == JOptionPane.YES_OPTION) {
                     try {
                         pinturaDAO.actualizarEstadoPintura(pintura.getIdPintura(), "E");
@@ -501,7 +326,6 @@ public class PinturaPanel extends JPanel {
             }
         }
     }
-    
     
     private void actualizarPintura(int idPintura) throws HeadlessException, SQLException {
         String titulo =         txtTitulo.getText();
@@ -529,9 +353,9 @@ public class PinturaPanel extends JPanel {
             return;
         }
         
-        int idAutor = obtenerIdAutorPorNombre(autor);  
-        int idCategoria = obtenerIdCategoriaPorNombre(categoria); 
-        int idSala = obtenerIdSalaPorNombre(sala);  
+        int idAutor = pinturaDAO.obtenerIdAutorPorNombre(autor);  
+        int idCategoria = pinturaDAO.obtenerIdCategoriaPorNombre(categoria); 
+        int idSala = pinturaDAO.obtenerIdSalaPorNombre(sala);  
         
         if (idAutor == -1 || idCategoria == -1 || idSala == -1) {
             JOptionPane.showMessageDialog(this, "Autor, Categoría o Sala no encontrados en la base de datos.");
