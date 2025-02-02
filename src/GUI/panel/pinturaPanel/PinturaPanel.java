@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import BusinessLogic.UsuarioBLException;
+
 import java.awt.*;
 import java.io.File;
 import java.sql.SQLException;
@@ -72,14 +74,16 @@ public class PinturaPanel extends JPanel {
         btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> {
             try {
                 activarModoModificar();
-            } catch (SQLException e) {
+            } catch (UsuarioBLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
                 e.printStackTrace();
             }
         });
         btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", _ -> {
             try {
                 eliminarPintura();
-            } catch (SQLException e) {
+            } catch (UsuarioBLException | SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -94,7 +98,8 @@ public class PinturaPanel extends JPanel {
         tablaPinturas.getSelectionModel().addListSelectionListener(_ -> {
             try {
                 mostrarImagenSeleccionada();
-            } catch (SQLException e) {
+            } catch (UsuarioBLException | SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -102,7 +107,8 @@ public class PinturaPanel extends JPanel {
             if (!event.getValueIsAdjusting()) {
                 try {
                     activarModoModificar();
-                } catch (SQLException e) {
+                } catch (UsuarioBLException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -147,7 +153,7 @@ public class PinturaPanel extends JPanel {
             JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
                 try {
                     agregarPintura();
-                } catch (SQLException e) {
+                } catch (UsuarioBLException | SQLException e) {
                     e.printStackTrace();
                 }
                 });
@@ -158,7 +164,7 @@ public class PinturaPanel extends JPanel {
             repaint();
         }
 
-    private void activarModoModificar() throws SQLException {
+    private void activarModoModificar() throws UsuarioBLException {
         int row = tablaPinturas.getSelectedRow();
             if (row != -1) {
                 String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
@@ -202,7 +208,7 @@ public class PinturaPanel extends JPanel {
                     JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", _ -> {
                         try {
                             actualizarPintura(pintura.getIdPintura());
-                        } catch (SQLException e) {
+                        } catch (UsuarioBLException | HeadlessException | SQLException e) {
                             e.printStackTrace();
                         }
                         });
@@ -250,13 +256,18 @@ public class PinturaPanel extends JPanel {
             try {
                 anio = Integer.parseInt(txtAnio.getText());
                 if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
-                    throw new NumberFormatException();
+                    // Mostrar un mensaje de error si el año no es válido
+                    JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                                  "Año inválido", JOptionPane.ERROR_MESSAGE);
+                    return;  // Termina el método para no continuar con el proceso
                 }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "El año debe ser un número válido entre 1000 y el año actual.");
+                // Si la conversión a número falla, mostramos un mensaje de error
+                JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                              "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-    
+
             int idAutor = pinturaDAO.obtenerIdAutorPorNombre(autor);
             int idCategoria = pinturaDAO.obtenerIdCategoriaPorNombre(categoria);
             int idSala = pinturaDAO.obtenerIdSalaPorNombre(sala);
@@ -296,7 +307,7 @@ public class PinturaPanel extends JPanel {
                 pinturaDAO.insertarPintura(nuevaPinturaDTO);
                 JOptionPane.showMessageDialog(this, "Pintura agregada exitosamente.");
                 cargarPinturas(); 
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error al agregar la pintura: " + e.getMessage());
                 e.printStackTrace();
             }
@@ -359,14 +370,19 @@ public class PinturaPanel extends JPanel {
         String sala =           txtIdSala.getText();
         
         try {
-            anio = Integer.parseInt(txtAnio.getText());
-            if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El año debe ser un número válido entre 1000 y el año actual.");
-            return;
+        anio = Integer.parseInt(txtAnio.getText());
+        if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
+            // Mostrar un mensaje de error si el año no es válido
+            JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                          "Año inválido", JOptionPane.ERROR_MESSAGE);
+            return;  // Termina el método para no continuar con el proceso
         }
+    } catch (NumberFormatException e) {
+        // Si la conversión a número falla, mostramos un mensaje de error
+        JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                      "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
     
         String imagen = "src/utils/Resources/paintings/" + codigoBarras + ".jpg";
         
@@ -402,6 +418,5 @@ public class PinturaPanel extends JPanel {
         JOptionPane.showMessageDialog(this, "Pintura modificada exitosamente.");
         cargarPinturas(); 
     }
-    
     
 }

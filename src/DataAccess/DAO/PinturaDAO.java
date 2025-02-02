@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import BusinessLogic.PinturaBLException;
+
 public class PinturaDAO extends DbHelper implements IPinturaDAO {
     
     private static final String INSERT_PINTURA = "INSERT INTO Pinturas (titulo, anio, descripcion, codigoBarras, idCategoria, idAutor, idSala, imagen, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -31,9 +33,9 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     }
 
     @Override
-    public void insertarPintura(PinturaDTO pintura) throws SQLException {
+    public void insertarPintura(PinturaDTO pintura) throws PinturaBLException {
         try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
+            PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
             
             ps.setString(1, pintura.getTitulo());
             ps.setInt(2, pintura.getAnio());
@@ -46,14 +48,112 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.setString(9, pintura.getEstado());
             ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaCrea()));
             ps.setTimestamp(11, Timestamp.valueOf(pintura.getFechaModifica()));
-            
+
             ps.executeUpdate();
             
         } catch (SQLException e) {
-            throw new SQLException("Error al insertar pintura en la base de datos.", e);
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
         }
     }
 
+    @Override
+    public void actualizarPintura(PinturaDTO pintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(UPDATE_PINTURA)) {
+            
+            ps.setString(1, pintura.getTitulo());
+            ps.setInt(2, pintura.getAnio());
+            ps.setString(3, pintura.getDescripcion());
+            ps.setString(4, pintura.getCodigoBarras());
+            ps.setInt(5, pintura.getIdCategoria());
+            ps.setInt(6, pintura.getIdAutor());
+            ps.setInt(7, pintura.getIdSala());
+            ps.setString(8, pintura.getImagen());
+            ps.setString(9, pintura.getEstado());
+            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaModifica()));
+            ps.setInt(11, pintura.getIdPintura());
+    
+            ps.executeUpdate();
+    
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al actualizar pintura en la base de datos.", e);
+        }
+    }
+
+    @Override
+    public void eliminarPintura(int idPintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
+            
+            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(2, idPintura);
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+    }
+
+    @Override
+    public PinturaDTO obtenerPinturaPorId(int idPintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_ID)) {
+            
+            ps.setInt(1, idPintura);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToPinturaDTO(rs);
+            }
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+        return null;
+    }
+
+    @Override
+    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws PinturaBLException{
+        String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
+                       "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
+                       "p.fechaCrea, p.fechaModifica, " +
+                       "a.nombreAutor, c.categoria, s.Salas " +
+                       "FROM Pinturas p " +
+                       "JOIN Autores a ON p.idAutor = a.idAutor " +
+                       "JOIN Categorias c ON p.idCategoria = c.idCategoria " +
+                       "JOIN Salas s ON p.idSala = s.idSala " +
+                       "WHERE p.codigoBarras = ? AND p.estado = 'A'";  
+    
+        try (Connection connection = DbHelper.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, codigoBarras);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToPinturaDTO(rs);
+            }
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+        return null;
+    }
+    
+
+    @Override
+    public List<PinturaDTO> obtenerTodasLasPinturas() throws PinturaBLException {
+        List<PinturaDTO> pinturas = new ArrayList<>();
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PINTURAS);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                pinturas.add(mapResultSetToPinturaDTO(rs));
+            }
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+        return pinturas;
+    }
+    
     public boolean validarIdExistente(String autor, String categoria, String sala) throws HeadlessException, SQLException {
         if (!existeAutor(autor)) {
             JOptionPane.showMessageDialog(null, "El autor no existe en la base de datos.");
@@ -94,30 +194,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         return -1;
     }
 
-    @Override
-    public void actualizarPintura(PinturaDTO pintura) throws SQLException {
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(UPDATE_PINTURA)) {
-            
-            ps.setString(1, pintura.getTitulo());
-            ps.setInt(2, pintura.getAnio());
-            ps.setString(3, pintura.getDescripcion());
-            ps.setString(4, pintura.getCodigoBarras());
-            ps.setInt(5, pintura.getIdCategoria());
-            ps.setInt(6, pintura.getIdAutor());
-            ps.setInt(7, pintura.getIdSala());
-            ps.setString(8, pintura.getImagen());
-            ps.setString(9, pintura.getEstado());
-            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaModifica()));
-            ps.setInt(11, pintura.getIdPintura());
-            ps.executeUpdate();
-            
-        } catch (SQLException e) {
-            throw new SQLException("Error al actualizar pintura en la base de datos.", e);
-        }
-
-    }
-
     public void actualizarEstadoPintura(int idPintura, String estado) throws SQLException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_ESTADO_PINTURA)) {
@@ -129,80 +205,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         } catch (SQLException e) {
             throw new SQLException("Error al actualizar el estado de la pintura: " + e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void eliminarPintura(int idPintura) throws SQLException {
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
-            
-            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setInt(2, idPintura);
-            ps.executeUpdate();
-            
-        } catch (SQLException e) {
-            throw new SQLException("Error al insertar pintura en la base de datos.", e);
-        }
-    }
-
-    @Override
-    public PinturaDTO obtenerPinturaPorId(int idPintura) throws SQLException {
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_ID)) {
-            
-            ps.setInt(1, idPintura);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToPinturaDTO(rs);
-            }
-            
-        } catch (SQLException e) {
-            throw new SQLException("Error al insertar pintura en la base de datos.", e);
-        }
-        return null;
-    }
-
-    @Override
-    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws SQLException {
-        String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
-                       "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
-                       "p.fechaCrea, p.fechaModifica, " +
-                       "a.nombreAutor, c.categoria, s.Salas " +
-                       "FROM Pinturas p " +
-                       "JOIN Autores a ON p.idAutor = a.idAutor " +
-                       "JOIN Categorias c ON p.idCategoria = c.idCategoria " +
-                       "JOIN Salas s ON p.idSala = s.idSala " +
-                       "WHERE p.codigoBarras = ? AND p.estado = 'A'";  
-    
-        try (Connection connection = DbHelper.getConnection(); 
-             PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, codigoBarras);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapResultSetToPinturaDTO(rs);
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Error al insertar pintura en la base de datos.", e);
-        }
-        return null;
-    }
-    
-
-    @Override
-    public List<PinturaDTO> obtenerTodasLasPinturas() throws SQLException {
-        List<PinturaDTO> pinturas = new ArrayList<>();
-        try (Connection connection = DbHelper.getConnection();
-             PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PINTURAS);
-             ResultSet rs = ps.executeQuery()) {
-            
-            while (rs.next()) {
-                pinturas.add(mapResultSetToPinturaDTO(rs));
-            }
-            
-        } catch (SQLException e) {
-            throw new SQLException("Error al insertar pintura en la base de datos.", e);
-        }
-        return pinturas;
     }
 
     public List<PinturaDTO> obtenerPinturasResumen() {

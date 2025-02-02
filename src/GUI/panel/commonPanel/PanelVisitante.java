@@ -150,15 +150,12 @@ public class PanelVisitante extends JPanel {
     
 
     private void mostrarDetallesPintura(PinturaDTO pinturaDTO) {
-        // Limpiar el JTextArea antes de agregar nuevos detalles
         resultadoArea.setText("");
     
-        // Establecer el título con un formato especial (negrita, tamaño más grande)
-        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR); // Fuente del título más grande
+        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR); 
         resultadoArea.append(pinturaDTO.getTitulo() + "\n\n");
     
-        // Establecer el estilo para el resto del texto (texto normal)
-        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO); // Fuente del texto normal
+        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO); 
         resultadoArea.append("Autor: " + pinturaDTO.getNombreAutor() + "\n");
         resultadoArea.append("Año: " + pinturaDTO.getAnio() + "\n");
         resultadoArea.append("Descripción: " + pinturaDTO.getDescripcion() + "\n");
