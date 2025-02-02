@@ -1,0 +1,3563 @@
+import java.awt.HeadlessException;
+import javax.swing.*;
+
+import GUI.AppMuseoUI;
+
+public class App {
+    public static void main(String[] args) {
+
+        try {
+            System.out.println("Haz iniciado la App de ArtVision!! :)");
+
+
+            JFrame frame = new JFrame("ArtVision");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            AppMuseoUI app = new AppMuseoUI(frame);
+            app.iniciarApp();
+            
+        } catch (HeadlessException e) {
+            System.out.println("Ocurrió un error al iniciar la app: " + e.getMessage());
+        }
+    }
+}
+import java.awt.HeadlessException;
+import javax.swing.*;
+
+import GUI.AppMuseoUI;
+
+public class App {
+    public static void main(String[] args) {
+
+        try {
+            System.out.println("Haz iniciado la App de ArtVision!! :)");
+
+
+            JFrame frame = new JFrame("ArtVision");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            AppMuseoUI app = new AppMuseoUI(frame);
+            app.iniciarApp();
+            
+        } catch (HeadlessException e) {
+            System.out.println("Ocurrió un error al iniciar la app: " + e.getMessage());
+        }
+    }
+}
+package BusinessLogic.entities;
+
+import java.time.LocalDateTime;
+
+public class Pintura {
+    private int idPintura;
+    private String titulo;
+    private int anio;
+    private String descripcion;
+    private String codigoBarras;
+    private int idCategoria;
+    private int idAutor;
+    private int idSeccion;
+    private String imagen;
+    private String estado;
+    private LocalDateTime fechaCrea;
+    private LocalDateTime fechaModifica;
+
+    public static final String ESTADO_ACTIVO = "A";
+    public static final String ESTADO_INACTIVO = "I";
+    public static final String ESTADO_ELIMINADO = "E";
+
+    public Pintura() {
+        this.estado = ESTADO_ACTIVO; 
+    }
+
+    public Pintura(String titulo, int anio, String descripcion, String codigoBarras, int idCategoria, int idAutor, int idSeccion, String imagen, String estado, LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
+        this.titulo = titulo;
+        this.anio = anio;
+        this.descripcion = descripcion;
+        this.codigoBarras = codigoBarras;
+        this.idCategoria = idCategoria;
+        this.idAutor = idAutor;
+        this.idSeccion = idSeccion;
+        this.imagen = imagen;
+        this.estado = estado != null ? estado : ESTADO_ACTIVO; 
+        this.fechaCrea = LocalDateTime.now();
+        this.fechaModifica = LocalDateTime.now();
+    }
+
+    // Getters y Setters
+
+    public int getIdPintura() {
+        return idPintura;
+    }
+
+    public void setIdPintura(int idPintura) {
+        this.idPintura = idPintura;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        int anioActual = java.time.Year.now().getValue();
+        if (anio <= 0 || anio > anioActual) {
+            throw new IllegalArgumentException("El año debe estar entre 1 y " + anioActual);
+        }
+        this.anio = anio;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getCodigoBarras() {
+        return codigoBarras;
+    }
+
+    public void setCodigoBarras(String codigoBarras) {
+        if (codigoBarras == null || codigoBarras.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código de barras no puede estar vacío.");
+        }
+        this.codigoBarras = codigoBarras;
+    }
+
+    public int getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(int idCategoria) {
+        if (idCategoria <= 0) throw new IllegalArgumentException("ID de categoría no válido.");
+        this.idCategoria = idCategoria;
+    }
+
+    public int getIdAutor() {
+        return idAutor;
+    }
+
+    public void setIdAutor(int idAutor) {
+        this.idAutor = idAutor;
+    }
+
+    public int getIdSeccion() {
+        return idSeccion;
+    }
+
+    public void setIdSeccion(int idSeccion) {
+        this.idSeccion = idSeccion;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        if (!estado.equals(ESTADO_ACTIVO) && !estado.equals(ESTADO_INACTIVO) && !estado.equals(ESTADO_ELIMINADO)) {
+            throw new IllegalArgumentException("Estado inválido.");
+        }
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFechaCrea() {
+        return fechaCrea;
+    }
+
+    public void setFechaCrea(LocalDateTime fechaCrea) {
+        this.fechaCrea = LocalDateTime.now();
+    }
+
+    public LocalDateTime getFechaModifica() {
+        return fechaModifica;
+    }
+
+    public void setFechaModifica(LocalDateTime fechaModifica) {
+        this.fechaModifica = LocalDateTime.now();
+    }
+}
+package BusinessLogic.entities;
+
+import java.time.LocalDateTime;
+
+public class Usuario {
+    private int idUsuarios;           
+    private String nombre;             
+    private String identificacion;     
+    private int idCredenciales;       
+    private int idRol;                 
+    private String estado;             
+    private LocalDateTime fechaCrea;   
+    private LocalDateTime fechaModifica; 
+
+    public Usuario() {}
+
+
+    public Usuario(int idUsuarios, String nombre, String identificacion, int idCredenciales, int idRol, String estado, LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
+        this.idUsuarios = idUsuarios;
+        this.nombre = nombre;
+        this.identificacion = identificacion;
+        this.idCredenciales = idCredenciales;
+        this.idRol = idRol;
+        this.estado = estado;
+        this.fechaCrea = LocalDateTime.now();
+        this.fechaModifica = LocalDateTime.now();
+    }
+
+    // Getters y Setters
+
+    public int getIdUsuarios() {
+        return idUsuarios;
+    }
+
+    public void setIdUsuarios(int idUsuarios) {
+        this.idUsuarios = idUsuarios;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        if (identificacion == null || identificacion.length() != 13 || !identificacion.matches("\\d+")) {
+            throw new IllegalArgumentException("La identificación debe contener exactamente 13 dígitos numéricos.");
+        }
+        this.identificacion = identificacion;
+    }
+
+    public int getIdCredenciales() {
+        return idCredenciales;
+    }
+
+    public void setIdCredenciales(int idCredenciales) {
+        if (idCredenciales <= 0) {
+            throw new IllegalArgumentException("El ID de credenciales debe ser un número positivo.");
+        }
+        this.idCredenciales = idCredenciales;
+    }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        if (idRol <= 0) {
+            throw new IllegalArgumentException("El ID de rol debe ser un número positivo.");
+        }
+        this.idRol = idRol;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFechaCrea() {
+        return fechaCrea;
+    }
+
+    public void setFechaCrea(LocalDateTime fechaCrea) {
+        this.fechaCrea = LocalDateTime.now();
+    }
+
+    public LocalDateTime getFechaModifica() {
+        return fechaModifica;
+    }
+
+    public void setFechaModifica(LocalDateTime fechaModifica) {
+        this.fechaModifica = LocalDateTime.now();
+    }
+}package BusinessLogic;
+
+public class PinturaBLException extends RuntimeException{
+    public PinturaBLException(String message) {
+        super(message);
+    }
+
+    public PinturaBLException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}package BusinessLogic.services;
+
+import DataAccess.DAO.PinturaDAO;
+import DataAccess.DTO.PinturaDTO;
+import java.util.List;
+import java.util.logging.Logger;
+
+import BusinessLogic.PinturaBLException;
+
+public class PinturaService {
+
+    private static final Logger logger = Logger.getLogger(PinturaService.class.getName());
+    private PinturaDAO pinturaDAO;
+
+    public PinturaService() {
+        this.pinturaDAO = new PinturaDAO();
+    }
+
+    public void insertarPintura(PinturaDTO pintura) {
+        if (pintura == null || pintura.getTitulo() == null || pintura.getTitulo().isEmpty()) {
+            throw new IllegalArgumentException("El título de la pintura no puede estar vacío.");
+        }
+        try {
+            pinturaDAO.insertarPintura(pintura);
+        } catch (PinturaBLException e) {
+            logger.severe("Error al insertar pintura: " + e.getMessage());
+            throw new PinturaBLException("Error al insertar pintura.", e);
+        }
+    }
+
+    public void actualizarPintura(PinturaDTO pintura) {
+        if (pintura == null || pintura.getIdPintura() <= 0) {
+            throw new IllegalArgumentException("ID de pintura no válido.");
+        }
+        try {
+            pinturaDAO.actualizarPintura(pintura);
+        } catch (PinturaBLException e) {
+            logger.severe("Error al actualizar pintura: " + e.getMessage());
+            throw new PinturaBLException("Error al actualizar pintura.", e);
+        }
+    }
+
+    public void eliminarPintura(int idPintura) {
+        if (idPintura <= 0) {
+            throw new IllegalArgumentException("ID de pintura no válido.");
+        }
+        try {
+            pinturaDAO.eliminarPintura(idPintura);
+        } catch (PinturaBLException e) {
+            logger.severe("Error al eliminar pintura: " + e.getMessage());
+            throw new PinturaBLException("Error al eliminar pintura.", e);
+        }
+    }
+
+    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) {
+        if (codigoBarras == null || codigoBarras.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código de barras no puede estar vacío.");
+        }
+        try {
+            return pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+        } catch (PinturaBLException e) {
+            logger.severe("Error al obtener pintura por código de barras: " + e.getMessage());
+            throw new PinturaBLException("Error al obtener pintura.", e);
+        }
+    }
+
+    public List<PinturaDTO> obtenerTodasLasPinturas() {
+        try {
+            return pinturaDAO.obtenerTodasLasPinturas();
+        } catch (PinturaBLException e) {
+            logger.severe("Error al obtener todas las pinturas: " + e.getMessage());
+            throw new PinturaBLException("Error al obtener todas las pinturas.", e);
+        }
+    }
+
+    public PinturaDTO obtenerPinturaPorId(int idPintura) {
+        if (idPintura <= 0) {
+            throw new IllegalArgumentException("ID de pintura no válido.");
+        }
+        try {
+            return pinturaDAO.obtenerPinturaPorId(idPintura);
+        } catch (PinturaBLException e) {
+            logger.severe("Error al obtener pintura por ID: " + e.getMessage());
+            throw new PinturaBLException("Error al obtener pintura.", e);
+        }
+    }
+}
+package BusinessLogic.services;
+
+import DataAccess.IUsuarioDAO;
+import DataAccess.DAO.UsuarioDAO;
+import BusinessLogic.UsuarioBLException;
+import DataAccess.DTO.UsuarioDTO;
+import java.util.List;
+
+public class UsuarioService {
+
+    private final IUsuarioDAO usuarioDAO;
+
+    // Se inyecta la dependencia desde afuera en lugar de crearla internamente
+    public UsuarioService(IUsuarioDAO usuarioDAO) {
+        this.usuarioDAO = usuarioDAO;
+    }
+
+    // Constructor predeterminado para uso normal (usa UsuarioDAO por defecto)
+    public UsuarioService() {
+        this(new UsuarioDAO());
+    }
+
+    public void insertarUsuario(UsuarioDTO usuarioDTO) {
+        try {
+            validarUsuario(usuarioDTO);
+            usuarioDAO.insertarUsuario(usuarioDTO);
+        } catch (Exception e) {
+            throw new BusinessLogic.UsuarioBLException("Error al insertar usuario.", e);
+        }
+    }
+
+    public List<UsuarioDTO> obtenerTodosLosUsuarios() {
+        try {
+            return usuarioDAO.obtenerTodosUsuarios();
+        } catch (Exception e) {
+            throw new BusinessLogic.UsuarioBLException("Error al obtener la lista de usuarios.", e);
+        }
+    }
+
+    private void validarUsuario(UsuarioDTO usuarioDTO) {
+        if (usuarioDTO == null) {
+            throw new BusinessLogic.UsuarioBLException("El usuario no puede ser nulo.");
+        }
+        if (usuarioDTO.getNombre() == null || usuarioDTO.getNombre().trim().isEmpty()) {
+            throw new BusinessLogic.UsuarioBLException("El nombre del usuario no puede estar vacío.");
+        }
+        if (usuarioDTO.getIdentificacion() == null || usuarioDTO.getIdentificacion().length() != 13) {
+            throw new BusinessLogic.UsuarioBLException("La identificación debe tener 13 dígitos.");
+        }
+    }
+}
+package BusinessLogic;
+
+
+public class UsuarioBLException extends RuntimeException {
+
+    public UsuarioBLException(String message) {
+        super(message);
+    }
+
+    public UsuarioBLException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+package DataAccess.DAO;
+
+import DataAccess.DataHelper.DbHelper;
+import DataAccess.IPinturaDAO;
+import DataAccess.DTO.PinturaDTO;
+
+import java.awt.HeadlessException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import BusinessLogic.PinturaBLException;
+
+public class PinturaDAO extends DbHelper implements IPinturaDAO {
+    
+    private static final String INSERT_PINTURA = "INSERT INTO Pinturas (titulo, anio, descripcion, codigoBarras, idCategoria, idAutor, idSala, imagen, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_AUTOR_ID = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
+    private static final String SELECT_CATEGORIA_ID = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
+    private static final String SELECT_SALA_ID = "SELECT idSala FROM Salas WHERE Salas = ?";
+    private static final String UPDATE_PINTURA = "UPDATE Pinturas SET titulo = ?, anio = ?, descripcion = ?, codigoBarras = ?, idCategoria = ?, idAutor = ?, idSala = ?, imagen = ?, estado = ?, fechaModifica = ? WHERE idPintura = ?";
+    private static final String DELETE_PINTURA = "UPDATE Pinturas SET estado = 'E', fechaModifica = ? WHERE idPintura = ?";
+    private static final String SELECT_ALL_PINTURAS = "SELECT * FROM Pinturas WHERE estado != 'E'";
+    private static final String SELECT_PINTURA_BY_ID = "SELECT * FROM Pinturas WHERE idPintura = ?";
+    private static final String ACTUALIZAR_ESTADO_PINTURA = 
+        "UPDATE Pinturas SET estado = ? WHERE idPintura = ?";
+    
+    
+    public PinturaDAO() {
+        super();
+    }
+
+    @Override
+    public void insertarPintura(PinturaDTO pintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
+            
+            ps.setString(1, pintura.getTitulo());
+            ps.setInt(2, pintura.getAnio());
+            ps.setString(3, pintura.getDescripcion());
+            ps.setString(4, pintura.getCodigoBarras());
+            ps.setInt(5, pintura.getIdCategoria());
+            ps.setInt(6, pintura.getIdAutor());
+            ps.setInt(7, pintura.getIdSala());
+            ps.setString(8, pintura.getImagen());
+            ps.setString(9, pintura.getEstado());
+            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaCrea()));
+            ps.setTimestamp(11, Timestamp.valueOf(pintura.getFechaModifica()));
+
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+    }
+
+    @Override
+    public void actualizarPintura(PinturaDTO pintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(UPDATE_PINTURA)) {
+            
+            ps.setString(1, pintura.getTitulo());
+            ps.setInt(2, pintura.getAnio());
+            ps.setString(3, pintura.getDescripcion());
+            ps.setString(4, pintura.getCodigoBarras());
+            ps.setInt(5, pintura.getIdCategoria());
+            ps.setInt(6, pintura.getIdAutor());
+            ps.setInt(7, pintura.getIdSala());
+            ps.setString(8, pintura.getImagen());
+            ps.setString(9, pintura.getEstado());
+            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaModifica()));
+            ps.setInt(11, pintura.getIdPintura());
+    
+            ps.executeUpdate();
+    
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al actualizar pintura en la base de datos.", e);
+        }
+    }
+
+    @Override
+    public void eliminarPintura(int idPintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
+            
+            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(2, idPintura);
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+    }
+
+    @Override
+    public PinturaDTO obtenerPinturaPorId(int idPintura) throws PinturaBLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_ID)) {
+            
+            ps.setInt(1, idPintura);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToPinturaDTO(rs);
+            }
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+        return null;
+    }
+
+    @Override
+    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws PinturaBLException{
+        String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
+                       "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
+                       "p.fechaCrea, p.fechaModifica, " +
+                       "a.nombreAutor, c.categoria, s.Salas " +
+                       "FROM Pinturas p " +
+                       "JOIN Autores a ON p.idAutor = a.idAutor " +
+                       "JOIN Categorias c ON p.idCategoria = c.idCategoria " +
+                       "JOIN Salas s ON p.idSala = s.idSala " +
+                       "WHERE p.codigoBarras = ? AND p.estado = 'A'";  
+    
+        try (Connection connection = DbHelper.getConnection(); 
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, codigoBarras);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToPinturaDTO(rs);
+            }
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+        return null;
+    }
+    
+
+    @Override
+    public List<PinturaDTO> obtenerTodasLasPinturas() throws PinturaBLException {
+        List<PinturaDTO> pinturas = new ArrayList<>();
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PINTURAS);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                pinturas.add(mapResultSetToPinturaDTO(rs));
+            }
+            
+        } catch (SQLException e) {
+            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+        }
+        return pinturas;
+    }
+    
+    public boolean validarIdExistente(String autor, String categoria, String sala) throws HeadlessException, SQLException {
+        if (!existeAutor(autor)) {
+            JOptionPane.showMessageDialog(null, "El autor no existe en la base de datos.");
+            return false;
+        }
+        if (!existeCategoria(categoria)) {
+            JOptionPane.showMessageDialog(null, "La categoría no existe en la base de datos.");
+            return false;
+        }
+        if (!existeSala(sala)) {
+            JOptionPane.showMessageDialog(null, "La sección no existe en la base de datos.");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean existeAutor(String autor) throws SQLException {
+        return obtenerId(SELECT_AUTOR_ID, autor) != -1;
+    }
+    
+    private boolean existeCategoria(String categoria) throws SQLException {
+        return obtenerId(SELECT_CATEGORIA_ID, categoria) != -1;
+    }
+    
+    private boolean existeSala(String sala) throws SQLException {
+        return obtenerId(SELECT_SALA_ID, sala) != -1;
+    }
+
+    private int obtenerId(String selectSQL, String valor) throws SQLException {
+        try (PreparedStatement ps = DbHelper.getConnection().prepareStatement(selectSQL)) {
+            ps.setString(1, valor);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return -1;
+    }
+
+    public void actualizarEstadoPintura(int idPintura, String estado) throws SQLException {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(ACTUALIZAR_ESTADO_PINTURA)) {
+
+            ps.setString(1, estado);        
+            ps.setInt(2, idPintura);        
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Error al actualizar el estado de la pintura: " + e.getMessage(), e);
+        }
+    }
+
+    public List<PinturaDTO> obtenerPinturasResumen() {
+        List<PinturaDTO> pinturas = new ArrayList<>();
+        String query = "SELECT * FROM pinturas WHERE estado != 'E'";  
+    
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+    
+            while (rs.next()) {
+                PinturaDTO pintura = new PinturaDTO();
+                pintura.setCodigoBarras(rs.getString("codigoBarras"));
+                pintura.setTitulo(rs.getString("titulo"));
+                pintura.setIdAutor(rs.getInt("idAutor"));
+                pintura.setAnio(rs.getInt("anio"));
+                pinturas.add(pintura);
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pinturas;
+    }
+
+    private PinturaDTO mapResultSetToPinturaDTO(ResultSet rs) throws SQLException {
+        PinturaDTO pintura = new PinturaDTO();
+        pintura.setIdPintura(rs.getInt("idPintura"));
+        pintura.setTitulo(rs.getString("titulo"));
+        pintura.setAnio(rs.getInt("anio"));
+        pintura.setDescripcion(rs.getString("descripcion"));
+        pintura.setCodigoBarras(rs.getString("codigoBarras"));
+        pintura.setIdCategoria(rs.getInt("idCategoria"));
+        pintura.setIdAutor(rs.getInt("idAutor"));
+        pintura.setIdSala(rs.getInt("idSala"));
+        pintura.setImagen(rs.getString("imagen"));
+        pintura.setEstado(rs.getString("estado"));
+        pintura.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
+        pintura.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+        
+        pintura.setNombreAutor(rs.getString("nombreAutor"));  
+        pintura.setcategoria(rs.getString("categoria"));     
+        pintura.setSalas(rs.getString("Salas"));         
+    
+        return pintura;
+    }
+
+    public int obtenerIdAutorPorNombre(String nombreAutor) throws SQLException {
+        String sql = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nombreAutor);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idAutor");  
+            } else {
+                String insertSql = "INSERT INTO Autores (nombreAutor) VALUES (?)";
+                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertPs.setString(1, nombreAutor);
+                    insertPs.executeUpdate();
+                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1); 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    public int obtenerIdCategoriaPorNombre(String nombreCategoria) throws SQLException {
+        String sql = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nombreCategoria);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idCategoria");  
+            } else {
+                String insertSql = "INSERT INTO Categorias (categoria) VALUES (?)";
+                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertPs.setString(1, nombreCategoria);
+                    insertPs.executeUpdate();
+                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);  
+                    }
+                }
+            }
+        }
+        return -1;  
+    }
+    public int obtenerIdSalaPorNombre(String nombreSala) throws SQLException {
+        String sql = "SELECT idSala FROM Salas WHERE Salas = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, nombreSala);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idSala"); 
+            } else {
+                String insertSql = "INSERT INTO Salas (Salas) VALUES (?)";
+                try (PreparedStatement insertPs = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    insertPs.setString(1, nombreSala);
+                    insertPs.executeUpdate();
+                    ResultSet generatedKeys = insertPs.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1); 
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+
+    public String obtenerNombreAutorPorId(int idAutor) {
+        String sql = "SELECT nombreAutor FROM Autores WHERE idAutor = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idAutor);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nombreAutor");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String obtenerNombreCategoriaPorId(int idCategoria) {
+        String sql = "SELECT categoria FROM Categorias WHERE idCategoria = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idCategoria);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("categoria");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String obtenerNombreSalaPorId(int idSala) {
+        String sql = "SELECT Salas FROM Salas WHERE idSala = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idSala);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Salas");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    
+}package DataAccess.DAO;
+
+import DataAccess.DataHelper.DbHelper;
+import DataAccess.IUsuarioDAO;
+import DataAccess.DTO.UsuarioDTO;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import BusinessLogic.UsuarioBLException;
+public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
+    private static final String INSERT_USUARIO = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String DELETE_USUARIO = "UPDATE Usuarios SET estado = 'E', fechaModifica = ? WHERE idUsuarios = ?";
+    private static final String SELECT_USUARIO_BY_ID = "SELECT * FROM Usuarios WHERE idUsuarios = ?";
+    private static final String SELECT_USUARIO_BY_IDENTIFICACION = "SELECT * FROM Usuarios WHERE identificacion = ?";
+    private static final String SELECT_ALL_USUARIOS = 
+    "SELECT U.idUsuarios, U.nombre, U.identificacion, U.idCredenciales, U.estado, " +
+    "U.fechaCrea, U.fechaModifica, R.nombreRol " +
+    "FROM Usuarios U " +
+    "JOIN Roles R ON U.idRol = R.idRol " +
+    "WHERE U.estado != 'E'";
+    private static final String SELECT_USUARIO_BY_CREDENCIALES = "SELECT * FROM Usuarios WHERE idCredenciales = ?";
+    private static final String SELECT_ROLE_BY_NAME = "SELECT idRol FROM Roles WHERE nombreRol = ?";
+    
+    public UsuarioDAO() {
+        super();
+        verificarRolesPorDefecto();
+        cargarUsuarioPorDefecto();
+    }
+    
+    @Override
+    public void insertarUsuario(UsuarioDTO usuario) throws UsuarioBLException{
+        if (usuario.getEstado() == null) {
+            usuario.setEstado("A");
+        }
+        try (Connection connection = DbHelper.getConnection()) {
+            connection.setAutoCommit(false); 
+            int idCredenciales = insertarCredenciales(usuario.getUsername(), usuario.getPassword(), connection);
+            if (idCredenciales == -1) {
+                throw new SQLException("Error al obtener idCredenciales.");
+            }
+            try (PreparedStatement ps = connection.prepareStatement(INSERT_USUARIO)) {
+                ps.setString(1, usuario.getNombre());
+                ps.setString(2, usuario.getIdentificacion());
+                ps.setInt(3, idCredenciales);
+                ps.setInt(4, usuario.getIdRol());
+                ps.setString(5, usuario.getEstado());
+                LocalDateTime fechaCrea = usuario.getFechaCrea() != null ? usuario.getFechaCrea() : LocalDateTime.now();
+                LocalDateTime fechaModifica = usuario.getFechaModifica() != null ? usuario.getFechaModifica() : LocalDateTime.now();
+                ps.setTimestamp(6, Timestamp.valueOf(fechaCrea));
+                ps.setTimestamp(7, Timestamp.valueOf(fechaModifica));
+                ps.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new UsuarioBLException("Error al insertar usuario.", e);
+        }
+    }
+
+    @Override
+    public boolean actualizarUsuario(UsuarioDTO usuario) throws UsuarioBLException {
+        String sql = "UPDATE usuarios SET nombre = ?, idRol = ? WHERE identificacion = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, usuario.getNombre());
+            ps.setInt(2, usuario.getIdRol());
+            ps.setString(3, usuario.getIdentificacion());
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;  
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean eliminarUsuario(int idUsuario) throws UsuarioBLException {
+        UsuarioDTO usuario = obtenerUsuarioPorId(idUsuario); 
+        if (usuario == null) {
+            return false;  
+        }
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(DELETE_USUARIO)) {
+            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setInt(2, idUsuario);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; 
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public List<UsuarioDTO> obtenerTodosUsuarios() throws UsuarioBLException {
+        List<UsuarioDTO> usuarios = new ArrayList<>();
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_ALL_USUARIOS);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                UsuarioDTO usuario = new UsuarioDTO();
+                usuario.setIdUsuarios(rs.getInt("idUsuarios"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setIdentificacion(rs.getString("identificacion"));
+                usuario.setIdCredenciales(rs.getInt("idCredenciales"));
+                usuario.setEstado(rs.getString("estado"));
+                usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
+                usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+                usuario.setNombreRol(rs.getString("nombreRol")); 
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            throw new UsuarioBLException("Error al obtener usuarios.", e);
+        }
+        return usuarios;
+    }
+
+    @Override
+    public UsuarioDTO obtenerUsuarioPorId(int idUsuario) throws UsuarioBLException {
+        UsuarioDTO usuario = null;
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_USUARIO_BY_ID)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new UsuarioDTO();
+                    usuario.setIdUsuarios(rs.getInt("idUsuarios"));
+                    usuario.setNombre(rs.getString("nombre"));
+                    usuario.setIdentificacion(rs.getString("identificacion"));
+                    usuario.setIdCredenciales(rs.getInt("idCredenciales"));
+                    usuario.setIdRol(rs.getInt("idRol"));
+                    usuario.setEstado(rs.getString("estado"));
+                    usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
+                    usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+                }
+            }
+        } catch (SQLException e) {
+            throw new UsuarioBLException("Error al obtener usuario por id.", e);
+        }
+        return usuario;
+    }
+
+    @Override
+    public UsuarioDTO obtenerUsuarioPorIdentificacion(String identificacion) throws UsuarioBLException {
+        UsuarioDTO usuario = null;
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_USUARIO_BY_IDENTIFICACION)) {
+            ps.setString(1, identificacion);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new UsuarioDTO();
+                    usuario.setIdUsuarios(rs.getInt("idUsuarios"));
+                    usuario.setNombre(rs.getString("nombre"));
+                    usuario.setIdentificacion(rs.getString("identificacion"));
+                    usuario.setIdCredenciales(rs.getInt("idCredenciales"));
+                    usuario.setIdRol(rs.getInt("idRol"));
+                    usuario.setEstado(rs.getString("estado"));
+                    usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
+                    usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+                }
+            }
+        } catch (SQLException e) {
+            throw new UsuarioBLException("Error al obtener usuario por identificacion.", e);
+        }
+        return usuario;
+    }
+    
+    @Override
+    public UsuarioDTO obtenerUsuarioPorCredenciales(int idCredenciales) throws UsuarioBLException {
+        UsuarioDTO usuario = null;
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_USUARIO_BY_CREDENCIALES)) {
+            ps.setInt(1, idCredenciales);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new UsuarioDTO();
+                    usuario.setIdUsuarios(rs.getInt("idUsuarios"));
+                    usuario.setNombre(rs.getString("nombre"));
+                    usuario.setIdentificacion(rs.getString("identificacion"));
+                    usuario.setIdCredenciales(rs.getInt("idCredenciales"));
+                    usuario.setIdRol(rs.getInt("idRol"));
+                    usuario.setEstado(rs.getString("estado"));
+                    usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
+                    usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
+                }
+            }
+        } catch (SQLException e) {
+            throw new UsuarioBLException("Error al obtener usuario por credenciales.", e);
+        }
+        return usuario;
+    }
+    
+    private void verificarRolesPorDefecto() {
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement psAdmin = connection.prepareStatement(SELECT_ROLE_BY_NAME)) {
+            psAdmin.setString(1, "Administrador");
+            ResultSet rsAdmin = psAdmin.executeQuery();
+            if (!rsAdmin.next()) {
+                try (PreparedStatement psInsert = connection.prepareStatement("INSERT INTO Roles (nombreRol) VALUES ('Administrador')")) {
+                    psInsert.executeUpdate();
+                }
+            }
+            psAdmin.setString(1, "Supervisor");
+            ResultSet rsSupervisor = psAdmin.executeQuery();
+            if (!rsSupervisor.next()) {
+                try (PreparedStatement psInsert = connection.prepareStatement("INSERT INTO Roles (nombreRol) VALUES ('Supervisor')")) {
+                    psInsert.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cargarUsuarioPorDefecto() {
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream("src/utils/Resources/config/config.properties")) {
+            properties.load(fis);
+            String username = properties.getProperty("username");
+            String password = properties.getProperty("password");
+            String nombre = properties.getProperty("nombre");
+            String rol = properties.getProperty("rol");
+            String identificacion = properties.getProperty("identificacion");
+            System.out.println("username: " + username);
+            System.out.println("password: " + password);
+            System.out.println("nombre: " + nombre);
+            System.out.println("rol: " + rol);
+            System.out.println("identificacion: " + identificacion);
+            if (obtenerUsuarioPorIdentificacion(identificacion) == null) {
+                insertarUsuarioDesdeConfig(username, password, nombre, rol, identificacion);
+            } else {
+                System.out.println("El usuario ya existe en la base de datos.");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean verificarRolPorId(int idUsuario) {
+        String query = "SELECT idRol FROM Usuarios WHERE idUsuarios = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int idRol = rs.getInt("idRol");
+                    return idRol == 1 || idRol == 2; 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public int obtenerIdPorUsuario(String username) {
+        String query = "SELECT u.idUsuarios FROM Usuarios u JOIN Credenciales c ON u.idCredenciales = c.idCredenciales WHERE c.username = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idUsuarios");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; 
+    }
+
+    private void insertarUsuarioDesdeConfig(String username, String password, String nombre, String rol, String identificacion) {
+        try (Connection connection = DbHelper.getConnection()) {
+            if (existeUsername(connection, username)) {
+                System.out.println("El username ya existe. No se insertará.");
+                return; 
+            }
+            int idCredenciales = insertarCredenciales(username, password, connection);
+            int idRol = obtenerRolId(rol, connection);
+            String insertUsuario = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement psUsuario = connection.prepareStatement(insertUsuario)) {
+                psUsuario.setString(1, nombre);
+                psUsuario.setString(2, identificacion);
+                psUsuario.setInt(3, idCredenciales); 
+                psUsuario.setInt(4, idRol);           
+                psUsuario.setString(5, "A");         
+                psUsuario.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+                psUsuario.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+                psUsuario.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String obtenerNombreRolPorIdUsuario(int idUsuario) {
+        String query = "SELECT R.nombreRol FROM Usuarios U " +
+                       "JOIN Roles R ON U.idRol = R.idRol " +
+                       "WHERE U.idUsuarios = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("nombreRol");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; 
+    }
+
+    private int insertarCredenciales(String username, String password, Connection connection) throws SQLException {
+        String insertCredenciales = "INSERT INTO Credenciales (username, password) VALUES (?, ?)";
+        try (PreparedStatement psCredenciales = connection.prepareStatement(insertCredenciales, Statement.RETURN_GENERATED_KEYS)) {
+            psCredenciales.setString(1, username);
+            psCredenciales.setString(2, password);
+            psCredenciales.executeUpdate();
+            ResultSet generatedKeys = psCredenciales.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1); 
+            }
+        }
+        return -1;  
+    }
+
+    public int obtenerRolId(String nombrerol, Connection connection) throws SQLException {
+        String selectRol = "SELECT idRol FROM Roles WHERE nombreRol = ?";
+        try (PreparedStatement ps = connection.prepareStatement(selectRol)) {
+            ps.setString(1, nombrerol);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idRol");
+            } else {
+                String insertRol = "INSERT INTO Roles (nombreRol) VALUES (?)";
+                try (PreparedStatement psInsert = connection.prepareStatement(insertRol, Statement.RETURN_GENERATED_KEYS)) {
+                    psInsert.setString(1, nombrerol);
+                    psInsert.executeUpdate();
+                    ResultSet generatedKeys = psInsert.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);
+                    }
+                }
+            }
+        }
+        return -1;  
+    }
+
+    public boolean existeIdentificacion(Connection connection, String identificacion) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Usuarios WHERE identificacion = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, identificacion);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; 
+            }
+        }
+        return false;
+    }    
+
+    public boolean desactivarUsuario(String identificacion) {
+        String sql = "UPDATE usuarios SET estado = 'E' WHERE identificacion = ?";
+        try (Connection connection = DbHelper.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, identificacion);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0; 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean verificarCredencialesYEstado(String username, String password) {
+        String query = "SELECT u.estado FROM Credenciales c " +
+        "JOIN Usuarios u ON c.idCredenciales = u.idCredenciales " + 
+        "WHERE c.username = ? AND c.password = ?";
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, username);
+            ps.setString(2, password); 
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()){
+                    String estado = rs.getString("estado");
+                    return "A".equals(estado);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean verificarCredencialesPorIdentificacionYEstado(String identificacion) {
+        String query = "SELECT COUNT(*) FROM Usuarios WHERE identificacion = ? AND estado = 'A'";
+        try (Connection connection = DbHelper.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, identificacion);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean existeUsername(Connection connection, String username) throws SQLException {
+        String selectUsername = "SELECT * FROM Credenciales WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(selectUsername)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }    
+}
+package DataAccess.DataHelper;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+public abstract class DbHelper {
+
+    private static final Logger LOGGER = Logger.getLogger(DbHelper.class.getName());
+    private static final String DB_URL = "jdbc:sqlite:database/museo.sqlite";
+    private static final String DRIVER = "org.sqlite.JDBC";
+
+    private static Connection connection;
+
+    static {
+        verificarBaseDeDatos();
+        try {
+            Class.forName(DRIVER);
+            connection = DriverManager.getConnection(DB_URL);
+            if (connection != null) {
+                LOGGER.info("Conexión exitosa a la base de datos.");
+            }
+        } catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "El controlador JDBC no se encontró.", e);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al conectar con la base de datos.", e);
+        }
+    }
+
+    protected DbHelper() {
+    }
+
+  
+    public static Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                LOGGER.info("Intentando reabrir la conexión a la base de datos.");
+                connection = DriverManager.getConnection(DB_URL);
+            }
+            return connection;
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al obtener la conexión.", e);
+            return null;
+        }
+    }
+
+    public static void closeConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+                LOGGER.info("Conexión cerrada correctamente.");
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error al cerrar la conexión.", e);
+        }
+    }
+
+    private static void verificarBaseDeDatos() {
+        File dbFile = new File("database/museo.sqlite");
+        if (!dbFile.exists()) {
+            LOGGER.severe("La base de datos no existe en la ruta: " + dbFile.getAbsolutePath());
+        }
+    }
+}
+package DataAccess.DTO;
+
+import java.time.LocalDateTime;
+
+public class PinturaDTO {
+    private int idPintura;
+    private String titulo;
+    private int anio;
+    private String descripcion;
+    private String codigoBarras;
+    private int idCategoria;
+    private int idAutor;
+    private String nombreAutor;  // Nuevo atributo para el nombre del autor
+    private String categoria;  // Atributo para el nombre de la categoría
+    private String Salas;  // Atributo para el nombre de la sala
+    private int idSala;
+    private String imagen;
+    private String estado;
+    private LocalDateTime fechaCrea;
+    private LocalDateTime fechaModifica;
+
+    public PinturaDTO() {}
+
+    public PinturaDTO(int idPintura, String titulo, int anio, String descripcion, String codigoBarras, 
+                      int idCategoria, String categoria, int idAutor, String nombreAutor, 
+                      String Salas, int idSala, String imagen, String estado, 
+                      LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
+        this.idPintura = idPintura;
+        this.titulo = titulo;
+        this.anio = anio;
+        this.descripcion = descripcion;
+        this.codigoBarras = codigoBarras;
+        this.idCategoria = idCategoria;
+        this.categoria = categoria;
+        this.idAutor = idAutor;
+        this.nombreAutor = nombreAutor;  // Asignar el nombre del autor
+        this.Salas = Salas;  // Asignar el nombre de la sala
+        this.idSala = idSala;
+        this.imagen = imagen;
+        this.estado = estado;
+        this.fechaCrea = fechaCrea;
+        this.fechaModifica = fechaModifica;
+    }
+
+    // Getters and Setters
+
+    public int getIdPintura() {
+        return idPintura;
+    }
+
+    public void setIdPintura(int idPintura) {
+        this.idPintura = idPintura;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getCodigoBarras() {
+        return codigoBarras;
+    }
+
+    public void setCodigoBarras(String codigoBarras) {
+        this.codigoBarras = codigoBarras;
+    }
+
+    public int getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(int idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public String getcategoria() {
+        return categoria;  // Getter para el nombre de la categoría
+    }
+
+    public void setcategoria(String categoria) {
+        this.categoria = categoria;  // Setter para el nombre de la categoría
+    }
+
+    public int getIdAutor() {
+        return idAutor;
+    }
+
+    public void setIdAutor(int idAutor) {
+        this.idAutor = idAutor;
+    }
+
+    public String getNombreAutor() {
+        return nombreAutor;  // Getter para el nombre del autor
+    }
+
+    public void setNombreAutor(String nombreAutor) {
+        this.nombreAutor = nombreAutor;  // Setter para el nombre del autor
+    }
+
+    public String getSalas() {
+        return Salas;  // Getter para el nombre de la sala
+    }
+
+    public void setSalas(String Salas) {
+        this.Salas = Salas;  // Setter para el nombre de la sala
+    }
+
+    public int getIdSala() {
+        return idSala;
+    }
+
+    public void setIdSala(int idSala) {
+        this.idSala = idSala;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFechaCrea() {
+        return fechaCrea;
+    }
+
+    public void setFechaCrea(LocalDateTime fechaCrea) {
+        this.fechaCrea = fechaCrea;
+    }
+
+    public LocalDateTime getFechaModifica() {
+        return fechaModifica;
+    }
+
+    public void setFechaModifica(LocalDateTime fechaModifica) {
+        this.fechaModifica = fechaModifica;
+    }
+
+    @Override
+    public String toString() {
+        return "PinturaDTO{" +
+                "idPintura=" + idPintura +
+                ", titulo='" + titulo + '\'' +
+                ", anio=" + anio +
+                ", descripcion='" + descripcion + '\'' +
+                ", codigoBarras='" + codigoBarras + '\'' +
+                ", idCategoria=" + idCategoria +
+                ", categoria='" + categoria + '\'' +
+                ", idAutor=" + idAutor +
+                ", nombreAutor='" + nombreAutor + '\'' +  // Mostrar el nombre del autor
+                ", Salas='" + Salas + '\'' +  // Mostrar el nombre de la sala
+                ", idSala=" + idSala +
+                ", imagen='" + imagen + '\'' +
+                ", estado='" + estado + '\'' +
+                ", fechaCrea=" + fechaCrea +
+                ", fechaModifica=" + fechaModifica +
+                '}';
+    }
+}
+package DataAccess.DTO;
+
+import java.time.LocalDateTime;
+
+public class UsuarioDTO {
+    private int idUsuarios;            // ID del usuario (autoincremental)
+    private String nombre;             // Nombre del usuario
+    private String identificacion;     // Identificación única del usuario
+    private int idCredenciales;        // ID de las credenciales (relacionado con la tabla Credenciales)
+    private int idRol;                 // ID del rol (relacionado con la tabla Roles)
+    private String nombreRol;
+    private String username;
+    private String password;
+    
+
+
+
+    private String estado;             // Estado del usuario (activo, inactivo, eliminado)
+    private LocalDateTime fechaCrea;   // Fecha de creación del registro
+    private LocalDateTime fechaModifica; // Fecha de última modificación del registro
+
+    public UsuarioDTO() {}
+
+    /**
+     * Constructor que inicializa todos los atributos del usuario
+     * @param idUsuarios
+     * @param nombre
+     * @param identificacion
+     * @param idCredenciales
+     * @param idRol
+     * @param estado
+     * @param fechaCrea
+     * @param fechaModifica
+     */
+    public UsuarioDTO(int idUsuarios, String nombre, String identificacion, int idCredenciales, int idRol, String nombreRol, String username, String estado, LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
+        this.idUsuarios = idUsuarios;
+        this.nombre = nombre;
+        this.identificacion = identificacion;
+        this.idCredenciales = idCredenciales;
+        this.idRol = idRol;
+        this.nombreRol = nombreRol;
+        this.username = username;
+        this.estado = estado;
+        this.fechaCrea = fechaCrea;
+        this.fechaModifica = fechaModifica;
+    }
+
+    // Getters y Setters
+
+    public int getIdUsuarios() {
+        return idUsuarios;
+    }
+
+    public void setIdUsuarios(int idUsuarios) {
+        this.idUsuarios = idUsuarios;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
+    }
+
+    public int getIdCredenciales() {
+        return idCredenciales;
+    }
+
+    public void setIdCredenciales(int idCredenciales) {
+        this.idCredenciales = idCredenciales;
+    }
+
+    public int getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(int idRol) {
+        this.idRol = idRol;
+    }
+
+    public String getNombreRol() {
+        return nombreRol;
+    }
+
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFechaCrea() {
+        return fechaCrea;
+    }
+
+    public void setFechaCrea(LocalDateTime fechaCrea) {
+        this.fechaCrea = fechaCrea;
+    }
+
+    public LocalDateTime getFechaModifica() {
+        return fechaModifica;
+    }
+
+    public void setFechaModifica(LocalDateTime fechaModifica) {
+        this.fechaModifica = fechaModifica;
+    }
+
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "idUsuarios=" + idUsuarios +
+                ", nombre='" + nombre + '\'' +
+                ", identificacion='" + identificacion + '\'' +
+                ", idCredenciales=" + idCredenciales +
+                ", idRol=" + idRol +
+                ", estado='" + estado + '\'' +
+                ", fechaCrea=" + fechaCrea +
+                ", fechaModifica=" + fechaModifica +
+                '}';
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+}
+package DataAccess;
+
+import DataAccess.DTO.PinturaDTO;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public interface IPinturaDAO {
+
+    void insertarPintura(PinturaDTO pintura) throws SQLException;
+
+    void actualizarPintura(PinturaDTO pintura) throws SQLException;
+
+    void eliminarPintura(int idPintura) throws SQLException;
+
+    PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws SQLException;
+
+    List<PinturaDTO> obtenerTodasLasPinturas() throws SQLException;
+
+    PinturaDTO obtenerPinturaPorId(int idPintura) throws SQLException;
+}
+package DataAccess;
+
+import DataAccess.DTO.UsuarioDTO;
+import java.util.List;
+
+public interface IUsuarioDAO {
+    
+    void insertarUsuario(UsuarioDTO usuario);
+    
+    boolean actualizarUsuario(UsuarioDTO usuario);
+    
+    boolean eliminarUsuario(int idUsuario);
+    
+    UsuarioDTO obtenerUsuarioPorIdentificacion(String identificacion);
+    
+    List<UsuarioDTO> obtenerTodosUsuarios();
+    
+    UsuarioDTO obtenerUsuarioPorId(int idUsuario);
+
+    UsuarioDTO obtenerUsuarioPorCredenciales(int idCredenciales);
+}
+package GUI;
+
+import javax.swing.*;
+
+import DataAccess.DAO.UsuarioDAO;
+import GUI.panel.commonPanel.InicioPanel;
+import GUI.panel.commonPanel.SplashScreenPanel;
+
+
+public class AppMuseoUI {
+    private final JFrame frame;
+
+    public AppMuseoUI(JFrame parentFrame) {
+        this.frame = parentFrame;
+    }
+
+    public void iniciarApp(){
+        mostrarSpash();
+    }
+
+    private void mostrarSpash(){
+        JFrame loadingFrame = new JFrame("Cargando la App...");
+        loadingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loadingFrame.setUndecorated(true);
+        loadingFrame.setSize(300, 300);
+        loadingFrame.setLocationRelativeTo(null);
+
+        SplashScreenPanel loadingPanel = new SplashScreenPanel("Bienvenido!!");
+        loadingFrame.setContentPane(loadingPanel);
+        loadingFrame.setVisible(true);
+
+        new Thread(() -> {
+            try {
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                usuarioDAO.cargarUsuarioPorDefecto(); 
+
+                Thread.sleep(3550); 
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            SwingUtilities.invokeLater(() -> {
+                loadingPanel.stopLoadingAnimation();
+                loadingFrame.dispose();
+                mostrarInicio();  
+            });
+        }).start();
+    }
+
+    private void mostrarInicio(){
+        frame.add(new InicioPanel(frame));
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+}
+package GUI.panel.adminPanel;
+
+import DataAccess.DAO.*;
+import GUI.panel.commonPanel.InicioPanel;
+import GUI.panel.pinturaPanel.PinturaPanel;
+import GUI.panel.usuarioPanel.UsuarioPanel;
+import utils.Estilo.*;
+import javax.swing.*;
+import java.awt.*;
+import javax.imageio.ImageIO;
+
+public class AdminPanel extends JPanel {
+
+    private UsuarioPanel usuarioPanel;
+    private PinturaPanel pinturaPanel;
+    private JPanel mainPanel;
+    private JPanel sidebar;
+    private JButton toggleButton;
+    private boolean sidebarVisible = false;
+    private JButton btnVolver;
+
+    private JFrame parentFrame;
+
+    public AdminPanel(JFrame parentFrame, String rol) {
+        this.parentFrame = parentFrame;
+    
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        PinturaDAO pinturaDAO = new PinturaDAO();
+        usuarioPanel = new UsuarioPanel(usuarioDAO);
+        pinturaPanel = new PinturaPanel(pinturaDAO);
+    
+        setLayout(new BorderLayout());
+        setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+    
+        sidebar = createSidebar();
+    
+        mainPanel = new JPanel(new CardLayout());
+        mainPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); 
+    
+        mostrarInicio();
+    
+        mainPanel.add(usuarioPanel, "Usuarios");
+        mainPanel.add(pinturaPanel, "Pinturas");
+    
+        add(mainPanel, BorderLayout.CENTER);
+    
+        toggleButton = ComponentFactory.crearBotonSidebar("☰", e -> toggleSidebar());
+        toggleButton.setFocusPainted(false);
+        toggleButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_SIDEBAR);
+        toggleButton.setForeground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
+        toggleButton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
+        toggleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setOpaque(true);
+        topPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+        topPanel.add(toggleButton);
+        add(topPanel, BorderLayout.NORTH);
+    
+        JButton btnHome = ComponentFactory.crearBotonSidebar("Inicio", e -> mostrarInicio());
+        JButton btnUsuarios = ComponentFactory.crearBotonSidebar("Usuarios", e -> mostrarUsuarios());
+        JButton btnPinturas = ComponentFactory.crearBotonSidebar("Pinturas", e -> mostrarPinturas());
+        btnVolver = ComponentFactory.crearBotonSidebar("Salir", e -> volver());
+    
+        if ("Supervisor".equals(rol)) {
+            btnUsuarios.setEnabled(false);
+        }
+    
+        sidebar.add(Box.createVerticalStrut(20));
+        sidebar.add(btnHome);
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(btnUsuarios);
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(btnPinturas);
+        sidebar.add(Box.createVerticalGlue());
+        sidebar.add(Box.createVerticalStrut(10));
+        sidebar.add(btnVolver);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Image img = cargarImagen("/utils/Resources/logos/InicioAdmin.png");
+        if (img != null) {
+            g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+        }
+    }
+
+    private JPanel createSidebar() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setPreferredSize(new Dimension(200, 0));
+        panel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR); 
+        return panel;
+    }
+
+    public void mostrarUsuarios() {
+        CardLayout cl = (CardLayout) (mainPanel.getLayout());
+        cl.show(mainPanel, "Usuarios");
+    }
+
+    public void mostrarPinturas() {
+        CardLayout cl = (CardLayout) (mainPanel.getLayout());
+        cl.show(mainPanel, "Pinturas");
+    }
+
+    public void mostrarInicio() {
+        JPanel inicioPanel = new JPanel() {
+            private final Image img = cargarImagen("/utils/Resources/logos/InicioAdmin.png");
+    
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (img != null) {
+                    g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+                }
+            }
+        };
+        inicioPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+        mainPanel.add(inicioPanel, "Inicio");
+        ((CardLayout) mainPanel.getLayout()).show(mainPanel, "Inicio");
+    }
+
+    private void toggleSidebar() {
+        sidebarVisible = !sidebarVisible;
+        if (sidebarVisible) {
+            if (sidebar.getParent() == null) {
+                add(sidebar, BorderLayout.WEST);
+            }
+        } else {
+            remove(sidebar);
+        }
+        revalidate();
+        repaint();
+    }
+
+    private Image cargarImagen(String ruta) {
+        try {
+            return ImageIO.read(getClass().getResource(ruta)); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    private void volver() {
+        if (!(parentFrame.getContentPane().getComponent(0) instanceof InicioPanel)) {
+            parentFrame.getContentPane().removeAll();
+            parentFrame.add(new InicioPanel(parentFrame));
+            parentFrame.revalidate();
+            parentFrame.repaint();
+        }
+    }
+    
+}
+package GUI.panel.adminPanel;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import utils.Estilo.*;
+import DataAccess.DAO.UsuarioDAO;
+import GUI.panel.commonPanel.InicioPanel;
+
+public class IngresoAdminPanel extends JPanel {
+    private final JFrame parentFrame;
+
+    public IngresoAdminPanel(JFrame parentFrame) {
+        this.parentFrame = parentFrame;
+
+        setLayout(new BorderLayout(10, 10));
+        setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+
+        JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        tituloPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        JLabel titulo = EstiloFuenteYColor.crearTitulo("Ingreso de Administrador");
+        tituloPanel.add(titulo);
+
+        JPanel volverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        volverPanel.setOpaque(false);
+
+        JButton volverButton = ComponentFactory.crearBotonIcono("back.png", e -> volverAGInicioPanel());
+        volverButton.setPreferredSize(new Dimension(40, 40)); 
+        volverButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        volverPanel.add(volverButton);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.add(volverPanel, BorderLayout.WEST);
+        topPanel.add(tituloPanel, BorderLayout.CENTER);
+
+        add(topPanel, BorderLayout.NORTH);
+
+        JPanel centroPanel = new JPanel();
+        centroPanel.setLayout(new GridBagLayout());
+        centroPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO); 
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); 
+        gbc.anchor = GridBagConstraints.CENTER; 
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        JLabel usuarioLabel = EstiloFuenteYColor.crearTituloSecundario("Usuario:");
+        centroPanel.add(usuarioLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextField usernameField = ComponentFactory.crearCampoTextoUsuario();
+        usernameField.setOpaque(false);
+        usernameField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN));
+        centroPanel.add(usernameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel passwordLabel = EstiloFuenteYColor.crearTituloSecundario("Contraseña:");
+        centroPanel.add(passwordLabel, gbc);
+
+        gbc.gridx = 1;
+        JPasswordField passwordField = ComponentFactory.crearCampoTextoPassword();
+        passwordField.setOpaque(false);
+        passwordField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN)); 
+        centroPanel.add(passwordField, gbc);
+
+        add(centroPanel, BorderLayout.CENTER);
+
+        JPanel botonesPanelInferior = new JPanel();
+        botonesPanelInferior.setLayout(new FlowLayout(FlowLayout.CENTER));  
+        botonesPanelInferior.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        JButton loginButton = ComponentFactory.crearBotonConTextoYIcono("Iniciar Sesión", "ingresar.png", e -> iniciarSesion(usernameField, passwordField));
+        JButton scanButton = ComponentFactory.crearBotonConTextoYIcono("Escanear Credencial", "credencial.png", e -> mostrarVentanaEscanearCredencial());
+
+        loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        scanButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        loginButton.setContentAreaFilled(false); 
+        loginButton.setBorderPainted(false);  
+        loginButton.setOpaque(true);          
+
+        scanButton.setContentAreaFilled(false);  
+        scanButton.setBorderPainted(false);     
+        scanButton.setOpaque(true);             
+
+        loginButton.setPreferredSize(new Dimension(250, 40)); 
+        scanButton.setPreferredSize(new Dimension(250, 40));   
+
+        loginButton.setIconTextGap(20);  
+        scanButton.setIconTextGap(20);   
+
+        loginButton.setHorizontalAlignment(SwingConstants.LEFT);
+        scanButton.setHorizontalAlignment(SwingConstants.LEFT);
+
+        botonesPanelInferior.add(loginButton);
+        botonesPanelInferior.add(scanButton);
+
+        add(botonesPanelInferior, BorderLayout.SOUTH);
+
+        botonesPanelInferior.revalidate();
+        botonesPanelInferior.repaint();
+
+        passwordField.addActionListener(e -> iniciarSesion(usernameField, passwordField));
+    }
+
+    private void iniciarSesion(JTextField usernameField, JPasswordField passwordField) {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+    
+        if (username.isEmpty() || password.isEmpty()) {
+            mostrarMensaje("Por favor, complete todos los campos.", "Error");
+            return;
+        }
+    
+        try {
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            boolean authenticated = usuarioDAO.verificarCredencialesYEstado(username, password);
+            if (authenticated) {
+                int idUsuario = usuarioDAO.obtenerIdPorUsuario(username);
+                
+                boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
+                String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
+                
+                if (rol != null) {
+                    mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
+                    
+                    irPanelAdmin(rol);
+                } else {
+                    mostrarMensaje("Usuario o contraseña incorrectos", "Error");
+                }
+            } 
+        } catch (Exception e) {
+            mostrarMensaje("Error al conectar con la base de datos.", "Error");
+        }
+    }
+    
+    private void verificarYAutenticarCredencial(JTextField identificacionField, JDialog dialog) {
+        String identificacion = identificacionField.getText();
+        if (identificacion.length() < 13) {
+            return;
+        }
+
+        try{
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            boolean authenticated = usuarioDAO.verificarCredencialesPorIdentificacionYEstado(identificacion);
+            if (authenticated) {
+                mostrarMensaje("Inicio de sesión exitoso.", "Éxito");
+                dialog.dispose();
+                irPanelAdmin(identificacion);
+            } else {
+                mostrarMensaje("ID de credencial incorrecto.", "Error");
+                identificacionField.setText(""); 
+            }
+        } catch (Exception e) {
+            mostrarMensaje("Error al conectar con la base de datos.", "Error");
+        }
+    }
+    
+    private void mostrarMensaje(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(
+            this,
+            mensaje,
+            titulo,
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void mostrarVentanaEscanearCredencial() {
+        JDialog dialog = new JDialog(parentFrame, "Escanear Credencial", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(400, 200);
+        dialog.setLocationRelativeTo(this);
+
+        JLabel titulo = EstiloFuenteYColor.crearTituloSecundario("Escanee su Credencial:");
+        dialog.add(titulo, BorderLayout.NORTH);
+
+        JPanel panelCentral = EstiloFuenteYColor.crearPanelTransparente();
+        JTextField idField = ComponentFactory.crearCampoTextoUsuario();
+        panelCentral.add(idField);
+        dialog.add(panelCentral, BorderLayout.CENTER);
+
+        JPanel panelInferior = EstiloFuenteYColor.crearPanelTransparente();
+        JButton cancelButton = ComponentFactory.crearBoton("Cancelar", e -> dialog.dispose());
+        panelInferior.add(cancelButton);
+        dialog.add(panelInferior, BorderLayout.SOUTH);
+        idField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                verificarYAutenticarCredencial(idField, dialog);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                verificarYAutenticarCredencial(idField, dialog);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                verificarYAutenticarCredencial(idField, dialog);
+            }
+        });
+
+        dialog.setVisible(true);
+    }
+
+    private void irPanelAdmin(String rol) {
+        parentFrame.getContentPane().removeAll();
+        parentFrame.add(new AdminPanel(parentFrame, rol));  
+        parentFrame.revalidate();
+        parentFrame.repaint();
+    }
+    
+    private void volverAGInicioPanel() {
+        parentFrame.getContentPane().removeAll();
+        parentFrame.getContentPane().add(new InicioPanel(parentFrame));
+        parentFrame.revalidate();
+        parentFrame.repaint();
+    }
+}package GUI.panel.commonPanel;
+
+import utils.Estilo.*;
+import javax.swing.*;
+import GUI.panel.adminPanel.IngresoAdminPanel;
+import java.awt.*;
+
+public class InicioPanel extends JPanel {
+    private final JFrame parentFrame;
+    private boolean sidebarVisible = false;
+    private JPanel sidebarPanel;
+
+    public InicioPanel(JFrame parentFrame) {
+        this.parentFrame = parentFrame;
+        setLayout(new BorderLayout());
+
+        BackgroundPanel backgroundPanel = new BackgroundPanel("src/utils/Resources/logos/InicioImage.png");
+        backgroundPanel.setLayout(new BorderLayout());
+
+        sidebarPanel = createSidebar();
+        sidebarPanel.setVisible(sidebarVisible);
+
+        JButton textIconButton = new JButton("☰ Menú");
+        textIconButton.setFocusPainted(false);
+        textIconButton.setBackground(EstiloFuenteYColor.COLOR_BOTON_TOGGLE);
+        textIconButton.setForeground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
+        textIconButton.setFont(EstiloFuenteYColor.FUENTE_BOTON_TOGGLE);
+        textIconButton.setBorder(EstiloBordes.BORDE_BOTON_SIDEBAR);
+        textIconButton.setToolTipText("Abrir menú");
+        textIconButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+        textIconButton.addActionListener(e -> toggleSidebar());
+
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setOpaque(false);
+        topPanel.add(textIconButton);
+
+        backgroundPanel.add(topPanel, BorderLayout.NORTH);
+        backgroundPanel.add(sidebarPanel, BorderLayout.LINE_START);
+
+        add(backgroundPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel createSidebar() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setPreferredSize(new Dimension(200, 0));
+        panel.setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+
+        JLabel titleLabel = ComponentFactory.crearTituloSidebar("Opciones");
+
+        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", _ -> irModoVisitante());
+        visitarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+
+        JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", _ -> irLogin());
+        adminButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(titleLabel);
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(visitarButton);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(adminButton);
+
+        return panel;
+    }
+
+    private void toggleSidebar() {
+        sidebarVisible = !sidebarVisible;
+        sidebarPanel.setVisible(sidebarVisible);
+        revalidate();
+        repaint();
+    }
+
+    private void irModoVisitante() {
+        parentFrame.getContentPane().removeAll();
+        parentFrame.add(new PanelVisitante(parentFrame));
+        parentFrame.revalidate();
+        parentFrame.repaint();
+    }
+
+    private void irLogin() {
+        parentFrame.getContentPane().removeAll();
+        parentFrame.add(new IngresoAdminPanel(parentFrame));
+        parentFrame.revalidate();
+        parentFrame.repaint();
+    }
+}
+package GUI.panel.commonPanel;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+import DataAccess.DAO.PinturaDAO;
+import DataAccess.DTO.PinturaDTO; 
+import utils.Estilo.*;
+
+    public class PanelVisitante extends JPanel {
+        private JTextArea resultadoArea;
+        private JTextArea tituloArea;  
+        private JLabel imagenPinturaLabel;
+        private PinturaDAO pinturaDAO; 
+    
+        public PanelVisitante(JFrame parentFrame) {
+            setLayout(new BorderLayout());
+            setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+            
+            pinturaDAO = new PinturaDAO();
+    
+            BackgroundPanel backgroundPanel = new BackgroundPanel("src/utils/Resources/logos/FondoVisitante.png");
+            backgroundPanel.setLayout(new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS));
+            backgroundPanel.setBackground(new Color(0, 0, 0, 1));
+
+            add(backgroundPanel, BorderLayout.CENTER);
+    
+            JPanel topPanel = new JPanel(new BorderLayout());
+            topPanel.setOpaque(false);
+            
+            JButton volverButton = ComponentFactory.crearBotonIcono("back.png", _ -> {
+                parentFrame.getContentPane().removeAll();
+                parentFrame.add(new InicioPanel(parentFrame));
+                parentFrame.revalidate();
+                parentFrame.repaint();
+            });
+    
+            JLabel tituloLabel = EstiloFuenteYColor.crearTextoPrincipal("Escanee la Pintura por favor");
+            tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    
+            topPanel.add(volverButton, BorderLayout.WEST);
+            volverButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+            topPanel.add(tituloLabel, BorderLayout.CENTER);
+            backgroundPanel.add(topPanel);
+    
+            JPanel escaneoPanel = ComponentFactory.crearPanelTransparenteConLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            escaneoPanel.setOpaque(false);
+    
+            JTextField codigoInput = new JTextField();
+            codigoInput.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+            codigoInput.setPreferredSize(new Dimension(200, 40));
+            codigoInput.setOpaque(false);
+            // codigoInput.setSelectedTextColor(Color.WHITE); 
+            // codigoInput.setCaretColor(Color.WHITE); 
+            codigoInput.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO); 
+    
+            JButton buscarButton = ComponentFactory.crearBotonIcono("buscarpaint.png", _ -> {
+                try {
+                    buscarPintura(codigoInput);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+    
+            buscarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+    
+            escaneoPanel.add(codigoInput);
+            escaneoPanel.add(buscarButton);
+            backgroundPanel.add(escaneoPanel);
+    
+            JPanel mainContentPanel = new JPanel(new BorderLayout());
+            mainContentPanel.setOpaque(false);
+    
+            JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            imagePanel.setOpaque(false);
+            imagenPinturaLabel = new JLabel();
+            imagenPinturaLabel.setHorizontalAlignment(SwingConstants.CENTER); 
+            imagenPinturaLabel.setOpaque(false); 
+            imagePanel.add(imagenPinturaLabel);
+    
+            JPanel detallePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+            detallePanel.setOpaque(false);
+            detallePanel.setPreferredSize(new Dimension(480, 300)); 
+    
+            tituloArea = new JTextArea();
+            tituloArea.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR); 
+            tituloArea.setEditable(false);
+            tituloArea.setFocusable(false);
+        
+            tituloArea.setBackground(new Color(0, 0, 0, 1)); 
+            tituloArea.setSelectedTextColor(Color.WHITE); 
+            tituloArea.setLineWrap(true);
+            tituloArea.setWrapStyleWord(true);
+            tituloArea.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO);
+
+            tituloArea.setPreferredSize(new Dimension(200, 25)); 
+            tituloArea.setMinimumSize(new Dimension(150, 25)); 
+
+            JScrollPane tituloScrollPane = new JScrollPane(tituloArea);
+            tituloScrollPane.setPreferredSize(new Dimension(200, 25));
+            tituloScrollPane.setBorder(null);
+            tituloScrollPane.setOpaque(false);
+            tituloScrollPane.getViewport().setOpaque(false); 
+            detallePanel.add(tituloScrollPane);
+
+            resultadoArea = new JTextArea();
+            EstiloFuenteYColor.aplicarEstiloFondoYTexto(resultadoArea);
+            resultadoArea.setEditable(false);
+            resultadoArea.setFocusable(false); 
+            resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO.deriveFont(30f)); 
+            resultadoArea.setSelectedTextColor(Color.WHITE); 
+            resultadoArea.setLineWrap(true);
+            resultadoArea.setWrapStyleWord(true);
+            resultadoArea.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO);
+    
+            JScrollPane detalleScrollPane = new JScrollPane(resultadoArea);
+            detalleScrollPane.setPreferredSize(new Dimension(480, 300)); 
+            detalleScrollPane.setBorder(null);
+            detalleScrollPane.setOpaque(false);
+            detalleScrollPane.getViewport().setOpaque(false); 
+            detallePanel.add(detalleScrollPane);
+    
+            JPanel contentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 10));
+            contentPanel.setOpaque(false);
+            contentPanel.add(imagePanel);
+            contentPanel.add(detallePanel);
+    
+            mainContentPanel.add(contentPanel, BorderLayout.CENTER);
+            backgroundPanel.add(mainContentPanel);
+    
+            codigoInput.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    String codigoBarras = codigoInput.getText();
+                    if (codigoBarras.length() == 13) {
+                        try {
+                            buscarPintura(codigoInput);
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
+    
+
+        private void buscarPintura(JTextField codigoInput) throws SQLException {
+            String codigoBarras = codigoInput.getText();
+            if (codigoBarras.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un código de barras.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        
+            PinturaDTO pinturaDTO = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+            if (pinturaDTO != null) {
+                mostrarDetallesPintura(pinturaDTO);
+                mostrarImagenPintura(pinturaDTO);
+            } else {
+                resultadoArea.setText("No se encontró ninguna pintura con el código de barras ingresado.");
+                imagenPinturaLabel.setIcon(null);
+            }
+        
+            revalidate();  
+            repaint();     
+        }
+    
+
+        private void mostrarDetallesPintura(PinturaDTO pinturaDTO) {
+            tituloArea.setText(pinturaDTO.getTitulo());
+        
+            resultadoArea.setText("");
+            resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO); 
+            resultadoArea.append("Autor: " + pinturaDTO.getNombreAutor() + "\n");
+            resultadoArea.append("Año: " + pinturaDTO.getAnio() + "\n");
+            resultadoArea.append("" + pinturaDTO.getcategoria() + "\n");
+            resultadoArea.append("\n" + pinturaDTO.getDescripcion() + "\n");
+            resultadoArea.append("\n" + pinturaDTO.getSalas() + "\n");
+        }
+    
+        private void mostrarImagenPintura(PinturaDTO pinturaDTO) {
+            String imagenPath = "src/utils/Resources/paintings/" + pinturaDTO.getCodigoBarras() + ".jpg";
+            File imagenFile = new File(imagenPath);
+            if (imagenFile.exists()) {
+                try {
+                    Image img = ImageIO.read(imagenFile);
+                    ImageIcon icon = new ImageIcon(img.getScaledInstance(300, 400, Image.SCALE_SMOOTH));
+                    imagenPinturaLabel.setIcon(icon);
+                } catch (IOException e) {
+                    imagenPinturaLabel.setIcon(null); 
+                    e.printStackTrace();
+                }
+            } else {
+                imagenPinturaLabel.setIcon(null); 
+            }
+        }
+}
+package GUI.panel.commonPanel;
+
+import utils.Estilo.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+public class SplashScreenPanel extends JPanel {
+
+    private int angle = 0;
+    private Timer timer;
+    private int progress = 0;
+    private static final int MAX_ANGLE = 1080;
+    private static final int MAX_PROGRESS = 100;
+    private Image logo;
+
+    public SplashScreenPanel(String mensajeBienvenida) {
+        setLayout(null);
+        setBackground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
+
+        try {
+            logo = ImageIO.read(new File("src/utils/Resources/logos/ArtVisionLogo.png"));
+            if (logo == null) {
+                System.err.println("No se pudo cargar la imagen: " + logo);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar la imagen: " + e.getMessage());
+            logo = createDefaultImage();
+        }
+        startLoadingAnimation();
+    }
+
+ 
+    private Image createDefaultImage() {
+        int width = 100, height = 100;
+        BufferedImage defaultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = defaultImage.createGraphics();
+        g2d.setColor(EstiloFuenteYColor.COLOR_BOTON_SIDEBAR);
+        g2d.fillRect(0, 0, width, height);
+        g2d.setColor(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
+        g2d.drawString("Logo no disponible", 10, 50);
+        g2d.dispose();
+        return defaultImage;
+    }
+
+
+    private void startLoadingAnimation() {
+        timer = new Timer(50, _ -> {
+            angle += 20;
+            if (angle >= MAX_ANGLE) {
+                angle = MAX_ANGLE;
+                timer.stop();
+            }
+
+            progress = (int) ((double) angle / MAX_ANGLE * MAX_PROGRESS);
+            repaint();
+        });
+        timer.start();
+    }
+
+
+    public void stopLoadingAnimation() {
+        if (timer != null) {
+            timer.stop();
+        }
+    }
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        int logoWidth = 360;
+        int logoHeight = 360;
+
+        int x = (getWidth() - logoWidth) / 2;
+        int y = (getHeight() - logoHeight) / 2 - 30;
+
+        g2d.drawImage(logo.getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH), x, y, this);
+
+        int circleRadius = 15;
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() - 25;
+
+        g2d.setStroke(new BasicStroke(3));
+        g2d.setColor(EstiloFuenteYColor.COLOR_LOGGIN); 
+        g2d.drawArc(centerX - circleRadius, centerY - circleRadius, circleRadius * 2, circleRadius * 2, angle % 360, 270);
+
+        String percentageText = progress + "%";
+        FontMetrics fm = g2d.getFontMetrics(EstiloFuenteYColor.FUENTE_LOGIN);
+        int textWidth = fm.stringWidth(percentageText);
+        int textHeight = fm.getHeight();
+
+        g2d.setColor(EstiloFuenteYColor.COLOR_LOGGIN);
+        g2d.setFont(EstiloFuenteYColor.FUENTE_LOGIN);
+        g2d.drawString(percentageText, centerX - textWidth / 2, centerY + textHeight / 3);
+    }
+}
+package GUI.panel.pinturaPanel;
+
+import DataAccess.DAO.PinturaDAO;
+import DataAccess.DTO.PinturaDTO;
+import utils.Estilo.ComponentFactory;
+import utils.Estilo.EstiloFuenteYColor;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
+import BusinessLogic.UsuarioBLException;
+
+import java.awt.*;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
+import java.time.LocalDateTime;
+
+public class PinturaPanel extends JPanel {
+
+    private JTable      tablaPinturas;
+    private JButton     btnAgregarPintura;
+    private JButton     btnModificarPintura;
+    private JButton     btnEliminarPintura;
+    private PinturaDAO  pinturaDAO;
+    private JPanel      panelBotones;
+    private JLabel      lblImagenPreview;
+    private JPanel      panelFormulario;
+    private JPanel      panelContenido;
+    private JTextField  txtTitulo, 
+                        txtAutor, 
+                        txtAnio, 
+                        txtDescripcion, 
+                        txtCodigoBarras, 
+                        txtCategoria, 
+                        txtIdSala;
+                        
+    public PinturaPanel(PinturaDAO pinturaDAO) {
+        this.pinturaDAO = pinturaDAO;
+        setLayout(new BorderLayout());
+        setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+
+        panelContenido = new JPanel();
+        panelContenido.setLayout(new BorderLayout());
+
+        JPanel panelTabla = new JPanel(new BorderLayout());
+        tablaPinturas = new JTable(new DefaultTableModel(new Object[]{"ID", "Título", "Autor", "Año"}, 0));
+        tablaPinturas.setGridColor(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+        tablaPinturas.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        JScrollPane scrollPinturas = new JScrollPane(tablaPinturas);
+        panelTabla.add(scrollPinturas, BorderLayout.CENTER);
+
+        JTableHeader header = tablaPinturas.getTableHeader();
+        header.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        header.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
+        header.setFont(EstiloFuenteYColor.FUENTE_TABLA);
+                        
+        panelFormulario = new JPanel(new GridLayout(8, 2));
+                        
+        JPanel panelImagen = new JPanel(new BorderLayout());
+        lblImagenPreview = new JLabel();
+        lblImagenPreview.setPreferredSize(new Dimension(400, 400));
+        panelImagen.add(lblImagenPreview, BorderLayout.CENTER);
+                        
+        panelContenido.add(panelTabla, BorderLayout.CENTER); 
+        panelContenido.add(panelFormulario, BorderLayout.SOUTH);
+                        
+        add(panelContenido, BorderLayout.CENTER);
+        add(panelImagen, BorderLayout.EAST);
+                        
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnAgregarPintura = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
+        btnModificarPintura = ComponentFactory.crearBoton("Modificar", _ -> {
+            try {
+                activarModoModificar();
+            } catch (UsuarioBLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+                e.printStackTrace();
+            }
+        });
+        btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", _ -> {
+            try {
+                eliminarPintura();
+            } catch (UsuarioBLException | SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+                e.printStackTrace();
+            }
+        });
+                        
+        panelBotones.add(btnAgregarPintura);
+        panelBotones.add(btnModificarPintura);
+        panelBotones.add(btnEliminarPintura);
+        add(panelBotones, BorderLayout.NORTH);
+                        
+        cargarPinturas();
+                        
+        tablaPinturas.getSelectionModel().addListSelectionListener(_ -> {
+            try {
+                mostrarImagenSeleccionada();
+            } catch (UsuarioBLException | SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+                e.printStackTrace();
+            }
+        });
+        tablaPinturas.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                try {
+                    activarModoModificar();
+                } catch (UsuarioBLException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+                    
+        private void mostrarFormularioAgregar() {
+
+            panelFormulario.removeAll();  
+            panelFormulario.setLayout(new GridLayout(8, 2));
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Título:"));
+            txtTitulo = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtTitulo);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Autor:"));
+            txtAutor = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtAutor);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Año:"));
+            txtAnio = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtAnio);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Descripción:"));
+            txtDescripcion = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtDescripcion);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Código de barras:"));
+            txtCodigoBarras = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtCodigoBarras);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Categoría:"));
+            txtCategoria = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtCategoria);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Sala:"));
+            txtIdSala = ComponentFactory.crearCampoTextoTransparente("");
+            panelFormulario.add(txtIdSala);
+                    
+            lblImagenPreview.setPreferredSize(new Dimension(200, 200));
+                    
+            JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
+                try {
+                    agregarPintura();
+                } catch (UsuarioBLException | SQLException e) {
+                    e.printStackTrace();
+                }
+                });
+            
+            panelFormulario.add(btnGuardar);
+                            
+            revalidate();
+            repaint();
+        }
+
+    private void activarModoModificar() throws UsuarioBLException {
+        int row = tablaPinturas.getSelectedRow();
+            if (row != -1) {
+                String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
+                PinturaDTO pintura = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+                if (pintura != null) {
+                    panelFormulario.removeAll();
+                    panelFormulario.setLayout(new GridLayout(8, 2));
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Título:"));
+                    txtTitulo = ComponentFactory.crearCampoTextoTransparente(pintura.getTitulo());
+                    panelFormulario.add(txtTitulo);
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Autor:"));
+                    String autor = pinturaDAO.obtenerNombreAutorPorId(pintura.getIdAutor());
+                    txtAutor = ComponentFactory.crearCampoTextoTransparente(autor);
+                    panelFormulario.add(txtAutor);
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Año:"));
+                    txtAnio = ComponentFactory.crearCampoTextoTransparente(String.valueOf(pintura.getAnio()));
+                    panelFormulario.add(txtAnio);
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Descripción:"));
+                    txtDescripcion = ComponentFactory.crearCampoTextoTransparente(pintura.getDescripcion());
+                    panelFormulario.add(txtDescripcion);
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Código de barras:"));
+                    txtCodigoBarras = ComponentFactory.crearCampoTextoTransparente(pintura.getCodigoBarras());
+                    txtCodigoBarras.setEditable(false);
+                    panelFormulario.add(txtCodigoBarras);
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Categoría:"));
+                    String categoria = pinturaDAO.obtenerNombreCategoriaPorId(pintura.getIdCategoria());
+                    txtCategoria = ComponentFactory.crearCampoTextoTransparente(categoria);
+                    panelFormulario.add(txtCategoria);
+                        
+                    panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Sala:"));
+                    String sala = pinturaDAO.obtenerNombreSalaPorId(pintura.getIdSala());
+                    txtIdSala = ComponentFactory.crearCampoTextoTransparente(sala);
+                    panelFormulario.add(txtIdSala);
+                        
+                    JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", _ -> {
+                        try {
+                            actualizarPintura(pintura.getIdPintura());
+                        } catch (UsuarioBLException | HeadlessException | SQLException e) {
+                            e.printStackTrace();
+                        }
+                        });
+                    
+                    panelFormulario.add(btnActualizar);
+                        
+                    panelContenido.add(panelFormulario, BorderLayout.SOUTH);
+                    panelContenido.revalidate();
+                    panelContenido.repaint();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione una pintura para modificar.");
+            }
+        }
+                                            
+        private void cargarPinturas() {
+            List<PinturaDTO> pinturas = pinturaDAO.obtenerPinturasResumen(); 
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("Código Barras");
+            model.addColumn("Título");
+            model.addColumn("Autor");
+            model.addColumn("Año");
+        
+            for (PinturaDTO pintura : pinturas) {
+                String autor = pinturaDAO.obtenerNombreAutorPorId(pintura.getIdAutor());
+                model.addRow(new Object[]{pintura.getCodigoBarras(), 
+                        pintura.getTitulo(), 
+                        autor, 
+                        pintura.getAnio()});
+            }
+        
+            tablaPinturas.setModel(model);
+            tablaPinturas.setRowHeight(20);
+        }
+        
+        private void agregarPintura() throws SQLException {
+            String titulo =         txtTitulo.getText();
+            String autor =          txtAutor.getText();
+            int anio;
+            String descripcion =    txtDescripcion.getText();
+            String codigoBarras =   txtCodigoBarras.getText();
+            String categoria =      txtCategoria.getText();
+            String sala =           txtIdSala.getText();
+    
+            try {
+                anio = Integer.parseInt(txtAnio.getText());
+                if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
+                    // Mostrar un mensaje de error si el año no es válido
+                    JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                                  "Año inválido", JOptionPane.ERROR_MESSAGE);
+                    return;  // Termina el método para no continuar con el proceso
+                }
+            } catch (NumberFormatException e) {
+                // Si la conversión a número falla, mostramos un mensaje de error
+                JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                              "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int idAutor = pinturaDAO.obtenerIdAutorPorNombre(autor);
+            int idCategoria = pinturaDAO.obtenerIdCategoriaPorNombre(categoria);
+            int idSala = pinturaDAO.obtenerIdSalaPorNombre(sala);
+    
+            if (idAutor == -1 || idCategoria == -1 || idSala == -1) {
+                JOptionPane.showMessageDialog(this, "Autor, Categoría o Sala no encontrados en la base de datos.");
+                return;
+            }
+    
+            String imagen = "src/utils/Resources/paintings/" + codigoBarras + ".jpg";
+    
+            if (titulo.isEmpty() || descripcion.isEmpty() || codigoBarras.isEmpty() || !new File(imagen).exists()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados y la imagen debe existir.");
+                return;
+            }
+    
+            PinturaDTO nuevaPinturaDTO = new PinturaDTO(
+                0, 
+                titulo,
+                anio,
+                descripcion,
+                codigoBarras,
+                idCategoria,
+                null,
+                idAutor,
+                null, 
+                null, 
+                idSala,
+                imagen,
+                "A",
+                LocalDateTime.now(),
+                LocalDateTime.now()
+            );
+    
+            try {
+                PinturaDAO pinturaDAO = new PinturaDAO();
+                pinturaDAO.insertarPintura(nuevaPinturaDTO);
+                JOptionPane.showMessageDialog(this, "Pintura agregada exitosamente.");
+                cargarPinturas(); 
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al agregar la pintura: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+    private void mostrarImagenSeleccionada() throws SQLException {
+        int row = tablaPinturas.getSelectedRow();
+        if (row != -1) {
+            String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
+            PinturaDTO pintura = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+            if (pintura != null) {
+                String rutaImagen = "src/utils/Resources/paintings/" + codigoBarras + ".jpg";
+                File archivoImagen = new File(rutaImagen);
+                if (archivoImagen.exists()) {
+                    ImageIcon imagenIcon = new ImageIcon(rutaImagen);
+                    Image img = imagenIcon.getImage();
+                    Image nuevaImagen = img.getScaledInstance(400, 400, Image.SCALE_SMOOTH);
+                    lblImagenPreview.setIcon(new ImageIcon(nuevaImagen));
+                } else {
+                    lblImagenPreview.setIcon(null);
+                    JOptionPane.showMessageDialog(this, "Imagen no encontrada.");
+                }
+            }
+
+        }
+    }
+    
+    private void eliminarPintura() throws SQLException {
+        int row = tablaPinturas.getSelectedRow();
+        if (row != -1) {
+            String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
+            PinturaDTO pintura = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+            if (pintura != null) {
+                int opcion = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro de que deseas eliminar esta pintura?", 
+                    "Confirmar eliminación", 
+                    JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.WARNING_MESSAGE);
+                if (opcion == JOptionPane.YES_OPTION) {
+                    try {
+                        pinturaDAO.actualizarEstadoPintura(pintura.getIdPintura(), "E");
+                        JOptionPane.showMessageDialog(this, "Pintura eliminada con Exito.");
+                        cargarPinturas();
+                    } catch (SQLException e) {
+                        JOptionPane.showMessageDialog(this, "Error al eliminar la pintura: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+    
+    private void actualizarPintura(int idPintura) throws HeadlessException, SQLException {
+        String titulo =         txtTitulo.getText();
+        String autor =          txtAutor.getText();
+        int anio;
+        String descripcion =    txtDescripcion.getText();
+        String codigoBarras =   txtCodigoBarras.getText();
+        String categoria =      txtCategoria.getText();
+        String sala =           txtIdSala.getText();
+        
+        try {
+        anio = Integer.parseInt(txtAnio.getText());
+        if (anio < 1000 || anio > LocalDateTime.now().getYear()) {
+            // Mostrar un mensaje de error si el año no es válido
+            JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                          "Año inválido", JOptionPane.ERROR_MESSAGE);
+            return;  // Termina el método para no continuar con el proceso
+        }
+    } catch (NumberFormatException e) {
+        // Si la conversión a número falla, mostramos un mensaje de error
+        JOptionPane.showMessageDialog(this, "El año debe ser un número válido.", 
+                                      "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+        String imagen = "src/utils/Resources/paintings/" + codigoBarras + ".jpg";
+        
+        if (titulo.isEmpty() || autor.isEmpty() || descripcion.isEmpty() || codigoBarras.isEmpty() || categoria.isEmpty() || sala.isEmpty() || !new File(imagen).exists()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos deben ser completados y la imagen debe existir.");
+            return;
+        }
+        
+        int idAutor = pinturaDAO.obtenerIdAutorPorNombre(autor);  
+        int idCategoria = pinturaDAO.obtenerIdCategoriaPorNombre(categoria); 
+        int idSala = pinturaDAO.obtenerIdSalaPorNombre(sala);  
+        
+        if (idAutor == -1 || idCategoria == -1 || idSala == -1) {
+            JOptionPane.showMessageDialog(this, "Autor, Categoría o Sala no encontrados en la base de datos.");
+            return;
+        }
+        
+        PinturaDTO pinturaModificada = new PinturaDTO(idPintura, 
+                                                      titulo, 
+                                                      anio, 
+                                                      descripcion, 
+                                                      codigoBarras, 
+                                                      idCategoria,  
+                                                      null, 
+                                                      idAutor, 
+                                                      null, null, idSala, 
+                                                      imagen,
+                                                      "A",  
+                                                      LocalDateTime.now(), 
+                                                      LocalDateTime.now()); 
+    
+        pinturaDAO.actualizarPintura(pinturaModificada);
+        JOptionPane.showMessageDialog(this, "Pintura modificada exitosamente.");
+        cargarPinturas(); 
+    }
+    
+}package GUI.panel.usuarioPanel;
+
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import DataAccess.DAO.UsuarioDAO;
+import DataAccess.DTO.UsuarioDTO;
+import DataAccess.DataHelper.DbHelper;
+import utils.Estilo.ComponentFactory;
+import utils.Estilo.EstiloFuenteYColor;
+
+public class UsuarioPanel extends JPanel {
+    private JTable tablaUsuarios;
+    private JButton btnAgregarUsuario;
+    private JButton btnModificarUsuario;
+    private JButton btnEliminarUsuario;
+    private UsuarioDAO usuarioDAO;
+    private JPanel panelFormulario;
+    private JPasswordField txtPassword;
+    @SuppressWarnings("unused")
+    private boolean modificando = false;
+    private JTextField txtNombre, txtIdentificacion, txtUsername;
+
+    public UsuarioPanel(UsuarioDAO usuarioDAO) {
+        this.usuarioDAO = usuarioDAO;
+        setLayout(new BorderLayout());
+        setBackground(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+
+        tablaUsuarios = new JTable();
+        tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablaUsuarios.getSelectionModel().addListSelectionListener(_ -> mostrarFormularioModificar());
+        tablaUsuarios.setRowHeight(25);
+        tablaUsuarios.setGridColor(EstiloFuenteYColor.COLOR_FONDO_SIDEBAR);
+        tablaUsuarios.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+
+        JTableHeader header = tablaUsuarios.getTableHeader();
+        header.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        header.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
+        header.setFont(EstiloFuenteYColor.FUENTE_TABLA);
+
+        JScrollPane scrollUsuarios = new JScrollPane(tablaUsuarios);
+        scrollUsuarios.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(scrollUsuarios, BorderLayout.CENTER);
+
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelBotones.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        btnAgregarUsuario = ComponentFactory.crearBoton("Agregar", _ -> mostrarFormularioAgregar());
+        btnModificarUsuario = ComponentFactory.crearBoton("Modificar", _ -> activarModoModificar());
+        btnEliminarUsuario = ComponentFactory.crearBoton("Eliminar", _ -> eliminarUsuario());
+
+        panelBotones.add(btnAgregarUsuario);
+        panelBotones.add(btnModificarUsuario);
+        panelBotones.add(btnEliminarUsuario);
+        add(panelBotones, BorderLayout.NORTH);
+
+        panelFormulario = new JPanel(new GridLayout(6, 2, 10, 10));
+        panelFormulario.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        panelFormulario.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        add(panelFormulario, BorderLayout.SOUTH);
+
+        cargarUsuarios();
+    }
+
+    private void cargarUsuarios() {
+        List<UsuarioDTO> usuarios = usuarioDAO.obtenerTodosUsuarios();
+    
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Nombre");
+        model.addColumn("Rol");
+        model.addColumn("Identificación");
+    
+        for (UsuarioDTO usuario : usuarios) {
+            model.addRow(new Object[]{
+                usuario.getNombre(),
+                usuario.getNombreRol(), 
+                usuario.getIdentificacion()
+            });
+        }
+        tablaUsuarios.setModel(model);
+    }
+
+    private void mostrarFormularioAgregar() {
+        panelFormulario.removeAll();
+
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Nombre:"));
+        txtNombre = ComponentFactory.crearCampoTextoTransparente("");  
+        panelFormulario.add(txtNombre);
+    
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Rol:"));
+        JComboBox<String> comboRoles = new JComboBox<>(new String[]{"Administrador", "Supervisor"});
+        panelFormulario.add(comboRoles);
+    
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Identificación:"));
+        txtIdentificacion = ComponentFactory.crearCampoTextoTransparente("");  
+        panelFormulario.add(txtIdentificacion);
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Nombre de usuario:"));
+        txtUsername = ComponentFactory.crearCampoTextoTransparente("");  
+        panelFormulario.add(txtUsername);
+        panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Contraseña:"));
+        txtPassword = ComponentFactory.crearCampoTextoPasswordTransparente();  
+        panelFormulario.add(txtPassword);
+    
+        JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", _ -> {
+            try {
+                agregarUsuario(comboRoles);  
+            } catch (HeadlessException | SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        panelFormulario.add(btnGuardar);
+    
+        revalidate();
+        repaint();
+    }
+
+    private void agregarUsuario(JComboBox<String> comboRoles) throws HeadlessException, SQLException {
+        String nombre = txtNombre.getText();
+        String nombreRol = (String) comboRoles.getSelectedItem();
+        String identificacion = txtIdentificacion.getText();
+        String username = txtUsername.getText();
+        String password = new String(txtPassword.getPassword());
+    
+        try (Connection connection = DbHelper.getConnection()) {
+            int idRol = usuarioDAO.obtenerRolId(nombreRol, connection);
+    
+            if (usuarioDAO.existeIdentificacion(connection, identificacion)) {
+                JOptionPane.showMessageDialog(this, "Error: La identificación ya está registrada en otro usuario.");
+                return;
+            }
+    
+            if (usuarioDAO.existeUsername(connection, username)) {
+                JOptionPane.showMessageDialog(this, "Error: El nombre de usuario ya existe.");
+                return;
+            }
+    
+            UsuarioDTO usuario = new UsuarioDTO();
+            usuario.setNombre(nombre);
+            usuario.setIdRol(idRol);
+            usuario.setIdentificacion(identificacion);
+            usuario.setUsername(username);
+            usuario.setPassword(password);
+    
+            usuarioDAO.insertarUsuario(usuario);
+            JOptionPane.showMessageDialog(this, "Usuario agregado correctamente.");
+    
+            cargarUsuarios();
+        }
+    }
+
+    private void mostrarFormularioModificar() {
+        int row = tablaUsuarios.getSelectedRow();
+        
+        if (row != -1) {
+            String nombre = (String) tablaUsuarios.getValueAt(row, 0);
+            String rol = (String) tablaUsuarios.getValueAt(row, 1);
+            String identificacion = (String) tablaUsuarios.getValueAt(row, 2);
+
+            panelFormulario.removeAll();
+
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Nombre:"));
+            txtNombre = ComponentFactory.crearCampoTextoTransparente(nombre); 
+            panelFormulario.add(txtNombre);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Rol:"));
+            JComboBox<String> comboRolesModificar = new JComboBox<>(new String[]{"Administrador", "Supervisor"});
+            comboRolesModificar.setSelectedItem(rol);  
+            panelFormulario.add(comboRolesModificar);
+
+            panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Identificación:"));
+            txtIdentificacion = ComponentFactory.crearCampoTextoTransparente(identificacion);  
+            panelFormulario.add(txtIdentificacion);
+
+            JButton btnModificar = ComponentFactory.crearBoton("Modificar", _ -> {
+                try {
+                    modificarUsuario(row, comboRolesModificar);  
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            panelFormulario.add(btnModificar);
+
+            revalidate();
+            repaint();
+        }
+    }
+
+    private void modificarUsuario(int row, JComboBox<String> comboRoles) throws SQLException {
+        String identificacion = (String) tablaUsuarios.getValueAt(row, 2); 
+        String nuevoNombre = txtNombre.getText();
+        String nuevoRol = (String) comboRoles.getSelectedItem();  
+
+        try (Connection connection = DbHelper.getConnection()) {
+            int idRol = usuarioDAO.obtenerRolId(nuevoRol, connection);  
+
+            UsuarioDTO usuario = new UsuarioDTO();
+            usuario.setIdentificacion(identificacion);  
+            usuario.setNombre(nuevoNombre);
+            usuario.setIdRol(idRol);  
+
+            if (usuarioDAO.actualizarUsuario(usuario)) {
+                JOptionPane.showMessageDialog(this, "Usuario modificado.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al modificar usuario.");
+            }
+
+            cargarUsuarios();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Se ha producido un error al modificar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void activarModoModificar() {
+        modificando = true;
+        mostrarFormularioModificar();
+    }
+
+    private void eliminarUsuario() {
+        int row = tablaUsuarios.getSelectedRow();
+        if (row != -1) {
+            String identificacionUsuario = (String) tablaUsuarios.getValueAt(row, 2); 
+            try {
+                int confirm = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea Eliminar este usuario?", "Confirmar Eliminar Usuario", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    if (usuarioDAO.desactivarUsuario(identificacionUsuario)) {
+                        JOptionPane.showMessageDialog(this, "Usuario Eliminado correctamente.");
+                        cargarUsuarios(); 
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al Eliminar el usuario.");
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al intentar Eliminar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona un usuario.");
+        }
+    }
+}
+package utils.Estilo;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class BackgroundPanel extends JPanel {
+    private Image backgroundImage;
+
+    public BackgroundPanel(String imagePath) {
+        setBackgroundImage(imagePath);
+    }
+
+    public void setBackgroundImage(String imagePath) {
+        try {
+            backgroundImage = ImageIO.read(new File(imagePath));
+            repaint(); 
+        } catch (IOException e) {
+            System.err.println("No se pudo cargar la imagen de fondo: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}
+package utils.Estilo;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public class ComponentFactory {
+    private static final String ICONS_PATH = "src/utils/Resources/icons/";
+
+    public static JButton crearBoton(String texto, ActionListener action) {
+        JButton boton = new JButton(texto);
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setFocusPainted(false);
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
+    
+        boton.setForeground(EstiloFuenteYColor.COLOR_ERROR);
+    
+        boton.setOpaque(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setBorder(null);
+        setHandCursor(boton);
+    
+        boton.addActionListener(action);
+        return boton;
+    }
+
+    public static JButton crearBotonExito(String texto, ActionListener action) {
+        JButton boton = new JButton(texto);
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setFocusPainted(false);
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
+    
+        boton.setForeground(EstiloFuenteYColor.COLOR_EXITO);
+    
+        boton.setOpaque(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setBorder(null);
+        setHandCursor(boton);
+    
+        boton.addActionListener(action);
+        return boton;
+    }
+
+    public static JButton crearBotonSidebar(String texto, ActionListener action) {
+        JButton boton = new JButton(texto);
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setFocusPainted(false);
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON_SIDEBAR);
+    
+        boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
+    
+        boton.setOpaque(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setBorder(null);
+        setHandCursor(boton);
+    
+        boton.addActionListener(action);
+        return boton;
+    }
+
+    public static JButton crearBotonPanelVisitante(String texto, ActionListener action) {
+        JButton boton = new JButton(texto);
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setFocusPainted(false);
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON);
+        boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
+    
+        boton.setOpaque(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setBorder(null);
+    
+        boton.addActionListener(action);
+        return boton;
+    }
+
+    public static JButton crearBotonIcono(String iconPath, ActionListener action) {
+        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath); 
+        JButton boton = new JButton(icon);
+
+        boton.setText("");  
+        boton.setFocusPainted(false);  
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);  
+        boton.setOpaque(false);  
+        boton.setBorder(null);
+        
+        boton.addActionListener(action);
+        return boton;
+    }
+
+    public static JButton crearBotonConTextoYIcono(String texto, String iconPath, ActionListener accion) {
+        JButton boton = new JButton(texto);
+    
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON);
+        boton.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
+    
+        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath);  
+        if (icon != null) {
+            boton.setIcon(icon);
+            boton.setHorizontalTextPosition(SwingConstants.RIGHT);  
+            boton.setIconTextGap(10);
+        }
+    
+        boton.setPreferredSize(boton.getPreferredSize());
+        boton.revalidate(); 
+        boton.repaint();  
+    
+        boton.addActionListener(accion);
+        
+        return boton;
+    }
+
+    public static JLabel crearTituloSidebar(String texto) {
+        JLabel titulo = new JLabel(texto);
+        titulo.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR);
+        titulo.setForeground(EstiloFuenteYColor.COLOR_TEXTO_BLANCO);
+        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titulo.setBorder(EstiloBordes.BORDE_TITULO_SIDEBAR);
+        return titulo;
+    }
+
+    public static JTextField crearCampoTexto(String texto) {
+        JTextField campo = new JTextField(texto);
+        campo.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        campo.setPreferredSize(new Dimension(250, 40));
+        campo.setBorder(EstiloBordes.BORDE_CAMPO_TEXTO);
+        return campo;
+    }
+
+    public static JPanel crearPanelConBorde(Color colorBorde) {
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createLineBorder(colorBorde, 2));
+        return panel;
+    }
+
+    public static JTextField crearCampoTextoUsuario() {
+        JTextField campoTexto = new JTextField(15);
+        campoTexto.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        campoTexto.setOpaque(false);
+        campoTexto.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN));
+        campoTexto.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(EstiloFuenteYColor.COLOR_TITULO, 1),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        campoTexto.setPreferredSize(new Dimension(200, 30));
+        return campoTexto;
+    }
+    
+    public static JPasswordField crearCampoTextoPassword() {
+        JPasswordField campoPassword = new JPasswordField(15);
+        campoPassword.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        campoPassword.setOpaque(false);
+        campoPassword.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDES_LOGGIN));
+        campoPassword.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(EstiloFuenteYColor.COLOR_TITULO, 1),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        campoPassword.setPreferredSize(new Dimension(200, 30));
+        return campoPassword;
+    }
+
+    public static JButton crearBotonConCursor(String texto, ActionListener accion) {
+        JButton button = new JButton(texto);
+        button.addActionListener(accion);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+        return button;
+    }
+
+    public static JPanel crearPanelTransparenteConLayout(LayoutManager layout) {
+        JPanel panel = new JPanel(layout);
+        panel.setOpaque(false);
+        return panel;
+    }
+
+    public static JTextField crearCampoTextoTransparente(String texto) {
+        JTextField campo = new JTextField(texto);
+        campo.setOpaque(false);
+        campo.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        campo.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDE));
+        return campo;
+    }
+
+    public static JPasswordField crearCampoTextoPasswordTransparente() {
+        JPasswordField campo = new JPasswordField();
+        campo.setOpaque(false);
+        campo.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        campo.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDE));
+        return campo;
+    }
+
+    public static JButton crearBotonConTextoYIconoConCursor(String texto, String iconPath, ActionListener accion) {
+        JButton boton = new JButton(texto);
+        ImageIcon icon = new ImageIcon(ICONS_PATH + iconPath);
+        if (icon != null) {
+            boton.setIcon(icon);
+            boton.setHorizontalTextPosition(SwingConstants.RIGHT);
+            boton.setIconTextGap(10);
+        }
+        boton.setPreferredSize(new Dimension(250, 40));
+        boton.setFont(EstiloFuenteYColor.FUENTE_BOTON);
+        boton.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+        boton.setForeground(EstiloFuenteYColor.COLOR_TEXTO);
+        boton.addActionListener(accion);
+        setHandCursor(boton);  
+        return boton;
+    }
+
+    public static JPanel crearPanelTransparenteConLayoutYBorde(LayoutManager layout, Color colorBorde) {
+        JPanel panel = new JPanel(layout);
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_BORDE));
+        return panel;
+    }
+
+    public static void setHandCursor(JButton button) {
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+}
+package utils.Estilo;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+
+public class EstiloBordes {
+    public static final Border BORDE_BOTON_SIDEBAR = BorderFactory.createEmptyBorder(10, 20, 10, 20);
+    public static final Border BORDE_TITULO_SIDEBAR = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+    
+    public static final Border BORDE_CAMPO_TEXTO = BorderFactory.createLineBorder(EstiloFuenteYColor.COLOR_TEXTO, 2);
+
+    public static final Border BORDE_INFERIOR_CAMPO_TEXTO = BorderFactory.createMatteBorder(0, 0, 1, 0, EstiloFuenteYColor.COLOR_TEXTO);
+}
+package utils.Estilo;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class EstiloFuenteYColor {
+    // Colores
+    public static final Color COLOR_FONDO_CLARO = new Color(245, 245, 245);
+    public static final Color COLOR_TITULO = new Color(0, 102, 204);
+    public static final Color COLOR_TEXTO = Color.BLACK;
+    public static final Color COLOR_ERROR = new Color(255, 69, 58);
+    public static final Color COLOR_EXITO = new Color(50, 205, 50);
+    public static final Color COLOR_VOLVER = new Color(255, 102, 102);
+    public static final Color COLOR_SELECCIONAR = new Color(84, 153, 199);
+    public static final Color COLOR_FONDO_SIDEBAR = new Color(40, 40, 40);
+    public static final Color COLOR_BOTON_SIDEBAR = new Color(60, 60, 60);
+    public static final Color COLOR_BOTON_TOGGLE = new Color(30, 30, 30);
+    public static final Color COLOR_LOGGIN = new Color(0, 51, 153);
+    public static final Color COLOR_BORDES_LOGGIN = Color.BLUE;
+    public static final Color COLOR_BORDE = Color.BLACK;
+    public static final Color COLOR_TEXTO_BLANCO = Color.WHITE;
+
+    // Fuentes
+    public static final Font FUENTE_TITULO = new Font("Serif", Font.BOLD, 30);
+    public static final Font FUENTE_BOTON = new Font("Serif", Font.PLAIN, 14);
+    public static final Font FUENTE_CAMPO_TEXTO = new Font("Serif", Font.PLAIN, 14);
+    public static final Font FUENTE_TABLA = new Font("Serif", Font.BOLD, 14);
+    public static final Font FUENTE_LOGIN = new Font("Serif", Font.BOLD, 12);
+    public static final Font FUENTE_TITULO_SIDEBAR = new Font("Serif", Font.BOLD, 18);
+    public static final Font FUENTE_BOTON_SIDEBAR = new Font("Serif", Font.PLAIN, 17);
+    public static final Font FUENTE_BOTON_TOGGLE = new Font("Serif", Font.BOLD, 16);
+
+    public static void aplicarEstiloFondoYTexto(JTextField campo) {
+        campo.setFont(FUENTE_CAMPO_TEXTO);
+        campo.setBackground(new Color(0, 0, 0, 5)); 
+        campo.setSelectedTextColor(Color.WHITE);
+    }
+
+    public static void aplicarEstiloFondoYTexto(JTextArea area) {
+        if (area != null) {
+            area.setFont(FUENTE_CAMPO_TEXTO);
+            area.setBackground(new Color(0, 0, 0, 5));  
+            area.setSelectedTextColor(Color.WHITE);
+        }
+    }
+    
+    public static JPanel crearPanelTransparente() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false); 
+        return panel;
+    }
+
+    public static JLabel crearTextoPrincipal(String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(FUENTE_TITULO_SIDEBAR);
+        label.setForeground(COLOR_TEXTO);
+        return label;
+    }
+    public static JLabel crearTextoFormularios(String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(FUENTE_TABLA);
+        label.setForeground(COLOR_TEXTO);
+        return label;
+    }
+
+    public static JLabel crearTextoSecundario(String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(FUENTE_BOTON);
+        label.setForeground(COLOR_TEXTO);
+        return label;
+    }
+
+    public static JLabel crearTituloSecundario(String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(FUENTE_TITULO_SIDEBAR);
+        label.setForeground(COLOR_TEXTO);
+        return label;
+    }
+    public static JLabel crearTitulo(String texto) {
+        JLabel label = new JLabel(texto);
+        label.setFont(FUENTE_TITULO);
+        label.setForeground(COLOR_TEXTO);
+        return label;
+    }
+
+
+}
+package utils.Estilo;
+
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.ImageIcon;
+
+public class ImageLoader {
+    public static ImageIcon cargarImagenPintura(String path, int width, int height) {
+        File imagenFile = new File(path);
+        if (imagenFile.exists()) {
+            try {
+                Image img = javax.imageio.ImageIO.read(imagenFile);
+                ImageIcon icon = new ImageIcon(img.getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                return icon;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null; 
+    }
+}
