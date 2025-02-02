@@ -31,7 +31,6 @@ public class PanelVisitante extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
-        topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         
         JButton volverButton = ComponentFactory.crearBotonPanelVisitante("\u2190 Volver", _ -> {
             parentFrame.getContentPane().removeAll();
@@ -72,41 +71,47 @@ public class PanelVisitante extends JPanel {
         escaneoPanel.add(buscarButton);
         backgroundPanel.add(escaneoPanel);
 
-        JPanel previewPanel = new JPanel();
-        previewPanel.setOpaque(false);
-        previewPanel.setLayout(new BorderLayout());
-        previewPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        
+        JPanel mainContentPanel = new JPanel(new BorderLayout());
+        mainContentPanel.setOpaque(false);
+
+        JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        imagePanel.setOpaque(false);
         imagenPinturaLabel = new JLabel();
-        imagenPinturaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imagenPinturaLabel.setHorizontalAlignment(SwingConstants.CENTER); 
         imagenPinturaLabel.setOpaque(false); 
+        imagePanel.add(imagenPinturaLabel);
 
-        previewPanel.add(imagenPinturaLabel, BorderLayout.CENTER);
-        backgroundPanel.add(previewPanel);
-
-        JPanel detallePanel = new JPanel(new BorderLayout());
+        JPanel detallePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
         detallePanel.setOpaque(false);
-        detallePanel.setPreferredSize(new Dimension(100, 100));
-        
+        detallePanel.setPreferredSize(new Dimension(500, 300)); 
+
         resultadoArea = new JTextArea();
         EstiloFuenteYColor.aplicarEstiloFondoYTexto(resultadoArea);
         resultadoArea.setEditable(false);
         resultadoArea.setFocusable(false); 
-        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
+        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO.deriveFont(20f)); 
         resultadoArea.setBackground(new Color(0, 0, 0, 10)); 
         resultadoArea.setSelectedTextColor(Color.WHITE); 
         resultadoArea.setLineWrap(true);
         resultadoArea.setWrapStyleWord(true);
-        
         resultadoArea.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO);
 
         JScrollPane scrollPane = new JScrollPane(resultadoArea);
+        scrollPane.setPreferredSize(new Dimension(500, 300)); // Ajustar el tamaño del scroll
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false); 
-        detallePanel.add(scrollPane, BorderLayout.CENTER);
+        detallePanel.add(scrollPane);
 
-        backgroundPanel.add(detallePanel);
+        // Crear un panel contenedor para los dos paneles (imagen y detalles)
+        JPanel contentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 10));
+        contentPanel.setOpaque(false);
+        contentPanel.add(imagePanel);
+        contentPanel.add(detallePanel);
+
+        // Añadir el panel principal con la imagen y los detalles al backgroundPanel
+        mainContentPanel.add(contentPanel, BorderLayout.CENTER);
+        backgroundPanel.add(mainContentPanel);
 
         codigoInput.addKeyListener(new KeyAdapter() {
             @Override
@@ -145,18 +150,23 @@ public class PanelVisitante extends JPanel {
     
 
     private void mostrarDetallesPintura(PinturaDTO pinturaDTO) {
-        String detallesTexto = String.format(
-                "Título: %s\nAutor: %s\nAño: %d\nDescripción: %s\nUbicación: %s\nCategoría: %s",
-                pinturaDTO.getTitulo(), 
-                pinturaDTO.getNombreAutor(),  
-                pinturaDTO.getAnio(), 
-                pinturaDTO.getDescripcion(), 
-                pinturaDTO.getSalas(), 
-                pinturaDTO.getcategoria()  
-        );
-        resultadoArea.setText(detallesTexto);
+        // Limpiar el JTextArea antes de agregar nuevos detalles
+        resultadoArea.setText("");
+    
+        // Establecer el título con un formato especial (negrita, tamaño más grande)
+        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR); // Fuente del título más grande
+        resultadoArea.append(pinturaDTO.getTitulo() + "\n\n");
+    
+        // Establecer el estilo para el resto del texto (texto normal)
+        resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO); // Fuente del texto normal
+        resultadoArea.append("Autor: " + pinturaDTO.getNombreAutor() + "\n");
+        resultadoArea.append("Año: " + pinturaDTO.getAnio() + "\n");
+        resultadoArea.append("Descripción: " + pinturaDTO.getDescripcion() + "\n");
+        resultadoArea.append("\n" + pinturaDTO.getSalas() + "\n");
+        resultadoArea.append("" + pinturaDTO.getcategoria() + "\n");
     }
     
+
 
     private void mostrarImagenPintura(PinturaDTO pinturaDTO) {
         String imagenPath = "src/utils/Resources/paintings/" + pinturaDTO.getCodigoBarras() + ".jpg";
@@ -164,7 +174,7 @@ public class PanelVisitante extends JPanel {
         if (imagenFile.exists()) {
             try {
                 Image img = ImageIO.read(imagenFile);
-                ImageIcon icon = new ImageIcon(img.getScaledInstance(250, 350, Image.SCALE_SMOOTH));
+                ImageIcon icon = new ImageIcon(img.getScaledInstance(300, 400, Image.SCALE_SMOOTH));
                 imagenPinturaLabel.setIcon(icon);
             } catch (IOException e) {
                 imagenPinturaLabel.setIcon(null); 
