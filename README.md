@@ -1,115 +1,104 @@
-# Proyecto Museo - Sistema de Gestión de Pinturas y Usuarios
+# ArtVision - Sistema de Gestión de Museo
 
-## Descripción General
+## Descripción
 
-Este proyecto es una aplicación de escritorio desarrollada en Java para gestionar información de un museo. Incluye funcionalidades para:
-
-- Administrar pinturas mediante un sistema de código de barras.
-- Gestionar usuarios con roles asignados como "Administrador" y "Supervisor".
-- Conectar y operar con una base de datos SQLite integrada.
-
-La aplicación utiliza una arquitectura modular, dividiendo la lógica en paquetes como `controller`, `model`, `service`, y `view`, con componentes diseñados para escalabilidad y mantenimiento.
-
----
+ArtVision es una aplicación de gestión de museos que permite la administración de pinturas, usuarios y otras funcionalidades clave para la organización y exhibición de obras de arte. La aplicación está desarrollada en **Java** con una interfaz gráfica basada en **Swing** y una base de datos en **SQLite**.
 
 ## Estructura del Proyecto
 
-```
-ProyectoMuseo
-├── src
-│   ├── controller      # Lógica de negocio y controladores de usuarios y pinturas
-│   ├── manager         # Manejo centralizado de la base de datos
-│   ├── model           # Clases de datos (Usuario, Pintura)
-│   ├── panel           # Paneles gráficos para la interfaz de usuario
-│   └── view            # Ventanas y vistas principales
-├── database
-│   ├── museo.db        # Archivo SQLite de la base de datos
-│   └── schema.sql      # Esquema de la base de datos
-├── resources
-│   ├── config.properties # Configuración de usuario y base de datos
-│   └── paintings        # Imágenes asociadas a las pinturas
-└── lib
-    └── sqlite-jdbc.jar # Controlador JDBC para SQLite
-```
+└── anndyrengifo-finalproyectprograii/
+    ├── README.md
+    ├── bin/
+    │   ├── TodoCode.txt
+    │   ├── BusinessLogic/
+    │   │   ├── entities/
+    │   │   └── services/
+    │   ├── DataAccess/
+    │   │   ├── DAO/
+    │   │   ├── DTO/
+    │   │   └── DataHelper/
+    │   ├── GUI/
+    │   │   └── panel/
+    │   │       ├── adminPanel/
+    │   │       ├── commonPanel/
+    │   │       ├── pinturaPanel/
+    │   │       └── usuarioPanel/
+    │   └── utils/
+    │       ├── Estilo/
+    │       └── Resources/
+    ├── database/
+    │   └── museo.sqlite
+    ├── dbScript/
+    │   ├── museo_DDL.sql
+    │   └── museo_DML.sql
+    ├── design/
+    │   ├── Diagram.plantUML
+    │   └── Diagramas.drawio
+    ├── lib/
+    └── src/
+        ├── App.java
+        ├── BusinessLogic/
+        ├── DataAccess/
+        ├── GUI/
+        ├── utils/
 
----
+## Instalación y Ejecución
 
-## Configuración
+### Requisitos
 
-### Requisitos Previos
+- **Java 8+**
+- **SQLite** (integrado en el proyecto)
+- **IDE recomendado:** IntelliJ IDEA, Eclipse o NetBeans
 
-1. Java 11 o superior.
-2. Visual Studio Code con soporte para proyectos Java.
-3. Controlador JDBC para SQLite (incluido en `/lib`).
+### Configuración
 
-### Configuración del Entorno
+1. Clona el repositorio:
 
-1. Clona el repositorio en tu máquina local:
-
-   ```bash
-
-   git clone <repositorio>
+   ```sh
+   git clone https://github.com/usuario/anndyrengifo-finalproyectprograii.git
    ```
 
-2. Configura la variable `JAVA_HOME` apuntando a tu instalación de Java.
-3. Asegúrate de que el archivo `config.properties` contiene los datos correctos:
+2. Importa el proyecto en tu IDE favorito.
+3. Asegúrate de que `sqlite-jdbc.jar` esté en el classpath.
+4. Ejecuta `App.java`.
 
-   ```properties
-   usuario=Admin
-   password=Admin123
-   id=0000000000001
-   ```
+## Características Principales
 
-4. Ejecuta la aplicación desde Visual Studio Code o desde línea de comandos:
-
-   ```bash
-   java -jar ProyectoMuseo.jar
-   ```
-
----
-
-## Funcionalidades
-
-### Gestión de Usuarios
-
-- **Agregar Usuarios:**
-  - Datos requeridos: Nombre, Rol, Nombre de Usuario, Contraseña, ID.
-  - Validación automática de campos.
-- **Modificar Usuarios:**
-  - Campos editables: Nombre, Rol, Nombre de Usuario.
-
-### Gestión de Pinturas
-
-- **Agregar Pinturas:**
-  - Incluye validación de código de barras y previsualización de imágenes.
-  - Campos requeridos: Título, Autor, Año, Código de Barras, Ubicación, Descripción.
-- **Modificar y Eliminar:**
-  - Modifica o elimina pinturas según su código de barras.
-
-### Administración de Base de Datos
-
-- **Inicialización Automática:**
-  - Creación de tablas (`Usuarios`, `Pinturas`, `Visitantes`) al iniciar la aplicación.
-- **Usuario por Defecto:**
-  - Usuario principal cargado desde `config.properties` si no hay registros.
-
----
+- **Gestión de pinturas**: Agregar, modificar, eliminar y visualizar pinturas en la base de datos.
+- **Gestión de usuarios**: Administración de cuentas y roles.
+- **Autenticación**: Inicio de sesión con credenciales.
+- **Interfaz gráfica**: Basada en **Swing**, incluye paneles para administración.
+- **Base de datos**: SQLite con scripts de inicialización (`museo_DDL.sql` y `museo_DML.sql`).
 
 ## Uso
 
-### Iniciar Sesión como Administrador
+1. Al ejecutar la aplicación, se iniciará la interfaz principal.
+2. Desde la pantalla de inicio, puedes acceder al panel de administración para gestionar pinturas y usuarios.
+3. Los usuarios pueden autenticarse según su rol (`Administrador` o `Supervisor`).
+4. Se pueden realizar operaciones CRUD en las pinturas desde el panel correspondiente.
 
-1. Introduce las credenciales configuradas en `config.properties`.
-2. Si el inicio de sesión es exitoso, accederás al panel de administración.
+## Base de Datos
 
-### Agregar Pinturas
+Ubicada en `database/museo.sqlite`, contiene las siguientes tablas principales:
 
-1. Ve al panel "Pinturas".
-2. Llena los campos requeridos y carga una imagen asociada.
-3. Haz clic en "Agregar".
+- `Usuarios`
+- `Pinturas`
+- `Categorias`
+- `Autores`
+- `Salas`
 
----
+## Contribuciones
 
-## Créditos
+Create by: Grupo1
 
-Desarrollado por: Anndy Rengifo.
+Si deseas contribuir:
+
+1. Realiza un **fork** del proyecto.
+2. Crea una **rama** (`git checkout -b feature-nueva-funcionalidad`).
+3. Realiza los cambios y haz un **commit** (`git commit -m "Añadir nueva funcionalidad"`).
+4. Sube la rama (`git push origin feature-nueva-funcionalidad`).
+5. Abre un **pull request**.
+
+## Licencia
+
+Este proyecto está bajo la licencia **MIT**. Puedes ver más detalles en el archivo `LICENSE`.
