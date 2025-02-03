@@ -16,12 +16,12 @@ import BusinessLogic.PinturaBLException;
 
 public class PinturaDAO extends DbHelper implements IPinturaDAO {
     
-    private static final String INSERT_PINTURA = "INSERT INTO Pinturas (titulo, anio, descripcion, codigoBarras, idCategoria, idAutor, idSala, imagen, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT_PINTURA = "INSERT INTO Pinturas (titulo, anio, descripcion, codigoBarras, idCategoria, idAutor, idSala, imagen, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_AUTOR_ID = "SELECT idAutor FROM Autores WHERE nombreAutor = ?";
     private static final String SELECT_CATEGORIA_ID = "SELECT idCategoria FROM Categorias WHERE categoria = ?";
     private static final String SELECT_SALA_ID = "SELECT idSala FROM Salas WHERE Salas = ?";
-    private static final String UPDATE_PINTURA = "UPDATE Pinturas SET titulo = ?, anio = ?, descripcion = ?, codigoBarras = ?, idCategoria = ?, idAutor = ?, idSala = ?, imagen = ?, estado = ?, fechaModifica = ? WHERE idPintura = ?";
-    private static final String DELETE_PINTURA = "UPDATE Pinturas SET estado = 'E', fechaModifica = ? WHERE idPintura = ?";
+    private static final String UPDATE_PINTURA = "UPDATE Pinturas SET titulo = ?, anio = ?, descripcion = ?, codigoBarras = ?, idCategoria = ?, idAutor = ?, idSala = ?, imagen = ?, estado = ? WHERE idPintura = ?";
+    private static final String DELETE_PINTURA = "UPDATE Pinturas SET estado = 'E' WHERE idPintura = ?";
     private static final String SELECT_ALL_PINTURAS = "SELECT * FROM Pinturas WHERE estado != 'E'";
     private static final String SELECT_PINTURA_BY_ID = "SELECT * FROM Pinturas WHERE idPintura = ?";
     private static final String ACTUALIZAR_ESTADO_PINTURA = 
@@ -46,8 +46,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.setInt(7, pintura.getIdSala());
             ps.setString(8, pintura.getImagen());
             ps.setString(9, pintura.getEstado());
-            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaCrea()));
-            ps.setTimestamp(11, Timestamp.valueOf(pintura.getFechaModifica()));
 
             ps.executeUpdate();
             
@@ -70,8 +68,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.setInt(7, pintura.getIdSala());
             ps.setString(8, pintura.getImagen());
             ps.setString(9, pintura.getEstado());
-            ps.setTimestamp(10, Timestamp.valueOf(pintura.getFechaModifica()));
-            ps.setInt(11, pintura.getIdPintura());
+            ps.setInt(10, pintura.getIdPintura());
     
             ps.executeUpdate();
     
@@ -85,8 +82,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
             
-            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setInt(2, idPintura);
+            ps.setInt(1, idPintura);
             ps.executeUpdate();
             
         } catch (SQLException e) {
@@ -115,7 +111,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws PinturaBLException{
         String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
                        "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
-                       "p.fechaCrea, p.fechaModifica, " +
                        "a.nombreAutor, c.categoria, s.Salas " +
                        "FROM Pinturas p " +
                        "JOIN Autores a ON p.idAutor = a.idAutor " +
@@ -242,8 +237,6 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
         pintura.setIdSala(rs.getInt("idSala"));
         pintura.setImagen(rs.getString("imagen"));
         pintura.setEstado(rs.getString("estado"));
-        pintura.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
-        pintura.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
         
         pintura.setNombreAutor(rs.getString("nombreAutor"));  
         pintura.setcategoria(rs.getString("categoria"));     

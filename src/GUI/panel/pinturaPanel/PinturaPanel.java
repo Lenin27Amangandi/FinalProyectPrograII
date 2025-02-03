@@ -294,9 +294,7 @@ public class PinturaPanel extends JPanel {
                 null, 
                 idSala,
                 imagen,
-                "A",
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                "A"
             );
     
             try {
@@ -404,9 +402,7 @@ public class PinturaPanel extends JPanel {
                                                       idAutor, 
                                                       null, null, idSala, 
                                                       imagen,
-                                                      "A",  
-                                                      LocalDateTime.now(), 
-                                                      LocalDateTime.now()); 
+                                                      "A"); 
     
         pinturaDAO.actualizarPintura(pinturaModificada);
         JOptionPane.showMessageDialog(this, "Pintura modificada exitosamente.");

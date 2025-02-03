@@ -13,13 +13,13 @@ import java.util.Properties;
 
 import BusinessLogic.UsuarioBLException;
 public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
-    private static final String INSERT_USUARIO = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String DELETE_USUARIO = "UPDATE Usuarios SET estado = 'E', fechaModifica = ? WHERE idUsuarios = ?";
+    private static final String INSERT_USUARIO = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado) VALUES (?, ?, ?, ?, ?)";
+    private static final String DELETE_USUARIO = "UPDATE Usuarios SET estado = 'E' WHERE idUsuarios = ?";
     private static final String SELECT_USUARIO_BY_ID = "SELECT * FROM Usuarios WHERE idUsuarios = ?";
     private static final String SELECT_USUARIO_BY_IDENTIFICACION = "SELECT * FROM Usuarios WHERE identificacion = ?";
     private static final String SELECT_ALL_USUARIOS = 
     "SELECT U.idUsuarios, U.nombre, U.identificacion, U.idCredenciales, U.estado, " +
-    "U.fechaCrea, U.fechaModifica, R.nombreRol " +
+    "R.nombreRol " +
     "FROM Usuarios U " +
     "JOIN Roles R ON U.idRol = R.idRol " +
     "WHERE U.estado != 'E'";
@@ -49,10 +49,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 ps.setInt(3, idCredenciales);
                 ps.setInt(4, usuario.getIdRol());
                 ps.setString(5, usuario.getEstado());
-                LocalDateTime fechaCrea = usuario.getFechaCrea() != null ? usuario.getFechaCrea() : LocalDateTime.now();
-                LocalDateTime fechaModifica = usuario.getFechaModifica() != null ? usuario.getFechaModifica() : LocalDateTime.now();
-                ps.setTimestamp(6, Timestamp.valueOf(fechaCrea));
-                ps.setTimestamp(7, Timestamp.valueOf(fechaModifica));
                 ps.executeUpdate();
             }
             connection.commit();
@@ -106,8 +102,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 usuario.setIdentificacion(rs.getString("identificacion"));
                 usuario.setIdCredenciales(rs.getInt("idCredenciales"));
                 usuario.setEstado(rs.getString("estado"));
-                usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
-                usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
                 usuario.setNombreRol(rs.getString("nombreRol")); 
                 usuarios.add(usuario);
             }
@@ -132,8 +126,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                     usuario.setIdCredenciales(rs.getInt("idCredenciales"));
                     usuario.setIdRol(rs.getInt("idRol"));
                     usuario.setEstado(rs.getString("estado"));
-                    usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
-                    usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -157,8 +149,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                     usuario.setIdCredenciales(rs.getInt("idCredenciales"));
                     usuario.setIdRol(rs.getInt("idRol"));
                     usuario.setEstado(rs.getString("estado"));
-                    usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
-                    usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -182,8 +172,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                     usuario.setIdCredenciales(rs.getInt("idCredenciales"));
                     usuario.setIdRol(rs.getInt("idRol"));
                     usuario.setEstado(rs.getString("estado"));
-                    usuario.setFechaCrea(rs.getTimestamp("fechaCrea").toLocalDateTime());
-                    usuario.setFechaModifica(rs.getTimestamp("fechaModifica").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -205,7 +193,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1; // Retorna -1 si no encuentra el usuario
+        return -1;
     }
     
     
@@ -241,10 +229,8 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             String rol = properties.getProperty("rol");
             String identificacion = properties.getProperty("identificacion");
             System.out.println("username: " + username);
-            System.out.println("password: " + password);
             System.out.println("nombre: " + nombre);
             System.out.println("rol: " + rol);
-            System.out.println("identificacion: " + identificacion);
             if (obtenerUsuarioPorIdentificacion(identificacion) == null) {
                 insertarUsuarioDesdeConfig(username, password, nombre, rol, identificacion);
             } else {
@@ -297,15 +283,13 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             }
             int idCredenciales = insertarCredenciales(username, password, connection);
             int idRol = obtenerRolId(rol, connection);
-            String insertUsuario = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado, fechaCrea, fechaModifica) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertUsuario = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement psUsuario = connection.prepareStatement(insertUsuario)) {
                 psUsuario.setString(1, nombre);
                 psUsuario.setString(2, identificacion);
                 psUsuario.setInt(3, idCredenciales); 
                 psUsuario.setInt(4, idRol);           
                 psUsuario.setString(5, "A");         
-                psUsuario.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-                psUsuario.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
                 psUsuario.executeUpdate();
             }
         } catch (SQLException e) {

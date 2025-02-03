@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     idCredenciales  INTEGER NOT NULL,
     idRol           INTEGER NOT NULL,  -- Relaciona con Roles
     estado          TEXT NOT NULL DEFAULT 'A',  -- Estado del usuario (activo, inactivo, eliminado)
-    fechaCrea       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Fecha de creación
-    fechaModifica   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Fecha de última modificación
+    fechaCrea       DATETIME DEFAULT(datetime('now','localtime')),  -- Fecha de creación
+    fechaModifica   DATETIME DEFAULT(datetime('now','localtime')),  -- Fecha de última modificación
     FOREIGN KEY (idCredenciales) REFERENCES Credenciales(idCredenciales),
     FOREIGN KEY (idRol) REFERENCES Roles(idRol)
 );
@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS Pinturas (
     idSala           INTEGER NOT NULL,  -- Relaciona con Salas
     imagen           TEXT,              -- Ruta o URL de la imagen
     estado           TEXT NOT NULL DEFAULT 'A',  -- Estado de la pintura (activo, inactivo, eliminado)
-    fechaCrea        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha de creación
-    fechaModifica    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha de última modificación
+    fechaCrea        DATETIME DEFAULT(datetime('now','localtime')),  -- Fecha de creación
+    fechaModifica    DATETIME DEFAULT(datetime('now','localtime')),  -- Fecha de última modificación
     FOREIGN KEY (idCategoria) REFERENCES Categorias(idCategoria),
     FOREIGN KEY (idAutor) REFERENCES Autores(idAutor),
     FOREIGN KEY (idSala) REFERENCES Salas(idSala)

@@ -16,15 +16,12 @@ public class PinturaDTO {
     private int idSala;
     private String imagen;
     private String estado;
-    private LocalDateTime fechaCrea;
-    private LocalDateTime fechaModifica;
 
     public PinturaDTO() {}
 
     public PinturaDTO(int idPintura, String titulo, int anio, String descripcion, String codigoBarras, 
                       int idCategoria, String categoria, int idAutor, String nombreAutor, 
-                      String Salas, int idSala, String imagen, String estado, 
-                      LocalDateTime fechaCrea, LocalDateTime fechaModifica) {
+                      String Salas, int idSala, String imagen, String estado) {
         this.idPintura = idPintura;
         this.titulo = titulo;
         this.anio = anio;
@@ -33,16 +30,13 @@ public class PinturaDTO {
         this.idCategoria = idCategoria;
         this.categoria = categoria;
         this.idAutor = idAutor;
-        this.nombreAutor = nombreAutor;  // Asignar el nombre del autor
-        this.Salas = Salas;  // Asignar el nombre de la sala
+        this.nombreAutor = nombreAutor; 
+        this.Salas = Salas; 
         this.idSala = idSala;
         this.imagen = imagen;
         this.estado = estado;
-        this.fechaCrea = fechaCrea;
-        this.fechaModifica = fechaModifica;
     }
 
-    // Getters and Setters
 
     public int getIdPintura() {
         return idPintura;
@@ -93,11 +87,11 @@ public class PinturaDTO {
     }
 
     public String getcategoria() {
-        return categoria;  // Getter para el nombre de la categoría
+        return categoria;  
     }
 
     public void setcategoria(String categoria) {
-        this.categoria = categoria;  // Setter para el nombre de la categoría
+        this.categoria = categoria;  
     }
 
     public int getIdAutor() {
@@ -109,19 +103,19 @@ public class PinturaDTO {
     }
 
     public String getNombreAutor() {
-        return nombreAutor;  // Getter para el nombre del autor
+        return nombreAutor; 
     }
 
     public void setNombreAutor(String nombreAutor) {
-        this.nombreAutor = nombreAutor;  // Setter para el nombre del autor
+        this.nombreAutor = nombreAutor;  
     }
 
     public String getSalas() {
-        return Salas;  // Getter para el nombre de la sala
+        return Salas; 
     }
 
     public void setSalas(String Salas) {
-        this.Salas = Salas;  // Setter para el nombre de la sala
+        this.Salas = Salas; 
     }
 
     public int getIdSala() {
@@ -148,21 +142,7 @@ public class PinturaDTO {
         this.estado = estado;
     }
 
-    public LocalDateTime getFechaCrea() {
-        return fechaCrea;
-    }
-
-    public void setFechaCrea(LocalDateTime fechaCrea) {
-        this.fechaCrea = fechaCrea;
-    }
-
-    public LocalDateTime getFechaModifica() {
-        return fechaModifica;
-    }
-
-    public void setFechaModifica(LocalDateTime fechaModifica) {
-        this.fechaModifica = fechaModifica;
-    }
+    
 
     @Override
     public String toString() {
@@ -180,8 +160,6 @@ public class PinturaDTO {
                 ", idSala=" + idSala +
                 ", imagen='" + imagen + '\'' +
                 ", estado='" + estado + '\'' +
-                ", fechaCrea=" + fechaCrea +
-                ", fechaModifica=" + fechaModifica +
                 '}';
     }
 }

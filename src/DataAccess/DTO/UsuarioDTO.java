@@ -3,18 +3,16 @@ package DataAccess.DTO;
 import java.time.LocalDateTime;
 
 public class UsuarioDTO {
-    private int idUsuarios;            // ID del usuario (autoincremental)
-    private String nombre;             // Nombre del usuario
-    private String identificacion;     // Identificación única del usuario
-    private int idCredenciales;        // ID de las credenciales (relacionado con la tabla Credenciales)
-    private int idRol;                 // ID del rol (relacionado con la tabla Roles)
+    private int idUsuarios;           
+    private String nombre;            
+    private String identificacion;    
+    private int idCredenciales;       
+    private int idRol;                 
     private String nombreRol;
     private String username;
     private String password;
 
-    private String estado;             // Estado del usuario (activo, inactivo, eliminado)
-    private LocalDateTime fechaCrea;   // Fecha de creación del registro
-    private LocalDateTime fechaModifica; // Fecha de última modificación del registro
+    private String estado;             
 
     public UsuarioDTO() {}
 
@@ -38,10 +36,7 @@ public class UsuarioDTO {
         this.nombreRol = nombreRol;
         this.username = username;
         this.estado = estado;
-        // Si la fechaCrea es null, se puede asignar la fecha actual
-        this.fechaCrea = (fechaCrea != null) ? fechaCrea : LocalDateTime.now();
-        // Si la fechaModifica es null, se asigna la fecha actual al modificar
-        this.fechaModifica = (fechaModifica != null) ? fechaModifica : LocalDateTime.now();
+       
     }
 
     // Getters y Setters
@@ -114,21 +109,6 @@ public class UsuarioDTO {
         this.estado = estado;
     }
 
-    public LocalDateTime getFechaCrea() {
-        return fechaCrea;
-    }
-
-    public void setFechaCrea(LocalDateTime fechaCrea) {
-        this.fechaCrea = fechaCrea;
-    }
-
-    public LocalDateTime getFechaModifica() {
-        return fechaModifica;
-    }
-
-    public void setFechaModifica(LocalDateTime fechaModifica) {
-        this.fechaModifica = fechaModifica;
-    }
 
     @Override
     public String toString() {
@@ -139,8 +119,6 @@ public class UsuarioDTO {
                 ", idCredenciales=" + idCredenciales +
                 ", idRol=" + idRol +
                 ", estado='" + estado + '\'' +
-                ", fechaCrea=" + fechaCrea +
-                ", fechaModifica=" + fechaModifica +
                 '}';
     }
 
