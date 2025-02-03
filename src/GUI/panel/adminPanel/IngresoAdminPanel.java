@@ -18,7 +18,7 @@ public class IngresoAdminPanel extends JPanel {
 
         JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         tituloPanel.setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
-        JLabel titulo = EstiloFuenteYColor.crearTitulo("Ingreso de Administrador");
+        JLabel titulo = EstiloFuenteYColor.crearTitulo("Ingreso a Administración");
         tituloPanel.add(titulo);
 
         JPanel volverPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
