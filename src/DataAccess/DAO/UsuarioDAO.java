@@ -196,6 +196,23 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
         return -1;
     }
     
+    public String obtenerRolPorId(int idUsuario) {
+        String sql = "SELECT R.nombreRol FROM Usuarios U " +
+                     "JOIN Roles R ON U.idRol = R.idRol " +
+                     "WHERE U.idUsuarios = ?";
+        try (Connection conn = DbHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nombreRol");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     
     private void verificarRolesPorDefecto() {
         try (Connection connection = DbHelper.getConnection();

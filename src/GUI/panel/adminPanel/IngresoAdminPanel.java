@@ -120,10 +120,9 @@ public class IngresoAdminPanel extends JPanel {
             if (authenticated) {
                 int idUsuario = usuarioDAO.obtenerIdPorUsuario(username);
     
-                boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
-                String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
-    
-                if (rol != null) {
+                String rol = usuarioDAO.obtenerRolPorId(idUsuario);
+                if (rol != null && (rol.equals("Administrador") || rol.equals("Supervisor"))) {
+                    System.out.println("este es su rol" + rol);
                     mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
                     irPanelAdmin(rol);
                 } else {
@@ -158,16 +157,15 @@ public class IngresoAdminPanel extends JPanel {
             if (authenticated) {
                 int idUsuario = usuarioDAO.obtenerIdPorIdentificacion(identificacion);
                 
-                boolean esValido = usuarioDAO.verificarRolPorId(idUsuario);
-                String rol = (esValido) ? (idUsuario == 1 ? "Administrador" : "Supervisor") : null;
-    
-                if (rol != null) {
+                String rol = usuarioDAO.obtenerRolPorId(idUsuario);
+                if (rol != null && (rol.equals("Administrador") || rol.equals("Supervisor"))) {
                     mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
                     dialog.dispose();
                     irPanelAdmin(rol);
                 } else {
                     mostrarMensaje("No tiene permisos de administrador.", "Error");
                 }
+
             } else {
                 mostrarMensaje("ID de credencial incorrecto.", "Error");
                 identificacionField.setText(""); 

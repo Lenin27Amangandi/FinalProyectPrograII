@@ -174,7 +174,8 @@ public class UsuarioPanel extends JPanel {
             panelFormulario.add(comboRolesModificar);
 
             panelFormulario.add(EstiloFuenteYColor.crearTextoFormularios("Identificación:"));
-            txtIdentificacion = ComponentFactory.crearCampoTextoTransparente(identificacion);  
+            txtIdentificacion = ComponentFactory.crearCampoTextoTransparente(identificacion); 
+            txtIdentificacion.setEditable(false); 
             panelFormulario.add(txtIdentificacion);
 
             JButton btnModificar = ComponentFactory.crearBoton("Modificar", e -> {
