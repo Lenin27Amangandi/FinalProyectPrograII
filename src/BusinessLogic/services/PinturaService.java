@@ -2,10 +2,10 @@ package BusinessLogic.services;
 
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
+import Framework.PinturaBLException;
+
 import java.util.List;
 import java.util.logging.Logger;
-
-import BusinessLogic.PinturaBLException;
 
 public class PinturaService {
 

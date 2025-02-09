@@ -3,8 +3,8 @@ package GUI;
 import javax.swing.*;
 
 import DataAccess.DAO.UsuarioDAO;
-import GUI.panel.commonPanel.InicioPanel;
-import GUI.panel.commonPanel.SplashScreenPanel;
+import GUI.Forms.commonPanel.InicioPanel;
+import GUI.Forms.commonPanel.SplashScreenPanel;
 
 
 public class AppMuseoUI {
@@ -48,7 +48,7 @@ public class AppMuseoUI {
 
     private void mostrarInicio(){
         frame.add(new InicioPanel(frame));
-        frame.setSize(800, 600);
+        frame.setSize(800, 610);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

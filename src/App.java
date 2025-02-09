@@ -1,6 +1,7 @@
 import java.awt.HeadlessException;
 import javax.swing.*;
 
+import Framework.RAConfig;
 import GUI.AppMuseoUI;
 
 public class App {
@@ -16,7 +17,7 @@ public class App {
             app.iniciarApp();
             
         } catch (HeadlessException e) {
-            System.out.println("Ocurrió un error al iniciar la app: " + e.getMessage());
+            RAConfig.showMsgError("Ocurrió un error al iniciar la app: " + e.getMessage());
         }
 
     }

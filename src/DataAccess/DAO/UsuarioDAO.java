@@ -1,6 +1,7 @@
 package DataAccess.DAO;
 
 import DataAccess.DataHelper.DbHelper;
+import Framework.UsuarioBLException;
 import DataAccess.IUsuarioDAO;
 import DataAccess.DTO.UsuarioDTO;
 import java.io.FileInputStream;
@@ -10,8 +11,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import BusinessLogic.UsuarioBLException;
 public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     private static final String INSERT_USUARIO = "INSERT INTO Usuarios (nombre, identificacion, idCredenciales, idRol, estado) VALUES (?, ?, ?, ?, ?)";
     private static final String DELETE_USUARIO = "UPDATE Usuarios SET estado = 'E' WHERE idUsuarios = ?";
@@ -238,7 +237,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
 
     public void cargarUsuarioPorDefecto() {
         Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream("src/utils/Resources/config/config.properties")) {
+        try (FileInputStream fis = new FileInputStream("src/utils/config/config.properties")) {
             properties.load(fis);
             String username = properties.getProperty("username");
             String password = properties.getProperty("password");

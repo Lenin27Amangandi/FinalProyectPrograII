@@ -1,6 +1,7 @@
 package DataAccess.DAO;
 
 import DataAccess.DataHelper.DbHelper;
+import Framework.PinturaBLException;
 import DataAccess.IPinturaDAO;
 import DataAccess.DTO.PinturaDTO;
 
@@ -11,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-
-import BusinessLogic.PinturaBLException;
 
 public class PinturaDAO extends DbHelper implements IPinturaDAO {
     
