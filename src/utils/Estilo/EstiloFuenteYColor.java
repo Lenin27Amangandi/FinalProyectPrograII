@@ -6,6 +6,8 @@ import java.awt.*;
 public class EstiloFuenteYColor {
     // Colores
     public static final Color COLOR_FONDO_CLARO = new Color(245, 245, 245);
+    public static final Color COLOR_FONDO_OSCURO = new Color(25, 25, 25);
+
     public static final Color COLOR_TITULO = new Color(0, 102, 204);
     public static final Color COLOR_TEXTO = Color.BLACK;
     public static final Color COLOR_ERROR = new Color(255, 69, 58);

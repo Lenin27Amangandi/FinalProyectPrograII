@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import com.formdev.flatlaf.ui.FlatScrollBarUI;
+
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO; 
 import utils.Estilo.*;
@@ -19,7 +21,8 @@ public class PanelVisitante extends JPanel {
         private JLabel imagenPinturaLabel;
         private PinturaDAO pinturaDAO; 
     
-        public PanelVisitante(JFrame parentFrame) {
+        public PanelVisitante(JFrame parentFrame) throws UnsupportedLookAndFeelException {
+
             setLayout(new BorderLayout());
             setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
             
@@ -56,8 +59,6 @@ public class PanelVisitante extends JPanel {
             codigoInput.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO);
             codigoInput.setPreferredSize(new Dimension(200, 40));
             codigoInput.setOpaque(false);
-            // codigoInput.setSelectedTextColor(Color.WHITE); 
-            // codigoInput.setCaretColor(Color.WHITE); 
             codigoInput.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO); 
     
             JButton buscarButton = ComponentFactory.crearBotonIcono("buscarpaint.png", e -> {
@@ -86,7 +87,7 @@ public class PanelVisitante extends JPanel {
     
             JPanel detallePanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
             detallePanel.setOpaque(false);
-            detallePanel.setPreferredSize(new Dimension(480, 300)); 
+            detallePanel.setPreferredSize(new Dimension(400, 300)); 
     
             tituloArea = new JTextArea();
             tituloArea.setFont(EstiloFuenteYColor.FUENTE_TITULO_SIDEBAR); 
@@ -113,20 +114,38 @@ public class PanelVisitante extends JPanel {
             EstiloFuenteYColor.aplicarEstiloFondoYTexto(resultadoArea);
             resultadoArea.setEditable(false);
             resultadoArea.setFocusable(false); 
-            resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO.deriveFont(30f)); 
+            resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO); 
             resultadoArea.setSelectedTextColor(Color.WHITE); 
             resultadoArea.setLineWrap(true);
             resultadoArea.setWrapStyleWord(true);
             resultadoArea.setBorder(EstiloBordes.BORDE_INFERIOR_CAMPO_TEXTO);
     
-            JScrollPane detalleScrollPane = new JScrollPane(resultadoArea);
-            detalleScrollPane.setPreferredSize(new Dimension(480, 300)); 
+           JScrollPane detalleScrollPane = new JScrollPane(resultadoArea);
+            detalleScrollPane.setPreferredSize(new Dimension(350, 150)); 
             detalleScrollPane.setBorder(null);
             detalleScrollPane.setOpaque(false);
-            detalleScrollPane.getViewport().setOpaque(false); 
+            detalleScrollPane.getViewport().setOpaque(false);
+
+            detalleScrollPane.getVerticalScrollBar().setUI(new FlatScrollBarUI() {
+                @Override
+                protected void configureScrollBarColors() {
+                    this.thumbColor = new Color(100, 100, 100); 
+                    this.trackColor = new Color(60, 63, 65);
+                }
+            });
+            detalleScrollPane.getHorizontalScrollBar().setUI(new FlatScrollBarUI());
+
+            detalleScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            detalleScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+            UIManager.put("ScrollBar.thumbArc", 10); 
+            UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2)); 
+            UIManager.put("ScrollBar.width", 8); 
+
             detallePanel.add(detalleScrollPane);
+
     
-            JPanel contentPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 10));
+            JPanel contentPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));
             contentPanel.setOpaque(false);
             contentPanel.add(imagePanel);
             contentPanel.add(detallePanel);
@@ -148,7 +167,6 @@ public class PanelVisitante extends JPanel {
                 }
             });
         }
-    
 
         private void buscarPintura(JTextField codigoInput) throws SQLException {
             String codigoBarras = codigoInput.getText();

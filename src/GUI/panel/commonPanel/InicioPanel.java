@@ -48,7 +48,13 @@ public class InicioPanel extends JPanel {
 
         JLabel titleLabel = ComponentFactory.crearTituloSidebar("Opciones");
 
-        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", e -> irModoVisitante());
+        JButton visitarButton = ComponentFactory.crearBotonSidebar("Visitar Museo", e -> {
+            try {
+                irModoVisitante();
+            } catch (UnsupportedLookAndFeelException e1) {
+                e1.printStackTrace();
+            }
+        });
         visitarButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
 
         JButton adminButton = ComponentFactory.crearBotonSidebar("Administración", e -> irLogin());
@@ -71,7 +77,7 @@ public class InicioPanel extends JPanel {
         repaint();
     }
 
-    private void irModoVisitante() {
+    private void irModoVisitante() throws UnsupportedLookAndFeelException {
         parentFrame.getContentPane().removeAll();
         parentFrame.add(new PanelVisitante(parentFrame));
         parentFrame.revalidate();

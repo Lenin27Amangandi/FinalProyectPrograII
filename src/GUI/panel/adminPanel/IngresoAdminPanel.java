@@ -9,6 +9,9 @@ import GUI.panel.commonPanel.InicioPanel;
 
 public class IngresoAdminPanel extends JPanel {
     private final JFrame parentFrame;
+    private boolean modoOscuro = false; 
+    private JButton modoOscurButton;
+
 
     public IngresoAdminPanel(JFrame parentFrame) {
         this.parentFrame = parentFrame;
@@ -29,8 +32,22 @@ public class IngresoAdminPanel extends JPanel {
         volverButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         volverPanel.add(volverButton);
 
+        // JPanel modoOscuroPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        // modoOscuroPanel.setOpaque(false);
+
+        // modoOscurButton = new JButton("☀");
+        // modoOscurButton.setPreferredSize(new Dimension(30, 30));
+        // modoOscurButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // modoOscurButton.addActionListener(e -> cambiarModo());
+
+        // modoOscuroPanel.add(modoOscurButton);
+
+        volverPanel.add(volverButton);
+
+
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
+        // topPanel.add(modoOscuroPanel, BorderLayout.EAST);
         topPanel.add(volverPanel, BorderLayout.WEST);
         topPanel.add(tituloPanel, BorderLayout.CENTER);
 
@@ -126,10 +143,10 @@ public class IngresoAdminPanel extends JPanel {
                     mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
                     irPanelAdmin(rol);
                 } else {
-                    mostrarPanelAviso();  // Mostrar el panel de aviso si el rol no es válido
+                    mostrarPanelAviso();  
                 }
             } else {
-                mostrarPanelAviso();  // Mostrar el panel de aviso si las credenciales son incorrectas
+                mostrarPanelAviso(); 
             }
         } catch (Exception e) {
             mostrarMensaje("Error al conectar con la base de datos.", "Error");
@@ -188,7 +205,7 @@ public class IngresoAdminPanel extends JPanel {
     private void mostrarVentanaEscanearCredencial() {
         JDialog dialog = new JDialog(parentFrame, "Escanear Credencial", true);
         dialog.setLayout(new BorderLayout(10, 10));
-        dialog.setSize(400, 200);
+        dialog.setSize(400, 150);
         dialog.setLocationRelativeTo(this);
 
         JLabel titulo = EstiloFuenteYColor.crearTituloSecundario("Escanee su Credencial:");
@@ -230,10 +247,24 @@ public class IngresoAdminPanel extends JPanel {
         parentFrame.repaint();
     }
     
+    // private void cambiarModo(){
+    //     modoOscuro = !modoOscuro;
+    //     if(modoOscuro){
+    //         setBackground(EstiloFuenteYColor.COLOR_FONDO_OSCURO);
+    //         modoOscurButton.setText("🌙");
+    //     } else{
+    //         setBackground(EstiloFuenteYColor.COLOR_FONDO_CLARO);
+    //         modoOscurButton.setText("☀");
+    //     }
+    //     revalidate();
+    //     repaint();
+    // }
+
     private void volverAGInicioPanel() {
         parentFrame.getContentPane().removeAll();
         parentFrame.getContentPane().add(new InicioPanel(parentFrame));
         parentFrame.revalidate();
         parentFrame.repaint();
     }
+
 }
