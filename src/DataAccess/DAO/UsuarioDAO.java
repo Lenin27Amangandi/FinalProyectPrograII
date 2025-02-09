@@ -1,7 +1,7 @@
 package DataAccess.DAO;
 
 import DataAccess.DataHelper.DbHelper;
-import Framework.UsuarioBLException;
+import Framework.UsuarioException;
 import DataAccess.IUsuarioDAO;
 import DataAccess.DTO.UsuarioDTO;
 import java.io.FileInputStream;
@@ -32,7 +32,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     }
     
     @Override
-    public void insertarUsuario(UsuarioDTO usuario) throws UsuarioBLException{
+    public void insertarUsuario(UsuarioDTO usuario) throws UsuarioException{
         if (usuario.getEstado() == null) {
             usuario.setEstado("A");
         }
@@ -52,12 +52,12 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             }
             connection.commit();
         } catch (SQLException e) {
-            throw new UsuarioBLException("Error al insertar usuario.", e);
+            throw new UsuarioException("Error al insertar usuario.", e);
         }
     }
 
     @Override
-    public boolean actualizarUsuario(UsuarioDTO usuario) throws UsuarioBLException {
+    public boolean actualizarUsuario(UsuarioDTO usuario) throws UsuarioException {
         String sql = "UPDATE usuarios SET nombre = ?, idRol = ? WHERE identificacion = ?";
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -72,7 +72,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     }
     
     @Override
-    public boolean eliminarUsuario(int idUsuario) throws UsuarioBLException {
+    public boolean eliminarUsuario(int idUsuario) throws UsuarioException {
         UsuarioDTO usuario = obtenerUsuarioPorId(idUsuario); 
         if (usuario == null) {
             return false;  
@@ -89,7 +89,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     }
 
     @Override
-    public List<UsuarioDTO> obtenerTodosUsuarios() throws UsuarioBLException {
+    public List<UsuarioDTO> obtenerTodosUsuarios() throws UsuarioException {
         List<UsuarioDTO> usuarios = new ArrayList<>();
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_ALL_USUARIOS);
@@ -105,13 +105,13 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 usuarios.add(usuario);
             }
         } catch (SQLException e) {
-            throw new UsuarioBLException("Error al obtener usuarios.", e);
+            throw new UsuarioException("Error al obtener usuarios.", e);
         }
         return usuarios;
     }
 
     @Override
-    public UsuarioDTO obtenerUsuarioPorId(int idUsuario) throws UsuarioBLException {
+    public UsuarioDTO obtenerUsuarioPorId(int idUsuario) throws UsuarioException {
         UsuarioDTO usuario = null;
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_USUARIO_BY_ID)) {
@@ -128,13 +128,13 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new UsuarioBLException("Error al obtener usuario por id.", e);
+            throw new UsuarioException("Error al obtener usuario por id.", e);
         }
         return usuario;
     }
 
     @Override
-    public UsuarioDTO obtenerUsuarioPorIdentificacion(String identificacion) throws UsuarioBLException {
+    public UsuarioDTO obtenerUsuarioPorIdentificacion(String identificacion) throws UsuarioException {
         UsuarioDTO usuario = null;
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_USUARIO_BY_IDENTIFICACION)) {
@@ -151,13 +151,13 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new UsuarioBLException("Error al obtener usuario por identificacion.", e);
+            throw new UsuarioException("Error al obtener usuario por identificacion.", e);
         }
         return usuario;
     }
     
     @Override
-    public UsuarioDTO obtenerUsuarioPorCredenciales(int idCredenciales) throws UsuarioBLException {
+    public UsuarioDTO obtenerUsuarioPorCredenciales(int idCredenciales) throws UsuarioException {
         UsuarioDTO usuario = null;
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_USUARIO_BY_CREDENCIALES)) {
@@ -174,7 +174,7 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new UsuarioBLException("Error al obtener usuario por credenciales.", e);
+            throw new UsuarioException("Error al obtener usuario por credenciales.", e);
         }
         return usuario;
     }

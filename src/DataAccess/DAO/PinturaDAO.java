@@ -1,7 +1,7 @@
 package DataAccess.DAO;
 
 import DataAccess.DataHelper.DbHelper;
-import Framework.PinturaBLException;
+import Framework.PinturaException;
 import DataAccess.IPinturaDAO;
 import DataAccess.DTO.PinturaDTO;
 
@@ -32,7 +32,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
     }
 
     @Override
-    public void insertarPintura(PinturaDTO pintura) throws PinturaBLException {
+    public void insertarPintura(PinturaDTO pintura) throws PinturaException {
         try (Connection connection = DbHelper.getConnection();
             PreparedStatement ps = connection.prepareStatement(INSERT_PINTURA)) {
             
@@ -49,12 +49,12 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.executeUpdate();
             
         } catch (SQLException e) {
-            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+            throw new PinturaException("Error al insertar pintura en la base de datos.", e);
         }
     }
 
     @Override
-    public void actualizarPintura(PinturaDTO pintura) throws PinturaBLException {
+    public void actualizarPintura(PinturaDTO pintura) throws PinturaException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(UPDATE_PINTURA)) {
             
@@ -72,12 +72,12 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.executeUpdate();
     
         } catch (SQLException e) {
-            throw new PinturaBLException("Error al actualizar pintura en la base de datos.", e);
+            throw new PinturaException("Error al actualizar pintura en la base de datos.", e);
         }
     }
 
     @Override
-    public void eliminarPintura(int idPintura) throws PinturaBLException {
+    public void eliminarPintura(int idPintura) throws PinturaException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(DELETE_PINTURA)) {
             
@@ -85,12 +85,12 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             ps.executeUpdate();
             
         } catch (SQLException e) {
-            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+            throw new PinturaException("Error al insertar pintura en la base de datos.", e);
         }
     }
 
     @Override
-    public PinturaDTO obtenerPinturaPorId(int idPintura) throws PinturaBLException {
+    public PinturaDTO obtenerPinturaPorId(int idPintura) throws PinturaException {
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_PINTURA_BY_ID)) {
             
@@ -101,13 +101,13 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             }
             
         } catch (SQLException e) {
-            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+            throw new PinturaException("Error al insertar pintura en la base de datos.", e);
         }
         return null;
     }
 
     @Override
-    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws PinturaBLException{
+    public PinturaDTO obtenerPinturaPorCodigoBarras(String codigoBarras) throws PinturaException{
         String query = "SELECT p.idPintura, p.titulo, p.anio, p.descripcion, p.codigoBarras, " +
                        "p.idCategoria, p.idAutor, p.idSala, p.imagen, p.estado, " +
                        "a.nombreAutor, c.categoria, s.Salas " +
@@ -125,14 +125,14 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
                 return mapResultSetToPinturaDTO(rs);
             }
         } catch (SQLException e) {
-            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+            throw new PinturaException("Error al insertar pintura en la base de datos.", e);
         }
         return null;
     }
     
 
     @Override
-    public List<PinturaDTO> obtenerTodasLasPinturas() throws PinturaBLException {
+    public List<PinturaDTO> obtenerTodasLasPinturas() throws PinturaException {
         List<PinturaDTO> pinturas = new ArrayList<>();
         try (Connection connection = DbHelper.getConnection();
              PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PINTURAS);
@@ -143,7 +143,7 @@ public class PinturaDAO extends DbHelper implements IPinturaDAO {
             }
             
         } catch (SQLException e) {
-            throw new PinturaBLException("Error al insertar pintura en la base de datos.", e);
+            throw new PinturaException("Error al insertar pintura en la base de datos.", e);
         }
         return pinturas;
     }

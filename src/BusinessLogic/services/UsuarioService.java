@@ -3,7 +3,7 @@ package BusinessLogic.services;
 import DataAccess.IUsuarioDAO;
 import DataAccess.DAO.UsuarioDAO;
 import DataAccess.DTO.UsuarioDTO;
-import Framework.UsuarioBLException;
+import Framework.UsuarioException;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ public class UsuarioService {
         this.usuarioDAO = usuarioDAO;
     }
 
-    // Constructor predeterminado para uso normal (usa UsuarioDAO por defecto)
     public UsuarioService() {
         this(new UsuarioDAO());
     }
@@ -26,7 +25,7 @@ public class UsuarioService {
             validarUsuario(usuarioDTO);
             usuarioDAO.insertarUsuario(usuarioDTO);
         } catch (Exception e) {
-            throw new Framework.UsuarioBLException("Error al insertar usuario.", e);
+            throw new Framework.UsuarioException("Error al insertar usuario.", e);
         }
     }
 
@@ -34,19 +33,19 @@ public class UsuarioService {
         try {
             return usuarioDAO.obtenerTodosUsuarios();
         } catch (Exception e) {
-            throw new Framework.UsuarioBLException("Error al obtener la lista de usuarios.", e);
+            throw new Framework.UsuarioException("Error al obtener la lista de usuarios.", e);
         }
     }
 
     private void validarUsuario(UsuarioDTO usuarioDTO) {
         if (usuarioDTO == null) {
-            throw new Framework.UsuarioBLException("El usuario no puede ser nulo.");
+            throw new Framework.UsuarioException("El usuario no puede ser nulo.");
         }
         if (usuarioDTO.getNombre() == null || usuarioDTO.getNombre().trim().isEmpty()) {
-            throw new Framework.UsuarioBLException("El nombre del usuario no puede estar vacío.");
+            throw new Framework.UsuarioException("El nombre del usuario no puede estar vacío.");
         }
         if (usuarioDTO.getIdentificacion() == null || usuarioDTO.getIdentificacion().length() != 13) {
-            throw new Framework.UsuarioBLException("La identificación debe tener 13 dígitos.");
+            throw new Framework.UsuarioException("La identificación debe tener 13 dígitos.");
         }
     }
 }

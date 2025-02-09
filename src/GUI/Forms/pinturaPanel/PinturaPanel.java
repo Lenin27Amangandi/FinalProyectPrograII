@@ -3,7 +3,7 @@ package GUI.Forms.pinturaPanel;
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
 import Framework.RAConfig;
-import Framework.UsuarioBLException;
+import Framework.UsuarioException;
 import GUI.Estilo.ComponentFactory;
 import GUI.Estilo.EstiloFuenteYColor;
 
@@ -74,14 +74,14 @@ public class PinturaPanel extends JPanel {
         btnModificarPintura = ComponentFactory.crearBoton("Modificar", e -> {
             try {
                 activarModoModificar();
-            } catch (UsuarioBLException ex) {
+            } catch (UsuarioException ex) {
                 RAConfig.showMsgError("Error al ir al Modificar");
             }
         });
         btnEliminarPintura = ComponentFactory.crearBoton("Eliminar", e -> {
             try {
                 eliminarPintura();
-            } catch (UsuarioBLException | SQLException ex) {
+            } catch (UsuarioException | SQLException ex) {
                 RAConfig.showMsgError("Error al ir a Eliminar");
             }
         });
@@ -96,7 +96,7 @@ public class PinturaPanel extends JPanel {
         tablaPinturas.getSelectionModel().addListSelectionListener(e -> {
             try {
                 mostrarImagenSeleccionada();
-            } catch (UsuarioBLException | SQLException ex) {
+            } catch (UsuarioException | SQLException ex) {
                 RAConfig.showMsgError("Error al Mostar la imagen seleccionada");
             }
         });
@@ -104,7 +104,7 @@ public class PinturaPanel extends JPanel {
             if (!event.getValueIsAdjusting()) {
                 try {
                     activarModoModificar();
-                } catch (UsuarioBLException e) {
+                } catch (UsuarioException e) {
                     RAConfig.showMsgError("ERROR!!!");
                 }
             }
@@ -149,7 +149,7 @@ public class PinturaPanel extends JPanel {
             JButton btnGuardar = ComponentFactory.crearBotonExito("Guardar", e -> {
                 try {
                     agregarPintura();
-                } catch (UsuarioBLException | SQLException ex) {
+                } catch (UsuarioException | SQLException ex) {
                     RAConfig.showMsgError("Error al ir al Agregar pintura");
                 }
                 });
@@ -160,7 +160,7 @@ public class PinturaPanel extends JPanel {
             repaint();
         }
 
-    private void activarModoModificar() throws UsuarioBLException {
+    private void activarModoModificar() throws UsuarioException {
         int row = tablaPinturas.getSelectedRow();
             if (row != -1) {
                 String codigoBarras = (String) tablaPinturas.getValueAt(row, 0);
@@ -204,7 +204,7 @@ public class PinturaPanel extends JPanel {
                     JButton btnActualizar = ComponentFactory.crearBoton("Actualizar", e -> {
                         try {
                             actualizarPintura(pintura.getIdPintura());
-                        } catch (UsuarioBLException | HeadlessException | SQLException ex) {
+                        } catch (UsuarioException | HeadlessException | SQLException ex) {
                             RAConfig.showMsgError("Error al actualizar Pintura");
                         }
                         });

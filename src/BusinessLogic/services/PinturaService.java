@@ -2,7 +2,7 @@ package BusinessLogic.services;
 
 import DataAccess.DAO.PinturaDAO;
 import DataAccess.DTO.PinturaDTO;
-import Framework.PinturaBLException;
+import Framework.PinturaException;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,9 +22,9 @@ public class PinturaService {
         }
         try {
             pinturaDAO.insertarPintura(pintura);
-        } catch (PinturaBLException e) {
+        } catch (PinturaException e) {
             logger.severe("Error al insertar pintura: " + e.getMessage());
-            throw new PinturaBLException("Error al insertar pintura.", e);
+            throw new PinturaException("Error al insertar pintura.", e);
         }
     }
 
@@ -34,9 +34,9 @@ public class PinturaService {
         }
         try {
             pinturaDAO.actualizarPintura(pintura);
-        } catch (PinturaBLException e) {
+        } catch (PinturaException e) {
             logger.severe("Error al actualizar pintura: " + e.getMessage());
-            throw new PinturaBLException("Error al actualizar pintura.", e);
+            throw new PinturaException("Error al actualizar pintura.", e);
         }
     }
 
@@ -46,9 +46,9 @@ public class PinturaService {
         }
         try {
             pinturaDAO.eliminarPintura(idPintura);
-        } catch (PinturaBLException e) {
+        } catch (PinturaException e) {
             logger.severe("Error al eliminar pintura: " + e.getMessage());
-            throw new PinturaBLException("Error al eliminar pintura.", e);
+            throw new PinturaException("Error al eliminar pintura.", e);
         }
     }
 
@@ -58,18 +58,18 @@ public class PinturaService {
         }
         try {
             return pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
-        } catch (PinturaBLException e) {
+        } catch (PinturaException e) {
             logger.severe("Error al obtener pintura por código de barras: " + e.getMessage());
-            throw new PinturaBLException("Error al obtener pintura.", e);
+            throw new PinturaException("Error al obtener pintura.", e);
         }
     }
 
     public List<PinturaDTO> obtenerTodasLasPinturas() {
         try {
             return pinturaDAO.obtenerTodasLasPinturas();
-        } catch (PinturaBLException e) {
+        } catch (PinturaException e) {
             logger.severe("Error al obtener todas las pinturas: " + e.getMessage());
-            throw new PinturaBLException("Error al obtener todas las pinturas.", e);
+            throw new PinturaException("Error al obtener todas las pinturas.", e);
         }
     }
 
@@ -79,9 +79,9 @@ public class PinturaService {
         }
         try {
             return pinturaDAO.obtenerPinturaPorId(idPintura);
-        } catch (PinturaBLException e) {
+        } catch (PinturaException e) {
             logger.severe("Error al obtener pintura por ID: " + e.getMessage());
-            throw new PinturaBLException("Error al obtener pintura.", e);
+            throw new PinturaException("Error al obtener pintura.", e);
         }
     }
 }
