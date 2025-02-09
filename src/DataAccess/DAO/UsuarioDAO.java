@@ -245,13 +245,9 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
             String nombre = properties.getProperty("nombre");
             String rol = properties.getProperty("rol");
             String identificacion = properties.getProperty("identificacion");
-            System.out.println("username: " + username);
-            System.out.println("nombre: " + nombre);
-            System.out.println("rol: " + rol);
+
             if (obtenerUsuarioPorIdentificacion(identificacion) == null) {
                 insertarUsuarioDesdeConfig(username, password, nombre, rol, identificacion);
-            } else {
-                System.out.println("El usuario ya existe en la base de datos.");
             }
 
         } catch (IOException e) {
@@ -295,7 +291,6 @@ public class UsuarioDAO extends DbHelper implements IUsuarioDAO {
     private void insertarUsuarioDesdeConfig(String username, String password, String nombre, String rol, String identificacion) {
         try (Connection connection = DbHelper.getConnection()) {
             if (existeUsername(connection, username)) {
-                System.out.println("El username ya existe. No se insertará.");
                 return; 
             }
             int idCredenciales = insertarCredenciales(username, password, connection);

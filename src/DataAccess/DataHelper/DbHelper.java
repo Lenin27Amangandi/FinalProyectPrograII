@@ -16,21 +16,6 @@ public abstract class DbHelper {
 
     private static Connection connection;
 
-    static {
-        verificarBaseDeDatos();
-        try {
-            Class.forName(DRIVER);
-            connection = DriverManager.getConnection(DB_URL);
-            if (connection != null) {
-                LOGGER.info("Conexión exitosa a la base de datos.");
-            }
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "El controlador JDBC no se encontró.", e);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error al conectar con la base de datos.", e);
-        }
-    }
-
     protected DbHelper() {
     }
 
@@ -38,7 +23,6 @@ public abstract class DbHelper {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                LOGGER.info("Intentando reabrir la conexión a la base de datos.");
                 connection = DriverManager.getConnection(DB_URL);
             }
             return connection;

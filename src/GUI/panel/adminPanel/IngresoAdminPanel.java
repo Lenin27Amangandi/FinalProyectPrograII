@@ -9,8 +9,8 @@ import GUI.panel.commonPanel.InicioPanel;
 
 public class IngresoAdminPanel extends JPanel {
     private final JFrame parentFrame;
-    private boolean modoOscuro = false; 
-    private JButton modoOscurButton;
+    // private boolean modoOscuro = false; 
+    // private JButton modoOscurButton;
 
 
     public IngresoAdminPanel(JFrame parentFrame) {
@@ -139,7 +139,7 @@ public class IngresoAdminPanel extends JPanel {
     
                 String rol = usuarioDAO.obtenerRolPorId(idUsuario);
                 if (rol != null && (rol.equals("Administrador") || rol.equals("Supervisor"))) {
-                    System.out.println("este es su rol" + rol);
+                    System.out.println("Ingreso como " + rol);
                     mostrarMensaje("Inicio de sesión exitoso como " + rol, "Éxito");
                     irPanelAdmin(rol);
                 } else {
