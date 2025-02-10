@@ -50,7 +50,7 @@ public class SplashScreenPanel extends JPanel {
 
 
     private void startLoadingAnimation() {
-        timer = new Timer(50, _ -> {
+        timer = new Timer(50, e -> {
             angle += 20;
             if (angle >= MAX_ANGLE) {
                 angle = MAX_ANGLE;

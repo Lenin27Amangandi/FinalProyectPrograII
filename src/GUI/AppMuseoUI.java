@@ -34,7 +34,7 @@ public class AppMuseoUI {
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
                 usuarioDAO.cargarUsuarioPorDefecto(); 
 
-                Thread.sleep(3550); 
+                Thread.sleep(50); 
             } catch (InterruptedException e){
                 e.printStackTrace();
             }

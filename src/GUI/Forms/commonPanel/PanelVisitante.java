@@ -38,7 +38,7 @@ public class PanelVisitante extends JPanel {
             JPanel topPanel = new JPanel(new BorderLayout());
             topPanel.setOpaque(false);
             
-            JButton volverButton = ComponentFactory.crearBotonIcono("back.png", _ -> {
+            JButton volverButton = ComponentFactory.crearBotonIcono("back.png", e -> {
                 parentFrame.getContentPane().removeAll();
                 parentFrame.add(new InicioPanel(parentFrame));
                 parentFrame.revalidate();
@@ -184,7 +184,7 @@ public class PanelVisitante extends JPanel {
                 RAConfig.showMsgError("No se encontro ninguna imagen con ese codigo de Barras!!");
                 imagenPinturaLabel.setIcon(null);
             }
-        
+            codigoInput.setText("");
             revalidate();  
             repaint();     
         }
