@@ -26,6 +26,7 @@ public class EstiloFuenteYColor {
     public static final Font FUENTE_TITULO = new Font("Serif", Font.BOLD, 30);
     public static final Font FUENTE_BOTON = new Font("Serif", Font.PLAIN, 14);
     public static final Font FUENTE_CAMPO_TEXTO = new Font("Serif", Font.PLAIN, 14);
+    public static final Font FUENTE_CAMPO_TEXTO_Defecto = new Font("Serif", Font.PLAIN, 24);
     public static final Font FUENTE_TABLA = new Font("Serif", Font.BOLD, 14);
     public static final Font FUENTE_LOGIN = new Font("Serif", Font.BOLD, 12);
     public static final Font FUENTE_TITULO_SIDEBAR = new Font("Serif", Font.BOLD, 18);

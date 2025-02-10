@@ -169,6 +169,28 @@ public class PanelVisitante extends JPanel {
             });
         }
 
+        // private void buscarPintura(JTextField codigoInput) throws SQLException {
+        //     String codigoBarras = codigoInput.getText();
+        //     if (codigoBarras.isEmpty()) {
+        //         RAConfig.showMsgError("Por favor, ingrese un código de barras.");
+        //         return;
+        //     }
+        
+        //     PinturaDTO pinturaDTO = pinturaDAO.obtenerPinturaPorCodigoBarras(codigoBarras);
+        //     if (pinturaDTO != null) {
+        //         mostrarDetallesPintura(pinturaDTO);
+        //         mostrarImagenPintura(pinturaDTO);
+        //     } else {
+        //         RAConfig.showMsgError("No se encontro ninguna imagen con ese codigo de Barras!!");
+        //         imagenPinturaLabel.setIcon(null);
+        //     }
+        //     codigoInput.setText("");
+        //     revalidate();  
+        //     repaint();     
+        // }
+
+
+
         private void buscarPintura(JTextField codigoInput) throws SQLException {
             String codigoBarras = codigoInput.getText();
             if (codigoBarras.isEmpty()) {
@@ -181,18 +203,40 @@ public class PanelVisitante extends JPanel {
                 mostrarDetallesPintura(pinturaDTO);
                 mostrarImagenPintura(pinturaDTO);
             } else {
-                RAConfig.showMsgError("No se encontro ninguna imagen con ese codigo de Barras!!");
-                imagenPinturaLabel.setIcon(null);
+                // RAConfig.showMsgError("No se encontró ninguna imagen con ese código de barras!");
+                // Mostrar imagen por defecto si no se encuentra la pintura
+                mostrarImagenPorDefecto();
+            tituloArea.setText("");
+            resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO_Defecto);
+            resultadoArea.setText("No se encontró ninguna imagen con ese código de barras!");
             }
-            codigoInput.setText("");
+            codigoInput.setText("");  
             revalidate();  
             repaint();     
         }
+        
+        // Método para mostrar una imagen por defecto
+        private void mostrarImagenPorDefecto() {
+            String imagenPath = "src/utils/logos/pintingDefect.jpg";  // Ruta de la imagen por defecto
+            File imagenFile = new File(imagenPath);
+            if (imagenFile.exists()) {
+                try {
+                    Image img = ImageIO.read(imagenFile);
+                    ImageIcon icon = new ImageIcon(img.getScaledInstance(300, 400, Image.SCALE_SMOOTH));  // Ajustar tamaño si es necesario
+                    imagenPinturaLabel.setIcon(icon);
+                } catch (IOException e) {
+                    imagenPinturaLabel.setIcon(null);  // En caso de error, no mostrar ninguna imagen
+                    e.printStackTrace();
+                }
+            } else {
+                imagenPinturaLabel.setIcon(null);  // En caso de que no exista la imagen por defecto
+            }
+        }
+        
     
 
         private void mostrarDetallesPintura(PinturaDTO pinturaDTO) {
             tituloArea.setText(pinturaDTO.getTitulo());
-        
             resultadoArea.setText("");
             resultadoArea.setFont(EstiloFuenteYColor.FUENTE_CAMPO_TEXTO); 
             resultadoArea.append("Autor: " + pinturaDTO.getNombreAutor() + "\n");
